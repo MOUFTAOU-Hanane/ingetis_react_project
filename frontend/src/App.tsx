@@ -1,11 +1,8 @@
 import './App.css'
+import AppRoutes from './Routes';
 
 const App = () => {
-    return (
-        <span className='text-orange-500'>
-            SALUTT !
-        </span>
-    )
+    return <AppRoutes />;
 }
 
 export default App
