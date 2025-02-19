@@ -1,9 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');  // Pour comparer les mots de passe hachés
 const jwt = require('jsonwebtoken');  // Pour générer un token JWT
-const { User } = require('../db/sequelize'); // Vérifie le bon chemin d'accès
+const { User } = require('../db/sequelize'); 
 const router = express.Router();
-const upload = require('../config/multer');  // Importer la configuration multer
+const upload = require('../config/multer');  
 
 
 // Route POST pour l'inscription

@@ -4,6 +4,8 @@ const path = require('path');
 const sequelize=require('./src/db/sequelize.js');
 const authRoutes = require('./src/routes/authentication.js');  // Importer les routes d'authentification
 const userRoutes = require('./src/routes/user.js');  // Importer les routes d'authentification
+const lieuRoutes = require('./src/routes/lieu.js');  // Importer les routes d'authentification
+
 
 const bodyParser = require("body-parser");
 const cors = require('cors');
@@ -28,6 +30,8 @@ app.use(cors(corsOptions));
 // Utiliser les routes d'authentification
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', userRoutes);
+app.use('/api/admin', lieuRoutes);
+
 
 
 app.listen(port,() => console.log('API démmarée sur http://localhost:'+port));
