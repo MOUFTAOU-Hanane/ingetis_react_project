@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 
 // Utiliser les routes d'authentification
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/admin', userRoutes);
 
 
 app.listen(port,() => console.log('API démmarée sur http://localhost:'+port));
