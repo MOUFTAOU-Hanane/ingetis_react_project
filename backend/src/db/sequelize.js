@@ -33,22 +33,6 @@ const Participant = ParticipantModel(sequelize, DataTypes)
 const Program = ProgramModel(sequelize, DataTypes)
 
 
-
-
-
-
-
-
-
-
-
-// const etudiants = require('./mock-etudiants')
-// const etudiant = require('../models/etudiants')
-//  ===========================================
-//  créer une instance sequelize
-//  ===========================================
-
-
   
 
   const initDb = () => {
@@ -64,11 +48,6 @@ const Program = ProgramModel(sequelize, DataTypes)
   module.exports = { initDb,User };
 
   
-//  ====================================
-//  création table Etudiants
-//  ====================================
-// const Etudiant = EtudiantModel(sequelize, DataTypes)
-
 
 
 
