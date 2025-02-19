@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import UsersList from './pages/admin/users/UsersList';
 import CreateUser from './pages/admin/users/CreateUser';
 import LieuxList from './pages/admin/lieux/LieuxList';
+import CreateLieu from './pages/admin/lieux/CreateLieu';
 
 const AppRoutes = () => {
     return (
@@ -59,7 +60,16 @@ const AppRoutes = () => {
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin']}
-                                element={<CreateUser />}
+                                element={<CreateLieu />}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/lieux/update/:id" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<CreateLieu />} 
                             />
                         }
                     />
