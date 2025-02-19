@@ -15,7 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 sequelize.initDb();
 const corsOptions = {
-    origin: 'http://localhost:5173/', // Autoriser uniquement cette origine
+    origin: 'http://localhost:5173', // Autoriser uniquement cette origine
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes HTTP autorisées
     allowedHeaders: ['Content-Type', 'Authorization'], // En-têtes autorisés
 };
