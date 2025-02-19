@@ -7,49 +7,51 @@ const upload = require('../config/multer');  // Importer la configuration multer
 
 
 // Route POST pour l'inscription
-router.post('/register', upload.single('photo'), async (req, res) => {
-  const { nom, email, mot_de_passe, role, telephone, bibliographie } = req.body;
-  const photoProfil = req.file ? `/uploads/${req.file.filename}` : null;
+router.put('/update-profile/:id', upload.single('photo'), async (req, res) => {
+  const { id } = req.params;
+  const { nom, email, telephone, bibliographie, mot_de_passe } = req.body;
 
   try {
-    // Vérifier si l'email existe déjà
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
+    // Rechercher l'utilisateur à modifier
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Hacher le mot de passe
-    const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+    // Si une nouvelle photo de profil est téléchargée, on met à jour le champ de la photo
+    let photo = user.photo; // Conserver l'ancienne photo si aucune nouvelle photo n'est envoyée
+    if (req.file) {
+      photo = `/uploads/${req.file.filename}`; // Nouveau chemin de la photo
+    }
 
-    // Créer l'utilisateur
-    const newUser = await User.create({
+    // Mettre à jour les informations de l'utilisateur
+    await user.update({
       nom,
       email,
-      mot_de_passe: hashedPassword,
-      role: role || 'user',  // rôle par défaut = 'user'
       telephone,
       bibliographie,
-      photo: photoProfil,  // Sauvegarder le nom du fichier image
+      mot_de_passe, // Ne pas oublier de hasher le mot de passe si tu le modifies
+      photo // Mettre à jour la photo de profil
     });
 
-    res.status(201).json({
-      message: 'Utilisateur créé avec succès',
+    res.status(200).json({
+      message: "Profil mis à jour avec succès",
       user: {
-        id_user: newUser.id_user,
-        nom: newUser.nom,
-        email: newUser.email,
-        role: newUser.role,
-        bibliographie: newUser.bibliographie,
-        telephone: newUser.telephone,
-        photo: photoProfil ? `http://localhost:3000${photoProfil}` : null
-      },
+        id: user.id,
+        nom: user.nom,
+        email: user.email,
+        telephone: user.telephone,
+        bibliographie: user.bibliographie,
+        photo: `http://localhost:3000${photo}` // Afficher l'URL complète de la photo
+      }
     });
-
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Erreur lors de la création de l\'utilisateur.' });
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la mise à jour du profil" });
   }
 });
+
 
 
 // Route POST pour la connexion (login)
@@ -92,66 +94,76 @@ router.post('/login', async (req, res) => {
 });
 
 
-//upade 
-router.put('/update', (req, res) => {
-  const { id_user, nom, email, telephone, bibliographie, ancien_mot_de_passe, nouveau_mot_de_passe } = req.body;
+//update 
+router.put('/update-profile/:id', upload.single('photo'), async (req, res) => {
+  const { id } = req.params;
+  const { nom, email, telephone, bibliographie, mot_de_passe } = req.body;
 
-  if (!id_user) {
-      return res.status(400).json({ message: "L'ID de l'utilisateur est requis." });
+  try {
+    // Rechercher l'utilisateur à modifier
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // Si une nouvelle image de profil est téléchargée, on met à jour le champ de l'image
+    let photo_profil = user.photo; // Conserver l'ancienne image si aucune nouvelle image n'est envoyée
+    if (req.file) {
+      photo_profil = `/uploads/${req.file.filename}`; // Nouveau chemin de l'image
+    }
+
+    // Mettre à jour les informations de l'utilisateur
+    await user.update({
+      nom,
+      email,
+      telephone,
+      bibliographie,
+      mot_de_passe, // Ne pas oublier de hasher le mot de passe si tu le modifies
+      photo_profil // Mettre à jour l'image de profil
+    });
+
+    res.status(200).json({
+      message: "Profil mis à jour avec succès",
+      user: {
+        id: user.id,
+        nom: user.nom,
+        email: user.email,
+        telephone: user.telephone,
+        bibliographie: user.bibliographie,
+        photo: user.photo // Nouveau chemin de l'image de profil
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la mise à jour du profil" });
   }
+});
 
-  User.findByPk(id_user)
-      .then(user => {
-          if (!user) {
-              return res.status(404).json({ message: "Utilisateur non trouvé." });
-          }
 
-          // Vérifier si l'email est déjà utilisé (s'il veut le changer)
-          const checkEmail = email && email !== user.email
-              ? User.findOne({ where: { email } })
-              : Promise.resolve(null);
+router.get('/user-details/:id', async (req, res) => {
+  const { id } = req.params;
 
-          return checkEmail.then(existingUser => {
-              if (existingUser) {
-                  return res.status(400).json({ message: "Cet email est déjà utilisé." });
-              }
+  try {
+    // Rechercher l'utilisateur par son ID
+    const user = await User.findByPk(id);
 
-              // Gestion du mot de passe : vérifier l'ancien avant de changer
-              if (nouveau_mot_de_passe) {
-                  if (!ancien_mot_de_passe) {
-                      return res.status(400).json({ message: "L'ancien mot de passe est requis." });
-                  }
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
 
-                  return bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe)
-                      .then(match => {
-                          if (!match) {
-                              return res.status(400).json({ message: "Ancien mot de passe incorrect." });
-                          }
-                          return bcrypt.hash(nouveau_mot_de_passe, 10);
-                      });
-              }
-              return null;
-          });
-      })
-      .then(hashedPassword => {
-          // Construire l'objet de mise à jour
-          let updateData = { nom, email, telephone, bibliographie };
-          if (hashedPassword) updateData.mot_de_passe = hashedPassword;
-
-          return User.update(updateData, { where: { id_user } });
-      })
-      .then(() => {
-          return User.findByPk(id_user, {
-              attributes: ['id_user', 'nom', 'email', 'telephone', 'bibliographie']
-          });
-      })
-      .then(updatedUser => {
-          res.status(200).json({ message: "Profil mis à jour avec succès", user: updatedUser });
-      })
-      .catch(err => {
-          console.error(err);
-          res.status(500).json({ message: "Erreur lors de la mise à jour du profil" });
-      });
+    res.status(200).json({
+      id: user.id,
+      nom: user.nom,
+      email: user.email,
+      telephone: user.telephone,
+      bibliographie: user.bibliographie,
+      photo: user.photo ? `http://localhost:3000${user.photo}` : null, // Si l'utilisateur a une photo, on renvoie le lien, sinon null
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la récupération des détails de l'utilisateur" });
+  }
 });
 
 module.exports = router;  // Exporter le router
