@@ -9,7 +9,6 @@ const OeuvreModel = require('../models/oeuvre')
 const ParticipantModel = require('../models/participant')
 const ProgramModel = require('../models/program')
 
-
 sequelize = new Sequelize('events', 'root', '', {
     host: 'localhost',
     dialect: 'mariadb',
