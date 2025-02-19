@@ -8,6 +8,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 import UsersList from './pages/admin/users/UsersList';
 import CreateUser from './pages/admin/users/CreateUser';
+import LieuxList from './pages/admin/lieux/LieuxList';
 
 const AppRoutes = () => {
     return (
@@ -37,6 +38,24 @@ const AppRoutes = () => {
                     />
                     <Route
                         path="/admin/users/create"
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<CreateUser />}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/lieux"
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<LieuxList />}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/lieux/create"
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin']}
