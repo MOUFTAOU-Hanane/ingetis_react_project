@@ -38,14 +38,52 @@ const Navbar: React.FC = () => {
                             <>
                                 <div className="hidden md:flex space-x-4">
                                     {user.role === 'admin' && (
-                                        <NavLink
-                                            to="/admin/dashboard"
-                                            className={({ isActive }) =>
-                                                `hover:text-white ${isActive ? 'text-white' : ''}`
-                                            }
-                                        >
-                                            Tableau de bord admin
-                                        </NavLink>
+                                        <>
+                                            <NavLink
+                                                to="/admin/dashboard"
+                                                className={({ isActive }) =>
+                                                    `hover:text-white ${isActive ? 'text-white' : ''}`
+                                                }
+                                            >
+                                                Tableau de bord admin
+                                            </NavLink>
+                                            <div className="relative group">
+                                                <NavLink
+                                                    to="#"
+                                                    className={({ isActive }) =>
+                                                        `hover:text-white ${isActive ? 'text-white' : ''}`
+                                                    }
+                                                >
+                                                    Utilisateurs
+                                                </NavLink>
+                                                <div className="absolute left-0 hidden group-hover:block bg-gray-800 text-white rounded-md shadow-lg">
+                                                    <ul className="py-2">
+                                                        <li>
+                                                            <NavLink
+                                                                to="/admin/users/create"
+                                                                className={({ isActive }) =>
+                                                                    `block px-4 py-2 hover:bg-gray-700 ${isActive ? 'bg-gray-700' : ''}`
+                                                                }
+                                                            >
+                                                                Créer
+                                                            </NavLink>
+                                                        </li>
+                                                        <li>
+                                                            <NavLink
+                                                                to="/admin/users"
+                                                                className={({ isActive }) =>
+                                                                    `block px-4 py-2 hover:bg-gray-700 ${isActive ? 'bg-gray-700' : ''}`
+                                                                }
+                                                            >
+                                                                Liste
+                                                            </NavLink>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </>
+                                        
                                     )}
                                     {user.role === 'user' && (
                                         <NavLink
