@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 import UsersList from './pages/admin/users/UsersList';
+import CreateUser from './pages/admin/users/CreateUser';
 
 const AppRoutes = () => {
     return (
@@ -26,20 +27,20 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/admin/users/create"
-                        element={
-                            <PrivateRoute
-                                allowedRoles={['admin']}
-                                element={<AdminDashboard />}
-                            />
-                        }
-                    />
-                    <Route
                         path="/admin/users"
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin']}
                                 element={<UsersList />}
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/users/create"
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<CreateUser />}
                             />
                         }
                     />

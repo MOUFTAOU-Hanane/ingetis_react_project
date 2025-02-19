@@ -18,7 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
                 <main className="container mx-auto p-4">{children}</main>
                 
-                <footer className="mt-auto footer py-4 w-full text-center text-sm text-gray-500 !fixed !b-0">
+                <footer className="mt-auto footer py-4 w-full text-center text-sm text-gray-500 !relative !b-0">
                     <div className='text-center'>© {new Date().getFullYear()} Event Master. Tous droits réservés.</div>
                 </footer>
             </div>
