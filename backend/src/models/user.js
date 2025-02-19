@@ -36,10 +36,6 @@
         bibliographie: {
             type: DataTypes.TEXT,
             allowNull: true
-        },
-        date_inscription: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
         }
         }, {
         timestamps: true,
