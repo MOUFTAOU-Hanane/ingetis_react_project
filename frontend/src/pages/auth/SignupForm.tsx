@@ -44,18 +44,26 @@ const SignupForm: React.FC = () => {
         onSubmit: async (values) => {
             try {
                 const formData = new FormData();
+                
+                // Ajoutez les champs au FormData
                 Object.entries(values).forEach(([key, value]) => {
                     if (key === 'photo' && value instanceof File) {
-                        formData.append(key, value);
+                        formData.append(key, value); // Ajoute le fichier photo
                     } else {
-                        formData.append(key, value as string);
+                        formData.append(key, value as string); // Ajoute les autres champs
                     }
                 });
-
-                const response = await apiClient.post('/register', formData);
+        
+                // Effectuez l'appel API avec l'en-tête multipart
+                const response = await apiClient.post('/auth/register', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+        
                 if (response.status === 201) {
-                    toast.success('Inscription réussie ! Redirection...');
-                    // navigate('/login');
+                    toast.success('Inscription réussie');
+                    navigate('/login');
                 }
             } catch (error: any) {
                 if (error.response?.data) {
@@ -65,6 +73,7 @@ const SignupForm: React.FC = () => {
                 }
             }
         },
+        
     });
 
     return (

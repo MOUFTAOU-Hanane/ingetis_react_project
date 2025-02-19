@@ -1,30 +1,28 @@
-// src/components/PrivateRoute.tsx
 import React from 'react';
-import { Route, Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface PrivateRouteProps {
     allowedRoles: ('admin' | 'user')[];
     element: React.ReactNode;
-    path: string;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles, element, path }) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles, element }) => {
     const { user } = useAuth();
     const location = useLocation();
 
     if (!user) {
-        // Si l'utilisateur n'est pas connecté, on le redirige vers /login
+        // Redirige vers /login si l'utilisateur n'est pas connecté
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     if (!allowedRoles.includes(user.role)) {
-        // Si l'utilisateur n'a pas le rôle nécessaire, on le redirige vers /
+        // Redirige vers / si l'utilisateur n'a pas le rôle nécessaire
         return <Navigate to="/" state={{ from: location }} replace />;
     }
 
-    // Si tout est OK, on rend la route demandée
-    return <Route path={path} element={element} />;
+    // Si tout est OK, on retourne l'élément demandé
+    return <>{element}</>;
 };
 
 export default PrivateRoute;

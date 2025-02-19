@@ -9,28 +9,24 @@ import { AuthProvider } from './context/AuthContext';
 
 const AppRoutes = () => {
     return (
-        <AuthProvider> 
+        <AuthProvider>
             <Router>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={<Home />}
-                    />
-                    <Route
-                        path="/register"
-                        element={<SignupForm />}
-                    />
-                    <Route
-                        path="/login"
-                        element={<LoginForm />}
-                    />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/register" element={<SignupForm />} />
+                    <Route path="/login" element={<LoginForm />} />
                     <Route
                         path="/admin/dashboard"
-                        element={<PrivateRoute allowedRoles={['admin']} element={<AdminDashboard />} path="/admin/dashboard" />}
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<AdminDashboard />}
+                            />
+                        }
                     />
                 </Routes>
             </Router>
-        </AuthProvider> 
+        </AuthProvider>
     );
 };
 

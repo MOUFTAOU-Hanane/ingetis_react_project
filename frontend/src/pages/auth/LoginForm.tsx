@@ -5,6 +5,7 @@ import { TextField, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { NavLink, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
+import { useAuth } from '../../context/AuthContext';
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Email invalide').required('Email est requis'),
@@ -13,6 +14,7 @@ const validationSchema = Yup.object({
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const formik = useFormik({
         initialValues: {
@@ -22,15 +24,15 @@ const LoginForm: React.FC = () => {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await apiClient.post('/login', values);
+                const response = await apiClient.post('/auth/login', values);
 
                 if (response.status === 200) {
-                    const { token, user } = response.data;
-                    sessionStorage.setItem('token', token);
-                    sessionStorage.setItem('user', JSON.stringify(user));
-
+                    const { data } = response.data;
+                    sessionStorage.setItem('token', data.token);
+                    sessionStorage.setItem('user', JSON.stringify(data));
+                    login(data);
                     toast.success('Connexion réussie !');
-                    // navigate('/dashboard');
+                    navigate('/admin/dashboard');
                 }
             } catch (error: any) {
                 if (error.response?.data) {

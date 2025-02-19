@@ -19,10 +19,22 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+    console.log({sessionStorage})
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = sessionStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
-    const login = (user: User) => setUser(user);
-    const logout = () => setUser(null);
+    const login = (user: User) => {
+        setUser(user);
+        sessionStorage.setItem('user', JSON.stringify(user)); 
+    };
+
+    const logout = () => {
+        setUser(null);
+        sessionStorage.removeItem('user'); 
+        sessionStorage.removeItem('token');
+    };
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
@@ -30,6 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
 
     // Custom hook pour utiliser le contexte Auth
 export const useAuth = (): AuthContextType => {
