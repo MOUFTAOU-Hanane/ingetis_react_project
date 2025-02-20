@@ -45,7 +45,7 @@ const UsersList: React.FC = () => {
                 {users && users?.length ? (
                     <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
                         <table className="min-w-full text-sm text-gray-500">
-                            <thead className="bg-purple-500 text-white">
+                            <thead className="text-purple-500 bg-white">
                                 <tr>
                                     <th className="px-6 py-3 text-left">Photo</th>
                                     <th className="px-6 py-3 text-left">Nom</th>
@@ -56,7 +56,7 @@ const UsersList: React.FC = () => {
                             </thead>
                             <tbody>
                                 {users.map((user) => (
-                                    <tr key={user.id} className="border-b hover:bg-gray-100">
+                                    <tr key={user.id} className="border-b hover:bg-gray-100 hover:text-gray-800 text-white">
                                         <td className="px-6 py-4">
                                             <img
                                                 src={`http://localhost:3000${user.photo}`}

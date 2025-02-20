@@ -101,8 +101,8 @@ const LieuxList: React.FC = () => {
             <div className="p-6">
                 {lieux && lieux?.length ? (
                     <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
-                        <table className="min-w-full text-sm text-gray-500">
-                            <thead className="bg-purple-500 text-white">
+                        <table className="min-w-full text-sm text-white !hover:text-purple-500">
+                            <thead className="text-purple-500 bg-white">
                                 <tr>
                                     <th className="px-6 py-3 text-left">Nom</th>
                                     <th className="px-6 py-3 text-left">Adresse</th>
@@ -114,7 +114,7 @@ const LieuxList: React.FC = () => {
                             </thead>
                             <tbody>
                                 {lieux.map((lieu) => (
-                                    <tr key={lieu.id_lieu} className="border-b hover:bg-gray-100">
+                                    <tr key={lieu.id_lieu} className="border-b hover:bg-purple-300 hover:text-gray-800">
                                         <td className="px-6 py-4">{lieu.nom}</td>
                                         <td className="px-6 py-4">{lieu.adresse}</td>
                                         <td className="px-6 py-4">{lieu.latitude}</td>
@@ -124,22 +124,22 @@ const LieuxList: React.FC = () => {
                                             <div className="flex items-center gap-3">
                                                 <Eye
                                                     size={16}
-                                                    className="cursor-pointer text-green-600"
+                                                    className="cursor-pointer text-green-400"
                                                     onClick={() => handleOpenModal(lieu)}
                                                 />
                                                 <Edit
                                                     size={16}
-                                                    className="cursor-pointer text-blue-600"
+                                                    className="cursor-pointer text-blue-400"
                                                     onClick={() => handleEdit(lieu)}
                                                 />
                                                 <Trash
                                                     size={16}
-                                                    className="cursor-pointer text-red-600"
+                                                    className="cursor-pointer text-red-400"
                                                     onClick={() => handleOpenConfirmation(lieu)}
                                                 />
                                                 <List
                                                     size={16}
-                                                    className="cursor-pointer text-purple-600"
+                                                    className="cursor-pointer text-purple-100"
                                                     onClick={() => handleAddParcours(lieu)}
                                                 />
                                             </div>
@@ -151,7 +151,7 @@ const LieuxList: React.FC = () => {
                     </div>
                 ) : (
                     <div className="flex justify-center items-center p-8">
-                        <h3 className="text-lg text-gray-600">Pas encore de lieux à afficher.</h3>
+                        <h3 className="text-lg text-white">Pas encore de lieux à afficher.</h3>
                     </div>
                 )}
             </div>

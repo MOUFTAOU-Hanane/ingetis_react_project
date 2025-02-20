@@ -2,3 +2,7 @@ html, body {
     height: 100%;
     color: black;
 }
+
+body {
+    font-family: 'Comic Neue', sans-serif;
+}
