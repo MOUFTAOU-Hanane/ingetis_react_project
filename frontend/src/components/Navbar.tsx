@@ -115,6 +115,40 @@ const Navbar: React.FC = () => {
                                                     </ul>
                                                 </div>
                                             </div>
+                                            <div className="relative group">
+                                                <NavLink
+                                                    to="#"
+                                                    className={({ isActive }) =>
+                                                        `hover:text-white`
+                                                    }
+                                                >
+                                                    Evenements
+                                                </NavLink>
+                                                <div className="absolute left-0 hidden group-hover:block bg-gray-800 text-white rounded-md shadow-lg">
+                                                    <ul className="py-2">
+                                                        <li>
+                                                            <NavLink
+                                                                to="/admin/events/create"
+                                                                className={({ isActive }) =>
+                                                                    `block px-4 py-2 hover:bg-gray-700}`
+                                                                }
+                                                            >
+                                                                Créer
+                                                            </NavLink>
+                                                        </li>
+                                                        <li>
+                                                            <NavLink
+                                                                to="/admin/events"
+                                                                className={({ isActive }) =>
+                                                                    `block px-4 py-2 hover:bg-gray-700}`
+                                                                }
+                                                            >
+                                                                Liste
+                                                            </NavLink>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
 
                                         </>
                                         

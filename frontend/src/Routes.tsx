@@ -12,6 +12,7 @@ import LieuxList from './pages/admin/lieux/LieuxList';
 import CreateLieu from './pages/admin/lieux/CreateLieu';
 import AddParcours from './pages/admin/parcours/AddParcours';
 import ParcoursList from './pages/admin/parcours/ParcoursList';
+import EventsList from './pages/events/EventList';
 
 const AppRoutes = () => {
     return (
@@ -90,6 +91,24 @@ const AppRoutes = () => {
                             <PrivateRoute
                                 allowedRoles={['admin']}
                                 element={<ParcoursList />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/events/create" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<ParcoursList />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/events" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<EventsList />} 
                             />
                         }
                     />
