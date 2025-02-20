@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MapPin, Edit, Trash, Eye } from "lucide-react"; // icônes
+import { MapPin, Edit, Trash, Eye, Plus, List } from "lucide-react"; // Ajout de l'icône "Plus"
 import apiClient from "../../../apiClient";
 import Layout from "../../../components/Layout";
 import LieuModal from "./LieuModal"; // Import du nouveau composant Modal
@@ -46,9 +46,14 @@ const LieuxList: React.FC = () => {
         setIsModalOpen(true);
     };
 
-    const handleEdit= (lieu: Lieu) => {
+    const handleEdit = (lieu: Lieu) => {
         navigate(`/admin/lieux/update/${lieu.id_lieu}`);
-    }
+    };
+
+    // Rediriger vers la page pour ajouter un parcours
+    const handleAddParcours = (lieu: Lieu) => {
+        navigate(`/admin/lieux/${lieu.id_lieu}/parcours`);
+    };
 
     // Fonction pour fermer le modal des détails
     const handleCloseModal = () => {
@@ -122,11 +127,20 @@ const LieuxList: React.FC = () => {
                                                     className="cursor-pointer text-green-600"
                                                     onClick={() => handleOpenModal(lieu)}
                                                 />
-                                                <Edit size={16} className="cursor-pointer text-blue-600" onClick={() => handleEdit(lieu)} />
+                                                <Edit
+                                                    size={16}
+                                                    className="cursor-pointer text-blue-600"
+                                                    onClick={() => handleEdit(lieu)}
+                                                />
                                                 <Trash
                                                     size={16}
                                                     className="cursor-pointer text-red-600"
                                                     onClick={() => handleOpenConfirmation(lieu)}
+                                                />
+                                                <List
+                                                    size={16}
+                                                    className="cursor-pointer text-purple-600"
+                                                    onClick={() => handleAddParcours(lieu)}
                                                 />
                                             </div>
                                         </td>
@@ -143,17 +157,13 @@ const LieuxList: React.FC = () => {
             </div>
 
             {/* Modal pour afficher les détails du lieu */}
-            <LieuModal 
-                isOpen={isModalOpen} 
-                lieu={selectedLieu} 
-                onClose={handleCloseModal} 
-            />
+            <LieuModal isOpen={isModalOpen} lieu={selectedLieu} onClose={handleCloseModal} />
 
             {/* Modal de confirmation de suppression */}
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
                 title="Confirmation de suppression"
-                lieuNom={lieuToDelete?.nom ?? 'Anonyme'}
+                lieuNom={lieuToDelete?.nom ?? "Anonyme"}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCloseConfirmation}
             />

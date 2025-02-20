@@ -1,13 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { TextField, Button, Box, Typography } from "@mui/material";
-import { MapPin, Save } from "lucide-react"; // Icônes
+import {
+    TextField,
+    Button,
+    Box,
+    Typography,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from "@mui/material";
+import { Save } from "lucide-react"; // Icônes
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import apiClient from "../../../apiClient";
 import Layout from "../../../components/Layout";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { Lieu } from "./LieuxList";
+
 
 // Validation du formulaire avec Yup
 const validationSchema = Yup.object({
@@ -28,6 +40,9 @@ const validationSchema = Yup.object({
 
 const CreateLieu: React.FC = () => {
     const { id } = useParams(); // Récupérer l'ID du lieu depuis l'URL
+    const navigate = useNavigate();
+    const [openModal, setOpenModal] = useState(false);
+    const [createdLieuId, setCreatedLieuId] = useState<string | null>(null); // Stocker l'ID du lieu créé
 
     // Gestion du formulaire avec Formik
     const formik = useFormik({
@@ -45,11 +60,12 @@ const CreateLieu: React.FC = () => {
                     await apiClient.put(`/admin/lieux/${id}`, values); // Mise à jour du lieu
                     toast.success("Lieu mis à jour !");
                 } else {
-                    await apiClient.post("/admin/lieux", values); // Création du lieu
+                    const response = await apiClient.post("/admin/lieux", values); // Création du lieu
                     toast.success("Lieu créé !");
+                    setCreatedLieuId(response.data?.lieu?.id_lieu ?? null); // Récupérer l'ID du lieu créé
+                    setOpenModal(true); // Ouvrir le modal après création
                 }
                 resetForm();
-                toast.success("Sauvegarde effectuée !");
             } catch (error) {
                 toast.error("Erreur lors de l'enregistrement du lieu");
             }
@@ -72,15 +88,26 @@ const CreateLieu: React.FC = () => {
         }
     }, [id, formik]);
 
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleAddParcours = () => {
+        setOpenModal(false);
+        if (createdLieuId) {
+            navigate(`/admin/lieux/${createdLieuId}/parcours/create`); // Rediriger vers la page de création de parcours avec l'ID
+        }
+    };
+
     return (
         <Layout title={`${id ? "Modifier le " : "Créer un "}lieu`}>
-            <Box 
-                sx={{ 
-                    maxWidth: 500, 
-                    margin: "auto", 
-                    padding: 3, 
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)", 
-                    borderRadius: "8px", 
+            <Box
+                sx={{
+                    maxWidth: 500,
+                    margin: "auto",
+                    padding: 3,
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                    borderRadius: "8px",
                     backgroundColor: "#fff",
                 }}
             >
@@ -176,6 +203,24 @@ const CreateLieu: React.FC = () => {
                         </Button>
                     </Box>
                 </form>
+
+                {/* Modal de confirmation */}
+                <Dialog open={openModal} onClose={handleCloseModal}>
+                    <DialogTitle>Lieu créé avec succès !</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Voulez-vous ajouter un parcours pour ce lieu ?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseModal} color="secondary">
+                            Plus tard
+                        </Button>
+                        <Button onClick={handleAddParcours} variant="contained" color="primary">
+                            Oui
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         </Layout>
     );

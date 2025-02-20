@@ -10,6 +10,8 @@ import UsersList from './pages/admin/users/UsersList';
 import CreateUser from './pages/admin/users/CreateUser';
 import LieuxList from './pages/admin/lieux/LieuxList';
 import CreateLieu from './pages/admin/lieux/CreateLieu';
+import AddParcours from './pages/admin/parcours/AddParcours';
+import ParcoursList from './pages/admin/parcours/ParcoursList';
 
 const AppRoutes = () => {
     return (
@@ -70,6 +72,24 @@ const AppRoutes = () => {
                             <PrivateRoute
                                 allowedRoles={['admin']}
                                 element={<CreateLieu />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/lieux/:id/parcours/create" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<AddParcours />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/admin/lieux/:id/parcours" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<ParcoursList />} 
                             />
                         }
                     />

@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
                                     <NavLink
                                         to="/login"
                                         className={({ isActive }) =>
-                                        `hover:text-white ${isActive ? 'text-white' : ''}`
+                                        `hover:text-white`
                                         }
                                     >
                                         Se connecter
@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
                                     <NavLink
                                         to="/register"
                                         className={({ isActive }) =>
-                                        `hover:text-white ${isActive ? 'text-white' : ''}`
+                                        `hover:text-white`
                                         }
                                     >
                                         S'inscrire
@@ -36,13 +36,13 @@ const Navbar: React.FC = () => {
                             </>
                         ) : (
                             <>
-                                <div className="hidden md:flex space-x-4">
+                                <div className="hidden md:flex space-x-4 items-center">
                                     {user.role === 'admin' && (
                                         <>
                                             <NavLink
                                                 to="/admin/dashboard"
                                                 className={({ isActive }) =>
-                                                    `hover:text-white ${isActive ? 'text-white' : ''}`
+                                                    `hover:text-white`
                                                 }
                                             >
                                                 Tableau de bord admin
@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
                                                 <NavLink
                                                     to="#"
                                                     className={({ isActive }) =>
-                                                        `hover:text-white ${isActive ? 'text-white' : ''}`
+                                                        `hover:text-white`
                                                     }
                                                 >
                                                     Utilisateurs
@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
                                                             <NavLink
                                                                 to="/admin/users/create"
                                                                 className={({ isActive }) =>
-                                                                    `block px-4 py-2 hover:bg-gray-700 ${isActive ? 'bg-gray-700' : ''}`
+                                                                    `block px-4 py-2 hover:bg-gray-700}`
                                                                 }
                                                             >
                                                                 Créer
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
                                                             <NavLink
                                                                 to="/admin/users"
                                                                 className={({ isActive }) =>
-                                                                    `block px-4 py-2 hover:bg-gray-700 ${isActive ? 'bg-gray-700' : ''}`
+                                                                    `block px-4 py-2 hover:bg-gray-700}`
                                                                 }
                                                             >
                                                                 Liste
@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
                                                 <NavLink
                                                     to="#"
                                                     className={({ isActive }) =>
-                                                        `hover:text-white ${isActive ? 'text-white' : ''}`
+                                                        `hover:text-white`
                                                     }
                                                 >
                                                     Lieux
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                                                             <NavLink
                                                                 to="/admin/lieux/create"
                                                                 className={({ isActive }) =>
-                                                                    `block px-4 py-2 hover:bg-gray-700 ${isActive ? 'bg-gray-700' : ''}`
+                                                                    `block px-4 py-2 hover:bg-gray-700}`
                                                                 }
                                                             >
                                                                 Créer
@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
                                                             <NavLink
                                                                 to="/admin/lieux"
                                                                 className={({ isActive }) =>
-                                                                    `block px-4 py-2 hover:bg-gray-700 ${isActive ? 'bg-gray-700' : ''}`
+                                                                    `block px-4 py-2 hover:bg-gray-700}`
                                                                 }
                                                             >
                                                                 Liste
@@ -123,14 +123,14 @@ const Navbar: React.FC = () => {
                                         <NavLink
                                             to="/user/dashboard"
                                             className={({ isActive }) =>
-                                                `hover:text-white ${isActive ? 'text-white' : ''}`
+                                                `hover:text-white`
                                             }
                                         >
                                             Tableau de bord utilisateur
                                         </NavLink>
                                     )}
                                     <button
-                                        className="hover:text-white"
+                                        className="hover:text-white bg-purple-500 text-white rounded-sm p-2 cursor-pointer"
                                         onClick={logout} 
                                     >
                                         Se déconnecter
