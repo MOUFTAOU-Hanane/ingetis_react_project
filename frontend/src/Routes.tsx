@@ -15,6 +15,7 @@ import ParcoursList from './pages/admin/parcours/ParcoursList';
 import EventsList from './pages/events/EventList';
 import CreateEvent from './pages/events/CreateEvent';
 import EventPrograms from './pages/events/programs/EventPrograms';
+import EventCatalogs from './pages/events/catalogs/EventCatalogs';
 
 const AppRoutes = () => {
     return (
@@ -129,6 +130,15 @@ const AppRoutes = () => {
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
                                 element={<EventPrograms />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events/:id/catalogs" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<EventCatalogs />} 
                             />
                         }
                     />

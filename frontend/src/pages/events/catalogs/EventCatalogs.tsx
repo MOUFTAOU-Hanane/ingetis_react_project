@@ -18,104 +18,101 @@ import {
 import { Plus, Edit, Trash2, Save, X, AlertTriangle, ExternalLink } from "lucide-react";
 import { toast } from "react-toastify";
 import { NavLink, useParams } from "react-router-dom";
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import * as Yup from "yup";
 import events from "../../../data/events.json";
 import Layout from "../../../components/Layout";
-import { Event } from "../../../interfaces";
-import { Program } from "../../../interfaces";
+import { Catalog, Event } from "../../../interfaces";
 
-const EventPrograms: React.FC = () => {
+const EventCatalogs: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [programs, setPrograms] = useState<Program[]>([]);
+    const [catalogs, setCatalogs] = useState<Catalog[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [eventSelected, setEventSelected] = useState<Event>();
-    const [currentProgram, setCurrentProgram] = useState<Program | null>(null); // State for the program to be edited
+    const [currentCatalog, setCurrentCatalog] = useState<Catalog | null>(null);
 
     useEffect(() => {
         const event = events.find((event) => event.id_event === parseInt(id || "0"));
-        setEventSelected(event);
+        setEventSelected(event ?? undefined);
         if (event) {
-            setPrograms(event.programs || []);
+            setCatalogs(event.catalogs || []);
         } else {
             toast.error("Événement non trouvé.");
         }
     }, [id]);
 
-    const handleOpenModal = async (programToEdit?: Program) => {
-        if (programToEdit) {
-            await setCurrentProgram(programToEdit); // Set current program to edit
+    const handleOpenModal = async (catalogToEdit?: Catalog) => {
+        if (catalogToEdit) {
+            await setCurrentCatalog(catalogToEdit);
         } else {
-            setCurrentProgram(null); // For adding new programs
+            setCurrentCatalog(null);
         }
         setModalOpen(true);
     };
 
-    
-
     const handleCloseModal = () => {
         setModalOpen(false);
-        setCurrentProgram(null); // Reset current program when modal closes
+        setCurrentCatalog(null);
     };
 
     const formik = useFormik({
         initialValues: {
-            programs: currentProgram ? [{ ...currentProgram }] : [{ titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }],
+            catalogs: currentCatalog ? [{ ...currentCatalog }] : [{ nom_catalogue: "", description: "" }],
         },
         validationSchema: Yup.object({
-            programs: Yup.array()
+            catalogs: Yup.array()
                 .of(
                     Yup.object({
-                        titre: Yup.string().required("Le titre est requis"),
+                        nom_catalogue: Yup.string().required("Le nom du catalogue est requis"),
                         description: Yup.string(),
-                        date_heure: Yup.string().required("La date et l'heure sont requis"),
                     })
                 )
-                .min(1, "Il doit y avoir au moins un programme"),
+                .min(1, "Il doit y avoir au moins un catalogue"),
         }),
         onSubmit: (values) => {
-            if (currentProgram) {
-                // Modify existing program
-                setPrograms(programs.map((program) =>
-                    program.id_program === currentProgram.id_program
-                        ? { ...program, ...values.programs[0] }
-                        : program
+            if (currentCatalog) {
+                // Mise à jour du catalogue existant avec l'id_event
+                setCatalogs(catalogs.map((catalog) =>
+                    catalog.id_catalog === currentCatalog.id_catalog
+                        ? { ...catalog, ...values.catalogs[0], id_event: eventSelected?.id_event ?? 0 }
+                        : catalog
                 ));
-                toast.success("Programme modifié avec succès !");
+                toast.success("Catalogue modifié avec succès !");
             } else {
-                // Add new programs
-                setPrograms([...programs, ...values.programs.map(p => ({ ...p, id_program: Date.now() + Math.random() }))]);
-                toast.success("Programmes ajoutés avec succès !");
+                // Ajout d'un nouveau catalogue avec l'id_event
+                setCatalogs([
+                    ...catalogs,
+                    ...values.catalogs.map(c => ({ ...c, id_catalog: Date.now() + Math.random(), id_event: eventSelected?.id_event ?? 0 }))
+                ]);
+                toast.success("Catalogue ajouté avec succès !");
             }
             handleCloseModal();
         },
     });
-
-    useEffect(() => {
-        if (currentProgram) {
-            // Lorsque currentProgram change, mettre à jour les valeurs de formik avec les données de currentProgram
-            formik.setValues({
-                programs: [{ ...currentProgram }],
-            });
-        } else {
-            // Si aucun programme n'est sélectionné (nouveau programme), initialiser les valeurs par défaut
-            formik.setValues({
-                programs: [{ titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }],
-            });
-        }
-    }, [currentProgram]);
     
 
-    const addNewProgramField = () => {
-        formik.setFieldValue("programs", [...formik.values.programs, { titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }]);
+    useEffect(() => {
+        if (currentCatalog) {
+            formik.setValues({
+                catalogs: [{ ...currentCatalog }],
+            });
+        } else {
+            formik.setValues({
+                catalogs: [{ nom_catalogue: "", description: "" }],
+            });
+        }
+    }, [currentCatalog]);
+
+    const addNewCatalogField = () => {
+        formik.setFieldValue("catalogs", [...formik.values.catalogs, { nom_catalogue: "", description: "" }]);
     };
 
-    const handleDeleteProgram = (programId: number) => {
-        setPrograms(programs.filter((program) => program.id_program !== programId));
+    const handleDeleteCatalog = (catalogId: number) => {
+        setCatalogs(catalogs.filter((catalog) => catalog.id_catalog !== catalogId));
     };
 
     return (
-        <Layout title="Programmes de l'évènement">
+        <Layout title="Catalogues de l'évènement">
             <div className="mb-4">
                 <div className="flex gap-2 mb-4">
                     <div>
@@ -149,9 +146,9 @@ const EventPrograms: React.FC = () => {
                         <Chip
                             label={
                                 <span className="flex gap-1 items-center">
-                                    {!eventSelected?.catalogs?.length && <AlertTriangle color="red" size={20} />} 
-                                    Catalogues 
-                                    <NavLink to={`/events/${id}/catalogs`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                    {!eventSelected?.programs?.length && <AlertTriangle color="red" size={20} />} 
+                                    Programmes 
+                                    <NavLink to={`/events/${id}/programs`} style={{ color: 'inherit', textDecoration: 'none' }}>
                                         <ExternalLink size={15} />
                                     </NavLink>
                                 </span>
@@ -181,46 +178,47 @@ const EventPrograms: React.FC = () => {
             </div>
 
             <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={() => handleOpenModal()}>
-                Ajouter des programmes
+                Ajouter des catalogues
             </Button>
             <Box sx={{ maxWidth: 600, margin: "auto", p: 3, backgroundColor: "white", borderRadius: "12px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
                 <List>
-                    {programs?.length > 0 ? 
-                        programs.map((program) => (
-                            <ListItem key={program.id_program} secondaryAction={
+                    {catalogs?.length > 0 ? 
+                        catalogs.map((catalog) => (
+                            <ListItem key={catalog.id_catalog} secondaryAction={
                                 <>
-                                    <IconButton edge="end" onClick={() => handleOpenModal(program)}>
+                                    <IconButton edge="end" onClick={() => handleOpenModal(catalog)}>
                                         <Edit size={20} color="blue" />
                                     </IconButton>
-                                    <IconButton edge="end" onClick={() => program.id_program && handleDeleteProgram(program.id_program)}>
+                                    <IconButton edge="end" onClick={() => handleDeleteCatalog(catalog.id_catalog)}>
                                         <Trash2 size={20} color="red" />
                                     </IconButton>
-
                                 </>
                             }>
-                                <ListItemText primary={program.titre} secondary={program.date_heure} />
+                                <ListItemText primary={catalog.nom_catalogue} secondary={catalog.description} />
                             </ListItem>
                         )) : 
                         <div className="flex gap-2 items-center justify-center">
                             <AlertTriangle color="red" size={20}/>
-                            <span className="text-red-500">Veuillez ajouter les programmes afin de valider votre évènement</span>
+                            <span className="text-red-500">Veuillez ajouter des catalogues pour valider votre évènement</span>
                         </div>
                     }
                 </List>
-                
+
                 {/* Modal */}
                 <Dialog open={modalOpen} onClose={handleCloseModal} sx={{ backdropFilter: "blur(5px)" }}>
-                    <DialogTitle>{currentProgram ? "Modifier le programme" : "Ajouter des programmes"}</DialogTitle>
+                    <DialogTitle>{currentCatalog ? "Modifier le catalogue" : "Ajouter des catalogues"}</DialogTitle>
                     <DialogContent>
-                        {formik.values.programs.map((program, index) => (
+                        {formik.values.catalogs.map((catalog, index) => (
                             <Box key={index} sx={{ mb: 2 }}>
                                 <TextField
                                     fullWidth
-                                    label="Titre"
-                                    value={program.titre}
-                                    onChange={(e) => formik.setFieldValue(`programs[${index}].titre`, e.target.value)}
-                                    error={formik.touched.programs && formik.touched.programs[index]?.titre && Boolean(formik.errors.programs?.[index]?.titre)}
-                                    helperText={formik.touched.programs && formik.touched.programs[index]?.titre && formik.errors.programs?.[index]?.titre}
+                                    label="Nom du catalogue"
+                                    value={catalog.nom_catalogue}
+                                    onChange={(e) => formik.setFieldValue(`catalogs[${index}].nom_catalogue`, e.target.value)}
+                                    error={formik.touched.catalogs?.[index]?.nom_catalogue && Boolean(formik.errors.catalogs?.[index]?.nom_catalogue)}
+                                    helperText={
+                                        formik.touched.catalogs?.[index]?.nom_catalogue && formik.errors.catalogs?.[index]?.nom_catalogue
+                                    }
                                     sx={{ mb: 1 }}
                                 />
                                 <TextField
@@ -228,28 +226,40 @@ const EventPrograms: React.FC = () => {
                                     label="Description"
                                     multiline
                                     rows={3}
-                                    value={program.description}
-                                    onChange={(e) => formik.setFieldValue(`programs[${index}].description`, e.target.value)}
+                                    value={catalog.description}
+                                    onChange={(e) => formik.setFieldValue(`catalogs[${index}].description`, e.target.value)}
                                     sx={{ mb: 1 }}
                                 />
-                                <TextField
-                                    fullWidth
-                                    type="datetime-local"
-                                    label="Date et heure"
-                                    value={program.date_heure}
-                                    onChange={(e) => formik.setFieldValue(`programs[${index}].date_heure`, e.target.value)}
-                                    error={formik.touched.programs && formik.touched.programs[index]?.date_heure && Boolean(formik.errors.programs?.[index]?.date_heure)}
-                                    helperText={formik.touched.programs && formik.touched.programs[index]?.date_heure && formik.errors.programs?.[index]?.date_heure}
-                                    sx={{ mb: 1 }}
-                                />
-                                {index < formik.values.programs.length - 1 && <Divider sx={{ my: 2 }} />}
+                                {index < formik.values.catalogs.length - 1 && <Divider sx={{ my: 2 }} />}
+
+                                {/* Bouton de suppression du catalogue */}
+                                <Button
+                                    color="error"
+                                    onClick={() => {
+                                        const updatedCatalogs = formik.values.catalogs.filter((_, i) => i !== index);
+                                        formik.setFieldValue("catalogs", updatedCatalogs);
+                                    }}
+                                    sx={{ mt: 1 }}
+                                >
+                                    Supprimer ce catalogue
+                                </Button>
                             </Box>
                         ))}
-                        {!currentProgram && <Button variant="outlined" onClick={addNewProgramField} startIcon={<Plus />}>Ajouter un autre programme</Button>}
+                        {!currentCatalog && <Button variant="outlined" onClick={addNewCatalogField} startIcon={<Plus />}>Ajouter un autre catalogue</Button>}
                     </DialogContent>
+
                     <DialogActions>
                         <Button onClick={handleCloseModal} startIcon={<X />}>Annuler</Button>
-                        <Button onClick={formik.handleSubmit} variant="contained" startIcon={<Save />}>Sauvegarder</Button>
+                        <Button
+                            onClick={(e) => {
+                                e.preventDefault(); 
+                                formik.handleSubmit();
+                            }}
+                            variant="contained"
+                            startIcon={<Save />}
+                            >
+                            Sauvegarder
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </Box>
@@ -257,4 +267,4 @@ const EventPrograms: React.FC = () => {
     );
 };
 
-export default EventPrograms;
+export default EventCatalogs;
