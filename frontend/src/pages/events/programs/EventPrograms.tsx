@@ -30,6 +30,7 @@ const EventPrograms: React.FC = () => {
     const [programs, setPrograms] = useState<Program[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [eventSelected, setEventSelected] = useState<Event>();
+    const [currentProgram, setCurrentProgram] = useState<Program | null>(null); // State for the program to be edited
 
     useEffect(() => {
         const event = events.find((event) => event.id_event === parseInt(id || "0"));
@@ -41,17 +42,25 @@ const EventPrograms: React.FC = () => {
         }
     }, [id]);
 
-    const handleOpenModal = () => {
+    const handleOpenModal = async (programToEdit?: Program) => {
+        if (programToEdit) {
+            await setCurrentProgram(programToEdit); // Set current program to edit
+        } else {
+            setCurrentProgram(null); // For adding new programs
+        }
         setModalOpen(true);
     };
 
+    
+
     const handleCloseModal = () => {
         setModalOpen(false);
+        setCurrentProgram(null); // Reset current program when modal closes
     };
 
     const formik = useFormik({
         initialValues: {
-            programs: [{ titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }],
+            programs: currentProgram ? [{ ...currentProgram }] : [{ titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }],
         },
         validationSchema: Yup.object({
             programs: Yup.array()
@@ -65,19 +74,44 @@ const EventPrograms: React.FC = () => {
                 .min(1, "Il doit y avoir au moins un programme"),
         }),
         onSubmit: (values) => {
-            setPrograms([...programs, ...values.programs.map(p => ({ ...p, id_program: Date.now() + Math.random() }))]);
+            if (currentProgram) {
+                // Modify existing program
+                setPrograms(programs.map((program) =>
+                    program.id_program === currentProgram.id_program
+                        ? { ...program, ...values.programs[0] }
+                        : program
+                ));
+                toast.success("Programme modifié avec succès !");
+            } else {
+                // Add new programs
+                setPrograms([...programs, ...values.programs.map(p => ({ ...p, id_program: Date.now() + Math.random() }))]);
+                toast.success("Programmes ajoutés avec succès !");
+            }
             handleCloseModal();
-            toast.success("Programmes enregistrés avec succès !");
         },
     });
+
+    useEffect(() => {
+        if (currentProgram) {
+            // Lorsque currentProgram change, mettre à jour les valeurs de formik avec les données de currentProgram
+            formik.setValues({
+                programs: [{ ...currentProgram }],
+            });
+        } else {
+            // Si aucun programme n'est sélectionné (nouveau programme), initialiser les valeurs par défaut
+            formik.setValues({
+                programs: [{ titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }],
+            });
+        }
+    }, [currentProgram]);
+    
 
     const addNewProgramField = () => {
         formik.setFieldValue("programs", [...formik.values.programs, { titre: "", description: "", date_heure: new Date().toISOString().slice(0, 16) }]);
     };
 
-    const handleDeleteProgram = (index: number) => {
-        const updatedPrograms = formik.values.programs.filter((_, i) => i !== index);
-        formik.setFieldValue("programs", updatedPrograms);
+    const handleDeleteProgram = (programId: number) => {
+        setPrograms(programs.filter((program) => program.id_program !== programId));
     };
 
     return (
@@ -140,7 +174,7 @@ const EventPrograms: React.FC = () => {
                 </div>
             </div>
 
-            <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={handleOpenModal}>
+            <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={() => handleOpenModal()}>
                 Ajouter des programmes
             </Button>
             <Box sx={{ maxWidth: 600, margin: "auto", p: 3, backgroundColor: "white", borderRadius: "12px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
@@ -148,9 +182,15 @@ const EventPrograms: React.FC = () => {
                     {programs?.length > 0 ? 
                         programs.map((program) => (
                             <ListItem key={program.id_program} secondaryAction={
-                                <IconButton edge="end" onClick={() => setPrograms(programs.filter((p) => p.id_program !== program.id_program))}>
-                                    <Trash2 size={20} color="red" />
-                                </IconButton>
+                                <>
+                                    <IconButton edge="end" onClick={() => handleOpenModal(program)}>
+                                        <Edit size={20} color="blue" />
+                                    </IconButton>
+                                    <IconButton edge="end" onClick={() => program.id_program && handleDeleteProgram(program.id_program)}>
+                                        <Trash2 size={20} color="red" />
+                                    </IconButton>
+
+                                </>
                             }>
                                 <ListItemText primary={program.titre} secondary={program.date_heure} />
                             </ListItem>
@@ -164,10 +204,10 @@ const EventPrograms: React.FC = () => {
                 
                 {/* Modal */}
                 <Dialog open={modalOpen} onClose={handleCloseModal} sx={{ backdropFilter: "blur(5px)" }}>
-                    <DialogTitle>Ajouter des programmes</DialogTitle>
+                    <DialogTitle>{currentProgram ? "Modifier le programme" : "Ajouter des programmes"}</DialogTitle>
                     <DialogContent>
                         {formik.values.programs.map((program, index) => (
-                            <Box key={index} sx={{ mb: 2, position: 'relative' }}>
+                            <Box key={index} sx={{ mb: 2 }}>
                                 <TextField
                                     fullWidth
                                     label="Titre"
@@ -196,14 +236,10 @@ const EventPrograms: React.FC = () => {
                                     helperText={formik.touched.programs && formik.touched.programs[index]?.date_heure && formik.errors.programs?.[index]?.date_heure}
                                     sx={{ mb: 1 }}
                                 />
-                                <IconButton onClick={() => handleDeleteProgram(index)} sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                    <Trash2 size={20} color="red" />
-                                </IconButton>
-
                                 {index < formik.values.programs.length - 1 && <Divider sx={{ my: 2 }} />}
                             </Box>
                         ))}
-                        <Button variant="outlined" onClick={addNewProgramField} startIcon={<Plus />}>Ajouter un autre programme</Button>
+                        {!currentProgram && <Button variant="outlined" onClick={addNewProgramField} startIcon={<Plus />}>Ajouter un autre programme</Button>}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseModal} startIcon={<X />}>Annuler</Button>
