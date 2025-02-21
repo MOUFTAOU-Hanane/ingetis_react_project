@@ -16,6 +16,7 @@ import EventsList from './pages/events/EventList';
 import CreateEvent from './pages/events/CreateEvent';
 import EventPrograms from './pages/events/programs/EventPrograms';
 import EventCatalogs from './pages/events/catalogs/EventCatalogs';
+import EventMedias from './pages/events/medias/EventMedias';
 
 const AppRoutes = () => {
     return (
@@ -139,6 +140,15 @@ const AppRoutes = () => {
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
                                 element={<EventCatalogs />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events/:id/medias" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<EventMedias />} 
                             />
                         }
                     />

@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Edit, Trash, Eye, Plus, List } from "lucide-react";
+import { Edit, Trash, Eye, Plus, List, AlertTriangle } from "lucide-react"; // Ajoutez AlertTriangle
 import apiClient from "../../apiClient";
 import Layout from "../../components/Layout";
-import EventModal from "./EventModal"; // Import du modal pour afficher les détails
-import ConfirmationModal from "./ConfirmationModal"; // Import du modal de confirmation pour la suppression
+import EventModal from "./EventModal"; 
+import ConfirmationModal from "./ConfirmationModal"; 
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
@@ -11,106 +11,35 @@ import { Event } from "../../interfaces";
 
 // Données fictives pour les tests
 const sampleEvents: Event[] = [
+    // Événements fictifs
     {
         id_event: 1,
         titre: "Conférence React",
         description: "Découvrez les nouveautés de React.",
         date_debut: "2025-02-22",
         date_fin: "2025-02-22",
-        lieu: { id_lieu: 11, nom: "Palais des Congrès", adresse: "123 Avenue des Technologies" }
+        lieu: { id_lieu: 11, nom: "Palais des Congrès", adresse: "123 Avenue des Technologies" },
+        programs: [],
+        catalogs: [],
+        medias: [] // Si ces tableaux sont vides, l'icône s'affichera
     },
-    {
-        id_event: 2,
-        titre: "Atelier TypeScript",
-        description: "Un atelier pratique pour apprendre TypeScript.",
-        date_debut: "2025-02-25",
-        date_fin: "2025-02-25",
-        lieu: { id_lieu: 18, nom: "Campus Tech", adresse: "456 Rue du Code" }
-    },
-    {
-        id_event: 3,
-        titre: "Hackathon",
-        description: "Un marathon de programmation.",
-        date_debut: "2025-03-01",
-        date_fin: "2025-03-02",
-        lieu: { id_lieu: 17, nom: "Espace Innovation", adresse: "789 Boulevard des Startups" }
-    },
-    {
-        id_event: 4,
-        titre: "Séminaire DevOps",
-        description: "Explorez les pratiques DevOps.",
-        date_debut: "2025-03-05",
-        date_fin: "2025-03-06",
-        lieu: { id_lieu: 104, nom: "Tech Hub", adresse: "1010 Route du Cloud" }
-    },
-    {
-        id_event: 5,
-        titre: "Formation Docker",
-        description: "Apprenez les bases de Docker.",
-        date_debut: "2025-01-05",
-        date_fin: "2025-01-05",
-        lieu: { id_lieu: 105, nom: "Centre DevOps", adresse: "111 Rue des Conteneurs" }
-    },
-    {
-        id_event: 6,
-        titre: "Conférence IA",
-        description: "L'intelligence artificielle expliquée.",
-        date_debut: "2025-03-15",
-        date_fin: "2025-03-15",
-        lieu: { id_lieu: 106, nom: "Institut AI", adresse: "222 Chemin des Algorithmes" }
-    },
-    {
-        id_event: 7,
-        titre: "Meetup Cloud Computing",
-        description: "Rencontrez les experts du cloud.",
-        date_debut: "2025-03-20",
-        date_fin: "2025-03-20",
-        lieu: { id_lieu: 107, nom: "Cloud Center", adresse: "333 Avenue des Données" }
-    },
-    {
-        id_event: 8,
-        titre: "Conférence Sécurité",
-        description: "Les enjeux de la cybersécurité.",
-        date_debut: "2025-03-25",
-        date_fin: "2025-03-25",
-        lieu: { id_lieu: 108, nom: "Cyber Arena", adresse: "444 Rue du Firewall" }
-    },
-    {
-        id_event: 9,
-        titre: "Formation Laravel",
-        description: "Maîtrisez le framework Laravel.",
-        date_debut: "2025-03-30",
-        date_fin: "2025-03-30",
-        lieu: { id_lieu: 109, nom: "Académie Web", adresse: "555 Boulevard du Framework" }
-    },
-    {
-        id_event: 10,
-        titre: "Webinar GraphQL",
-        description: "Introduction à GraphQL.",
-        date_debut: "2025-04-05",
-        date_fin: "2025-04-05",
-        lieu: { id_lieu: 110, nom: "Online Event", adresse: "Lien en ligne" }
-    }
+    // Autres événements ici...
 ];
-
 
 const EventsList: React.FC = () => {
     const navigate = useNavigate();
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // Pour stocker l'événement sélectionné
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Pour contrôler l'ouverture du modal
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false); // Modal de confirmation
-    const [eventToDelete, setEventToDelete] = useState<Event | null>(null); // Pour stocker l'événement à supprimer
-    const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true); // Pour filtrer les événements à venir
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); 
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); 
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false); 
+    const [eventToDelete, setEventToDelete] = useState<Event | null>(null); 
+    const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true); 
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                // Commenter l'appel à l'API pour tester les données fictives
-                // const response = await apiClient.get("/admin/events");
-                // setEvents(response.data);
-                setEvents(sampleEvents); // Utilisation des données fictives
+                setEvents(sampleEvents); // A modifier en API
             } catch (error) {
                 console.error("Failed to fetch events:", error);
             } finally {
@@ -131,7 +60,7 @@ const EventsList: React.FC = () => {
     };
 
     const handleAddEvent = () => {
-        navigate("/events/create"); // Naviguer vers la page de création d'un nouvel événement
+        navigate("/events/create"); 
     };
 
     const handleCloseModal = () => {
@@ -153,7 +82,6 @@ const EventsList: React.FC = () => {
         if (!eventToDelete) return;
 
         try {
-            // Suppression fictive
             setEvents(events.filter((event) => event.id_event !== eventToDelete.id_event));
             toast.success("Événement supprimé avec succès !");
             handleCloseConfirmation();
@@ -183,7 +111,6 @@ const EventsList: React.FC = () => {
     return (
         <Layout title="Liste des événements">
             <div className="p-6">
-                {/* Bouton pour ajouter un nouvel événement */}
                 <button
                     onClick={handleAddEvent}
                     className="mb-4 px-4 py-2 bg-amber-500 text-white rounded-lg flex items-center gap-2 cursor-pointer"
@@ -191,7 +118,6 @@ const EventsList: React.FC = () => {
                     <Plus size={16} /> Ajouter un nouvel événement
                 </button>
 
-                {/* Filtrage des événements */}
                 <div className="flex justify-end mb-4">
                     <button
                         className={`px-4 py-2 rounded-lg ${filterUpcoming ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-600"}`}
@@ -223,7 +149,12 @@ const EventsList: React.FC = () => {
                             <tbody>
                                 {filteredEvents.map((event) => (
                                     <tr key={event.id_event} className="border-b hover:bg-gray-100 hover:text-gray-800">
-                                        <td className="px-6 py-4">{event.titre}</td>
+                                        <td className="px-6 py-4 flex items-center gap-2">
+                                            {(event.programs.length === 0 || event.medias.length === 0) && (
+                                                <AlertTriangle size={16} className="text-red-500" />
+                                            )}
+                                            {event.titre}
+                                        </td>
                                         <td className="px-6 py-4">{event.description}</td>
                                         <td className="px-6 py-4">{dayjs(event.date_debut).format('DD/MM/YYYY')}</td>
                                         <td className="px-6 py-4">{dayjs(event.date_fin).format('DD/MM/YYYY')}</td>
@@ -245,11 +176,6 @@ const EventsList: React.FC = () => {
                                                     className="cursor-pointer text-red-600"
                                                     onClick={() => handleOpenConfirmation(event)}
                                                 />
-                                                <List
-                                                    size={16}
-                                                    className="cursor-pointer text-purple-400"
-                                                    onClick={() => {}}
-                                                />
                                             </div>
                                         </td>
                                     </tr>
@@ -264,10 +190,7 @@ const EventsList: React.FC = () => {
                 )}
             </div>
 
-            {/* Modal pour afficher les détails de l'événement */}
             <EventModal isOpen={isModalOpen} event={selectedEvent} onClose={handleCloseModal} />
-
-            {/* Modal de confirmation de suppression */}
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
                 title="Confirmation de suppression"
