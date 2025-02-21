@@ -21,7 +21,7 @@ const Navbar = () => {
                             to="/admin/events"
                             className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
                         >
-                            Events
+                            Evenements
                         </NavLink>
                         <NavLink
                             to="/admin/lieux"
@@ -33,13 +33,13 @@ const Navbar = () => {
                             to="/admin/users"
                             className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
                         >
-                            Users
+                            Utilisateurs
                         </NavLink>
                         <NavLink
                             to="/admin/dashboard"
                             className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
                         >
-                            Dashboard
+                            Tableau de bord
                         </NavLink>
                     </div>
                 </div>

@@ -28,7 +28,7 @@ const EventMasterLogo = () => {
           fontWeight="bold"
           fill="white"
         >
-          Master
+          Culture
         </text>
       </svg>
     );

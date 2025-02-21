@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const AdminDashboard = () => {
     return (
-        <Layout title="Dashboard">
+        <Layout title="Tableau de bord">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Card 1: Overview */}
                 <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-xl transform transition-transform duration-300 hover:scale-105">
