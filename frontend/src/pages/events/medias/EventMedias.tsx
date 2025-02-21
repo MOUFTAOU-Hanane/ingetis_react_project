@@ -125,7 +125,7 @@ const EventMedias: React.FC = () => {
     };
 
     return (
-        <Layout title="Médias de l'évènement">
+        <Layout title={`Médias de l'évènement : ${eventSelected?.titre ?? ""}`}>
             <div className="mb-4">
                 <div className="flex gap-2 mb-4">
                     <div>

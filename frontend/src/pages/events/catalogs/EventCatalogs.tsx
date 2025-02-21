@@ -112,7 +112,7 @@ const EventCatalogs: React.FC = () => {
     };
 
     return (
-        <Layout title="Catalogues de l'évènement">
+        <Layout title={`Catalogues de l'évènement : ${eventSelected?.titre ?? ""}`}>
             <div className="mb-4">
                 <div className="flex gap-2 mb-4">
                     <div>

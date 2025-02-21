@@ -115,7 +115,7 @@ const EventPrograms: React.FC = () => {
     };
 
     return (
-        <Layout title="Programmes de l'évènement">
+        <Layout title={`Programmes de l'évènement : ${eventSelected?.titre ?? ""}`}>
             <div className="mb-4">
                 <div className="flex gap-2 mb-4">
                     <div>
