@@ -18,7 +18,7 @@ const Navbar = () => {
                 <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem]">
                     <div className="hidden md:flex items-center space-x-8">
                         <NavLink
-                            to="/admin/events"
+                            to="/events"
                             className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
                         >
                             Evenements

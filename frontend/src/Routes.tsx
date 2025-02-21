@@ -13,6 +13,8 @@ import CreateLieu from './pages/admin/lieux/CreateLieu';
 import AddParcours from './pages/admin/parcours/AddParcours';
 import ParcoursList from './pages/admin/parcours/ParcoursList';
 import EventsList from './pages/events/EventList';
+import CreateEvent from './pages/events/CreateEvent';
+import EventPrograms from './pages/events/programs/EventPrograms';
 
 const AppRoutes = () => {
     return (
@@ -95,20 +97,38 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/admin/events/create" 
+                        path="/events/create" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
-                                element={<ParcoursList />} 
+                                element={<CreateEvent />} 
                             />
                         }
                     />
                     <Route
-                        path="/admin/events" 
+                        path="/events/update/:id" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<CreateEvent />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
                                 element={<EventsList />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events/:id/programs" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<EventPrograms />} 
                             />
                         }
                     />
