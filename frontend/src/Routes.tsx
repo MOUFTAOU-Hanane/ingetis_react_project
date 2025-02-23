@@ -17,6 +17,8 @@ import CreateEvent from './pages/events/CreateEvent';
 import EventPrograms from './pages/events/programs/EventPrograms';
 import EventCatalogs from './pages/events/catalogs/EventCatalogs';
 import EventMedias from './pages/events/medias/EventMedias';
+import OeuvresList from './pages/oeuvres/OeuvresList';
+import CreateOeuvre from './pages/oeuvres/CreateOeuvre';
 
 const AppRoutes = () => {
     return (
@@ -120,7 +122,7 @@ const AppRoutes = () => {
                         path="/events" 
                         element={
                             <PrivateRoute
-                                allowedRoles={['admin', 'user']}
+                                allowedRoles={['admin']}
                                 element={<EventsList />} 
                             />
                         }
@@ -129,7 +131,7 @@ const AppRoutes = () => {
                         path="/events/:id/programs" 
                         element={
                             <PrivateRoute
-                                allowedRoles={['admin', 'user']}
+                                allowedRoles={['admin']}
                                 element={<EventPrograms />} 
                             />
                         }
@@ -138,7 +140,7 @@ const AppRoutes = () => {
                         path="/events/:id/catalogs" 
                         element={
                             <PrivateRoute
-                                allowedRoles={['admin', 'user']}
+                                allowedRoles={['admin']}
                                 element={<EventCatalogs />} 
                             />
                         }
@@ -147,8 +149,35 @@ const AppRoutes = () => {
                         path="/events/:id/medias" 
                         element={
                             <PrivateRoute
-                                allowedRoles={['admin', 'user']}
+                                allowedRoles={['admin']}
                                 element={<EventMedias />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/oeuvres" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<OeuvresList />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/oeuvres/create" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<CreateOeuvre />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/oeuvres/update/:id" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<CreateOeuvre />} 
                             />
                         }
                     />

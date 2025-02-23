@@ -5,15 +5,7 @@ import Layout from "../../../components/Layout";
 import ConfirmationDeleteParcours from "./ConfirmationDeleteParcours"; // Modal de confirmation pour la suppression
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-
-export interface Parcours {
-    id_parcours: number;
-    nom: string;
-    description: string;
-    lieu: string;
-    date_debut: string;
-    date_fin: string;
-}
+import { Parcours } from "../../../interfaces";
 
 const ParcoursList: React.FC = () => {
     const { id } = useParams();
@@ -122,7 +114,7 @@ const ParcoursList: React.FC = () => {
                                 {parcours.map((parcours) => (
                                     <tr key={parcours.id_parcours} className="border-b hover:bg-gray-100">
                                         <td className="px-6 py-4">{parcours.nom}</td>
-                                        <td className="px-6 py-4">{parcours.lieu}</td>
+                                        <td className="px-6 py-4">{parcours.lieu.nom}</td>
                                         <td className="px-6 py-4">{parcours.date_debut}</td>
                                         <td className="px-6 py-4">{parcours.date_fin}</td>
                                         <td className="px-6 py-4">{parcours.description}</td>

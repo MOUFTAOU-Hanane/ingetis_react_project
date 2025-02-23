@@ -64,3 +64,12 @@ export interface Comment {
     commentaire: string;
     date_commentaire: string;
 }
+
+export interface Parcours {
+    id_parcours: number;
+    nom: string;
+    description: string;
+    lieu: Lieu;
+    date_debut: string;
+    date_fin: string;
+}

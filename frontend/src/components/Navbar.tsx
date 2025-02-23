@@ -15,34 +15,43 @@ const Navbar = () => {
                 </div>
 
                 {/* Main Navigation */}
-                <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem]">
-                    <div className="hidden md:flex items-center space-x-8">
-                        <NavLink
-                            to="/events"
-                            className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                        >
-                            Evenements
-                        </NavLink>
-                        <NavLink
-                            to="/admin/lieux"
-                            className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                        >
-                            Lieux
-                        </NavLink>
-                        <NavLink
-                            to="/admin/users"
-                            className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                        >
-                            Utilisateurs
-                        </NavLink>
-                        <NavLink
-                            to="/admin/dashboard"
-                            className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                        >
-                            Tableau de bord
-                        </NavLink>
+                {user &&
+                    <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem]">
+                        <div className="hidden md:flex items-center space-x-8">
+                            <NavLink
+                                to="/admin/dashboard"
+                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                            >
+                                Tableau de bord
+                            </NavLink>
+                            <NavLink
+                                to="/events"
+                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                            >
+                                Evenements
+                            </NavLink>
+                            <NavLink
+                                to="/admin/lieux"
+                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                            >
+                                Lieux
+                            </NavLink>
+                            <NavLink
+                                to="/oeuvres"
+                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                            >
+                                Oeuvres
+                            </NavLink>
+                            <NavLink
+                                to="/admin/users"
+                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                            >
+                                Utilisateurs
+                            </NavLink>
+                            
+                        </div>
                     </div>
-                </div>
+                }
 
 
                 {/* Auth Buttons */}
