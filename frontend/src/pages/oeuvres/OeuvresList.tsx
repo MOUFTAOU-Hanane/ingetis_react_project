@@ -2,20 +2,12 @@ import React, { useState } from "react";
 import { Eye, Edit, Trash, Plus } from "lucide-react";
 import Layout from "../../components/Layout";
 import OeuvreModal from "./OeuvreModal";
-import ConfirmationModal from "./ConfirmationModal";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { Oeuvre } from "../../interfaces";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
-interface Oeuvre {
-    id_oeuvre: number;
-    id_user: number;
-    titre: string;
-    type: "image" | "peinture" | "sculpture" | "vidéo" | string;
-    description: string;
-    prix: number;
-    image: string;
-}
 
 // Mock data for testing
 const mockOeuvres: Oeuvre[] = [
@@ -28,42 +20,7 @@ const mockOeuvres: Oeuvre[] = [
         prix: 1500,
         image: "/api/placeholder/400/400"
     },
-    {
-        id_oeuvre: 2,
-        id_user: 102,
-        titre: "Harmonie",
-        type: "sculpture",
-        description: "Sculpture contemporaine en bronze représentant l'harmonie des formes",
-        prix: 2800,
-        image: "/api/placeholder/400/400"
-    },
-    {
-        id_oeuvre: 3,
-        id_user: 103,
-        titre: "Perspective Urbaine",
-        type: "image",
-        description: "Photographie urbaine en noir et blanc capturant l'essence de la ville",
-        prix: 800,
-        image: "/api/placeholder/400/400"
-    },
-    {
-        id_oeuvre: 4,
-        id_user: 104,
-        titre: "Mouvement Perpétuel",
-        type: "vidéo",
-        description: "Installation vidéo explorant le concept du mouvement continu",
-        prix: 1200,
-        image: "/api/placeholder/400/400"
-    },
-    {
-        id_oeuvre: 5,
-        id_user: 105,
-        titre: "Abstraction #3",
-        type: "peinture",
-        description: "Composition abstraite utilisant des couleurs vives et des formes géométriques",
-        prix: 950,
-        image: "/api/placeholder/400/400"
-    }
+    // ... autres œuvres
 ];
 
 const OeuvresList: React.FC = () => {
@@ -179,9 +136,15 @@ const OeuvresList: React.FC = () => {
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
                 title="Confirmation de suppression"
-                itemNom={oeuvreToDelete?.titre ?? "Anonyme"}
+                type="œuvre"
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCloseConfirmation}
+                setIsConfirmationOpen={setIsConfirmationOpen}
+                setObjectToDelete={setOeuvreToDelete}
+                objectToDelete={oeuvreToDelete ? { id: oeuvreToDelete.id_oeuvre } : null}
+                setObject={setOeuvres}
+                objects={oeuvres}
+                idKey="id_oeuvre"
             />
         </Layout>
     );

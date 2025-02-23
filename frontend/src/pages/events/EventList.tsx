@@ -1,45 +1,30 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Edit, Trash, Eye, Plus, List, AlertTriangle } from "lucide-react"; // Ajoutez AlertTriangle
-import apiClient from "../../apiClient";
-import Layout from "../../components/Layout";
-import EventModal from "./EventModal"; 
-import ConfirmationModal from "./ConfirmationModal"; 
+import { Edit, Trash, Eye, Plus, AlertTriangle } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
+import apiClient from "../../apiClient";
+import Layout from "../../components/Layout";
+import EventModal from "./EventModal";
 import { Event } from "../../interfaces";
-
-// Données fictives pour les tests
-const sampleEvents: Event[] = [
-    // Événements fictifs
-    {
-        id_event: 1,
-        titre: "Conférence React",
-        description: "Découvrez les nouveautés de React.",
-        date_debut: "2025-02-22",
-        date_fin: "2025-02-22",
-        lieu: { id_lieu: 11, nom: "Palais des Congrès", adresse: "123 Avenue des Technologies" },
-        programs: [],
-        catalogs: [],
-        medias: [] // Si ces tableaux sont vides, l'icône s'affichera
-    },
-    // Autres événements ici...
-];
+import dataEvents from "../../data/events.json";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import DataTable from "../../components/DataTable"; // Assurez-vous que DataTable est correctement importé
 
 const EventsList: React.FC = () => {
     const navigate = useNavigate();
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<Event[]>(dataEvents);
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); 
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); 
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false); 
-    const [eventToDelete, setEventToDelete] = useState<Event | null>(null); 
-    const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true); 
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
+    const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
+    const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                setEvents(sampleEvents); // A modifier en API
+                setEvents(dataEvents); // À remplacer par une requête API
             } catch (error) {
                 console.error("Failed to fetch events:", error);
             } finally {
@@ -60,7 +45,7 @@ const EventsList: React.FC = () => {
     };
 
     const handleAddEvent = () => {
-        navigate("/events/create"); 
+        navigate("/events/create");
     };
 
     const handleCloseModal = () => {
@@ -73,21 +58,18 @@ const EventsList: React.FC = () => {
         setIsConfirmationOpen(true);
     };
 
-    const handleCloseConfirmation = () => {
-        setIsConfirmationOpen(false);
-        setEventToDelete(null);
-    };
-
-    const handleConfirmDelete = async () => {
+    const handleDeleteEvent = () => {
         if (!eventToDelete) return;
 
         try {
-            setEvents(events.filter((event) => event.id_event !== eventToDelete.id_event));
+            setEvents((prevEvents) => prevEvents.filter((e) => e.id_event !== eventToDelete.id_event));
             toast.success("Événement supprimé avec succès !");
-            handleCloseConfirmation();
         } catch (error) {
-            console.error("Failed to delete event:", error);
-            toast.error("Erreur lors de la suppression de l'événement !");
+            console.error("Erreur de suppression:", error);
+            toast.error("Échec de la suppression de l'événement.");
+        } finally {
+            setIsConfirmationOpen(false);
+            setEventToDelete(null);
         }
     };
 
@@ -95,7 +77,6 @@ const EventsList: React.FC = () => {
         return events.filter((event) => {
             const currentDate = new Date();
             const eventDate = new Date(event.date_debut);
-            
             return filterUpcoming ? eventDate >= currentDate : eventDate < currentDate;
         });
     }, [events, filterUpcoming]);
@@ -107,6 +88,53 @@ const EventsList: React.FC = () => {
             </div>
         );
     }
+
+    // Définition des colonnes du DataTable
+    const columns = [
+        {
+            label: "Titre",
+            key: "titre" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => (
+                <div className="flex items-center gap-2">
+                    {(event.programs.length === 0 || event.medias.length === 0) && (
+                        <AlertTriangle size={16} className="text-red-500" />
+                    )}
+                    {event.titre}
+                </div>
+            ),
+        },
+        {
+            label: "Description",
+            key: "description" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => event.description,
+        },
+        {
+            label: "Date début",
+            key: "date_debut" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => dayjs(event.date_debut).format("DD/MM/YYYY"),
+        },
+        {
+            label: "Date fin",
+            key: "date_fin" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => dayjs(event.date_fin).format("DD/MM/YYYY"),
+        },
+        {
+            label: "Lieu",
+            key: "lieu" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => event.lieu.adresse,
+        },
+        {
+            label: "Actions",
+            key: "actions" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => (
+                <div className="flex items-center gap-3">
+                    <Eye size={16} className="cursor-pointer text-green-600" onClick={() => handleOpenModal(event)} />
+                    <Edit size={16} className="cursor-pointer text-amber-500" onClick={() => handleEdit(event)} />
+                    <Trash size={16} className="cursor-pointer text-red-600" onClick={() => handleOpenConfirmation(event)} />
+                </div>
+            ),
+        },
+    ];
 
     return (
         <Layout title="Liste des événements">
@@ -134,55 +162,10 @@ const EventsList: React.FC = () => {
                 </div>
 
                 {filteredEvents.length > 0 ? (
-                    <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
-                        <table className="min-w-full text-sm text-white">
-                            <thead className="text-purple-500 bg-white">
-                                <tr>
-                                    <th className="px-6 py-3 text-left">Titre</th>
-                                    <th className="px-6 py-3 text-left">Description</th>
-                                    <th className="px-6 py-3 text-left">Date début</th>
-                                    <th className="px-6 py-3 text-left">Date fin</th>
-                                    <th className="px-6 py-3 text-left">Lieu</th>
-                                    <th className="px-6 py-3 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredEvents.map((event) => (
-                                    <tr key={event.id_event} className="border-b hover:bg-gray-100 hover:text-gray-800">
-                                        <td className="px-6 py-4 flex items-center gap-2">
-                                            {(event.programs.length === 0 || event.medias.length === 0) && (
-                                                <AlertTriangle size={16} className="text-red-500" />
-                                            )}
-                                            {event.titre}
-                                        </td>
-                                        <td className="px-6 py-4">{event.description}</td>
-                                        <td className="px-6 py-4">{dayjs(event.date_debut).format('DD/MM/YYYY')}</td>
-                                        <td className="px-6 py-4">{dayjs(event.date_fin).format('DD/MM/YYYY')}</td>
-                                        <td className="px-6 py-4">{event.lieu.adresse}</td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <Eye
-                                                    size={16}
-                                                    className="cursor-pointer text-green-600"
-                                                    onClick={() => handleOpenModal(event)}
-                                                />
-                                                <Edit
-                                                    size={16}
-                                                    className="cursor-pointer text-amber-500"
-                                                    onClick={() => handleEdit(event)}
-                                                />
-                                                <Trash
-                                                    size={16}
-                                                    className="cursor-pointer text-red-600"
-                                                    onClick={() => handleOpenConfirmation(event)}
-                                                />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <DataTable
+                        data={filteredEvents}
+                        columns={columns}  // Utilisation directe de columns
+                    />
                 ) : (
                     <div className="flex justify-center items-center p-8">
                         <h3 className="text-lg text-gray-600">Aucun événement à afficher.</h3>
@@ -191,12 +174,19 @@ const EventsList: React.FC = () => {
             </div>
 
             <EventModal isOpen={isModalOpen} event={selectedEvent} onClose={handleCloseModal} />
+
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
-                title="Confirmation de suppression"
-                eventTitre={eventToDelete?.titre ?? "Anonyme"}
-                onConfirm={handleConfirmDelete}
-                onCancel={handleCloseConfirmation}
+                title={eventToDelete?.titre ?? "Cet événement"}
+                type="événement"
+                onConfirm={handleDeleteEvent}
+                onCancel={() => setIsConfirmationOpen(false)}
+                setObjectToDelete={setEventToDelete}
+                setIsConfirmationOpen={setIsConfirmationOpen}
+                objectToDelete={eventToDelete ? { id: eventToDelete.id_event } : null} 
+                setObject={setEvents}
+                objects={events}
+                idKey='id_event'
             />
         </Layout>
     );

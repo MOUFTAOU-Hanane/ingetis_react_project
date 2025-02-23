@@ -2,6 +2,9 @@ export interface Lieu {
     id_lieu: number;
     nom: string;
     adresse: string;
+    latitude: number;
+    longitude: number;
+    description: string;
 }
 
 export interface Program {

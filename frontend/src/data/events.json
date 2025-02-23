@@ -5,7 +5,14 @@
         "description": "Découvrez les nouveautés de React.",
         "date_debut": "2025-02-22",
         "date_fin": "2025-02-22",
-        "lieu": { "id_lieu": 11, "nom": "Palais des Congrès", "adresse": "123 Avenue des Technologies" },
+        "lieu": {
+            "id_lieu": 11,
+            "nom": "Palais des Congrès",
+            "adresse": "123 Avenue des Technologies",
+            "latitude": 48.8566,
+            "longitude": 2.3522,
+            "description": "Centre de conférences moderne, équipé pour des événements tech."
+        },
         "programs": [
             {
                 "id_program": 1,
@@ -51,7 +58,14 @@
         "description": "Un atelier pratique pour apprendre TypeScript.",
         "date_debut": "2025-02-25",
         "date_fin": "2025-02-25",
-        "lieu": { "id_lieu": 18, "nom": "Campus Tech", "adresse": "456 Rue du Code" },
+        "lieu": {
+            "id_lieu": 18,
+            "nom": "Campus Tech",
+            "adresse": "456 Rue du Code",
+            "latitude": 48.8582,
+            "longitude": 2.2945,
+            "description": "Un campus moderne dédié à l'innovation et à la technologie."
+        },
         "programs": [
             {
                 "id_program": 3,
@@ -77,7 +91,14 @@
         "description": "Un marathon de programmation.",
         "date_debut": "2025-03-01",
         "date_fin": "2025-03-02",
-        "lieu": { "id_lieu": 17, "nom": "Espace Innovation", "adresse": "789 Boulevard des Startups" },
+        "lieu": {
+            "id_lieu": 17,
+            "nom": "Espace Innovation",
+            "adresse": "789 Boulevard des Startups",
+            "latitude": 48.8738,
+            "longitude": 2.2950,
+            "description": "Un espace dédié à l'innovation et à l'entrepreneuriat."
+        },
         "programs": [
             {
                 "id_program": 4,
@@ -116,7 +137,14 @@
         "description": "Explorez les pratiques DevOps.",
         "date_debut": "2025-03-05",
         "date_fin": "2025-03-06",
-        "lieu": { "id_lieu": 104, "nom": "Tech Hub", "adresse": "1010 Route du Cloud" },
+        "lieu": {
+            "id_lieu": 104,
+            "nom": "Tech Hub",
+            "adresse": "1010 Route du Cloud",
+            "latitude": 48.8580,
+            "longitude": 2.2944,
+            "description": "Un espace collaboratif pour les professionnels du secteur IT."
+        },
         "programs": [
             {
                 "id_program": 6,
@@ -134,7 +162,14 @@
         "description": "Apprenez les bases de Docker.",
         "date_debut": "2025-01-05",
         "date_fin": "2025-01-05",
-        "lieu": { "id_lieu": 105, "nom": "Centre DevOps", "adresse": "111 Rue des Conteneurs" },
+        "lieu": {
+            "id_lieu": 105,
+            "nom": "Centre DevOps",
+            "adresse": "111 Rue des Conteneurs",
+            "latitude": 48.8647,
+            "longitude": 2.2874,
+            "description": "Un centre spécialisé dans les formations DevOps et Docker."
+        },
         "programs": [],
         "medias": [],
         "catalogs": []
@@ -145,7 +180,14 @@
         "description": "L'intelligence artificielle expliquée.",
         "date_debut": "2025-03-15",
         "date_fin": "2025-03-15",
-        "lieu": { "id_lieu": 106, "nom": "Institut AI", "adresse": "222 Chemin des Algorithmes" },
+        "lieu": {
+            "id_lieu": 106,
+            "nom": "Institut AI",
+            "adresse": "222 Chemin des Algorithmes",
+            "latitude": 48.8590,
+            "longitude": 2.3456,
+            "description": "Institut de recherche et formation en intelligence artificielle."
+        },
         "programs": [
             {
                 "id_program": 7,
