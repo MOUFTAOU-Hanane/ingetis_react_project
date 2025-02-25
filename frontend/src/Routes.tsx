@@ -19,6 +19,7 @@ import EventCatalogs from './pages/events/catalogs/EventCatalogs';
 import EventMedias from './pages/events/medias/EventMedias';
 import OeuvresList from './pages/oeuvres/OeuvresList';
 import CreateOeuvre from './pages/oeuvres/CreateOeuvre';
+import EventsPage from './pages/client/events/EventsPage';
 
 const AppRoutes = () => {
     return (
@@ -178,6 +179,15 @@ const AppRoutes = () => {
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
                                 element={<CreateOeuvre />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/client/events" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['user']}
+                                element={<EventsPage />} 
                             />
                         }
                     />

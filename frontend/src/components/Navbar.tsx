@@ -6,6 +6,7 @@ import EventMasterLogo from './EventMasterLogo';
 const Navbar = () => {
     const { user, logout } = useAuth();
 
+    console.log({user})
     return (
         <nav className="backdrop-blur-sm">
             <div className="container mx-auto flex items-center justify-between px-6 py-2">
@@ -15,43 +16,68 @@ const Navbar = () => {
                 </div>
 
                 {/* Main Navigation */}
-                {user &&
-                    <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem]">
-                        <div className="hidden md:flex items-center space-x-8">
-                            <NavLink
-                                to="/admin/dashboard"
-                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                            >
-                                Tableau de bord
-                            </NavLink>
-                            <NavLink
-                                to="/events"
-                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                            >
-                                Evenements
-                            </NavLink>
-                            <NavLink
-                                to="/admin/lieux"
-                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                            >
-                                Lieux
-                            </NavLink>
-                            <NavLink
-                                to="/oeuvres"
-                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                            >
-                                Oeuvres
-                            </NavLink>
-                            <NavLink
-                                to="/admin/users"
-                                className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
-                            >
-                                Utilisateurs
-                            </NavLink>
-                            
+                {user && (
+                    user.role === 'admin' ? (
+                        <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem]">
+                            <div className="hidden md:flex items-center space-x-8">
+                                <NavLink
+                                    to="/admin/dashboard"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Tableau de bord
+                                </NavLink>
+                                <NavLink
+                                    to="/events"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Evenements
+                                </NavLink>
+                                <NavLink
+                                    to="/admin/lieux"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Lieux
+                                </NavLink>
+                                <NavLink
+                                    to="/oeuvres"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Oeuvres
+                                </NavLink>
+                                <NavLink
+                                    to="/admin/users"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Utilisateurs
+                                </NavLink>
+                            </div>
                         </div>
-                    </div>
-                }
+                    ) : user.role === 'user' ? (
+                        <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem]">
+                            <div className="hidden md:flex items-center space-x-8">
+                                <NavLink
+                                    to="/client/dashboard"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Tableau de bord
+                                </NavLink>
+                                <NavLink
+                                    to="client/events"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Evenements
+                                </NavLink>
+                                <NavLink
+                                    to="/admin/lieux"
+                                    className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
+                                >
+                                    Oeuvres
+                                </NavLink>
+                            </div>
+                        </div>
+                    ) : null
+                )}
+
 
 
                 {/* Auth Buttons */}
