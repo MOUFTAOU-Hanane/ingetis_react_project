@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Event } from '../../../interfaces';
 import Layout from '../../../components/Layout';
-import SearchBar from './SearchBar';
+import SearchBar from '../../../components/SearchBar';
 import {EventCard} from './EventCard';
 import EventDetails from './EventDetails';
 import eventsData from '../../../data/events.json';
@@ -48,7 +48,7 @@ const EventsPage: React.FC = () => {
     return (
         <Layout title="Découvrez Nos Événements">
             <div className="space-y-8">
-                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} type="evenement"/>
 
                 {loading ? (
                     <div className="flex justify-center py-12">

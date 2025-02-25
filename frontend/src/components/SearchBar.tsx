@@ -4,16 +4,17 @@ import { Search, Filter } from 'lucide-react';
 interface SearchBarProps {
     searchTerm: string;
     setSearchTerm: (value: string) => void;
+    type: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm, type }) => {
     return (
         <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
                     <input
                         type="text"
-                        placeholder="Rechercher un événement..."
+                        placeholder={`Rechercher un ${type}...`}
                         className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-300"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}

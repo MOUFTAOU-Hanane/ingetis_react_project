@@ -62,13 +62,13 @@ const Navbar = () => {
                                     Tableau de bord
                                 </NavLink>
                                 <NavLink
-                                    to="client/events"
+                                    to="/client/events"
                                     className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
                                 >
                                     Evenements
                                 </NavLink>
                                 <NavLink
-                                    to="/admin/lieux"
+                                    to="/client/oeuvres"
                                     className="text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem]"
                                 >
                                     Oeuvres
