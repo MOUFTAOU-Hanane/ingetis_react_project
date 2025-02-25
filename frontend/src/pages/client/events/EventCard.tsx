@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Event } from '../../../interfaces';
 import { Calendar, MapPin, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { toast } from 'react-toastify'; // Assure-toi d'avoir installé react-toastify
+import ConfirmationModal from './ConfirmationModal'; // Assure-toi de bien importer le modal
 
 interface EventCardProps {
-event: Event;
-toggleEventExpansion: (id: number) => void;
-expandedEvents: Set<number>;
+    event: Event;
+    toggleEventExpansion: (id: number) => void;
+    expandedEvents: Set<number>;
 }
 
 const formatDate = (dateString: string) => {
@@ -15,6 +17,37 @@ const formatDate = (dateString: string) => {
 };
 
 const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expandedEvents }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+
+    const handleOpenModal = (eventId: number) => {
+        setSelectedEventId(eventId);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedEventId(null);
+    };
+
+    const handleRegister = async (eventId: number) => {
+        try {
+            // Logique pour l'inscription (ici c'est simulé par un timeout)
+            const response = await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // On simule une inscription réussie ou échouée
+                    const success = Math.random() > 0.5; // Simule aléatoirement une réussite ou échec
+                    success ? resolve('Inscription réussie !') : reject('Erreur lors de l\'inscription');
+                }, 1000);
+            });
+
+            // Si l'inscription est réussie
+            toast.success(response as string);
+        } catch (error) {
+            // Si une erreur survient
+            toast.error(error as string);
+        }
+    };
 
     return (
         <div key={event.id_event} className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-white/15">
@@ -57,12 +90,27 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
                             className="text-purple-300 hover:text-purple-100 transition-colors flex items-center gap-1"
                             onClick={() => toggleEventExpansion(event.id_event)}
                         >
-                        <span>Détails</span>
+                            <span>Détails</span>
                             {expandedEvents.has(event.id_event) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        </button>
+                        
+                        <button
+                            className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-6 py-2 transition-colors font-medium"
+                            onClick={() => handleOpenModal(event.id_event)}
+                        >
+                            S'inscrire
                         </button>
                     </div>
                 </div>
             </div>
+
+            {/* Modal */}
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                eventId={selectedEventId}
+                onClose={handleCloseModal}
+                onConfirm={handleRegister}
+            />
         </div>
     );
 };

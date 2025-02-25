@@ -12,6 +12,7 @@ const EventsPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [expandedEvents, setExpandedEvents] = useState<Set<number>>(new Set());
 
+    /** A GERER => EVENT DEJA INSCRIT CHANGEMENT DU BOUTON */
     useEffect(() => {
         const getEvents = async () => {
             try {
