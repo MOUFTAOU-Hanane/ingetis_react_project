@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Event } from '../../../interfaces';
 import Layout from '../../../components/Layout';
 import SearchBar from '../../../components/SearchBar';
-import {EventCard} from './EventCard';
+import { EventCard } from './EventCard';
 import EventDetails from './EventDetails';
+import EventComment from './EventComment';
 import eventsData from '../../../data/events.json';
 
 const EventsPage: React.FC = () => {
@@ -12,19 +13,9 @@ const EventsPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [expandedEvents, setExpandedEvents] = useState<Set<number>>(new Set());
 
-    /** A GERER => EVENT DEJA INSCRIT CHANGEMENT DU BOUTON */
     useEffect(() => {
-        const getEvents = async () => {
-            try {
-                setEvents(eventsData);
-            } catch (error) {
-                console.error("Erreur lors du chargement des événements:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getEvents();
+        setEvents(eventsData);
+        setLoading(false);
     }, []);
 
     const toggleEventExpansion = (id: number) => {
@@ -48,8 +39,7 @@ const EventsPage: React.FC = () => {
     return (
         <Layout title="Découvrez Nos Événements">
             <div className="space-y-8">
-                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} type="evenement"/>
-
+                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} type="evenements" />
                 {loading ? (
                     <div className="flex justify-center py-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
@@ -63,7 +53,11 @@ const EventsPage: React.FC = () => {
                         {filteredEvents.map((event) => (
                             <div key={event.id_event}>
                                 <EventCard event={event} toggleEventExpansion={toggleEventExpansion} expandedEvents={expandedEvents} />
-                                {expandedEvents.has(event.id_event) && <EventDetails event={event} />}
+                                {expandedEvents.has(event.id_event) && (
+                                    <>
+                                        <EventComment eventId={event.id_event} />
+                                    </>
+                                )}
                             </div>
                         ))}
                     </div>
