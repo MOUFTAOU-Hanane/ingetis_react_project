@@ -76,3 +76,20 @@ export interface Parcours {
     date_debut: string;
     date_fin: string;
 }
+export interface Reservation {
+    id_reservation: number;
+    id_event: number;
+    event?: Event;
+    date: string;
+    nb_tickets: number;
+    status: 'confirmée' | 'en_attente';
+}
+  
+export interface Favorite {
+    id_favorite: number;
+    id_oeuvre: number;
+    titre: string;
+    artiste: string;
+    type: string;
+    image_url?: string;
+}
