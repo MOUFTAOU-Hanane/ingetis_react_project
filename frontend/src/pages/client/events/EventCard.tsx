@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { toast } from 'react-toastify'; // Assure-toi d'avoir installé react-toastify
 import ConfirmationModal from './ConfirmationModal'; // Assure-toi de bien importer le modal
+import { useNavigate } from 'react-router-dom';
 
 interface EventCardProps {
     event: Event;
@@ -17,6 +18,7 @@ const formatDate = (dateString: string) => {
 };
 
 const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expandedEvents }) => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
@@ -88,10 +90,16 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
                     <div className="pt-2 flex justify-between items-center">
                         <button 
                             className="text-purple-300 hover:text-purple-100 transition-colors flex items-center gap-1"
-                            onClick={() => toggleEventExpansion(event.id_event)}
+                            onClick={() => navigate(`/client/events/${event.id_event}`)}
                         >
                             <span>Détails</span>
-                            {expandedEvents.has(event.id_event) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        </button>
+                        <button 
+                            className="text-yellow-300 hover:text-purple-100 transition-colors flex items-center gap-1"
+                            
+                            onClick={() => toggleEventExpansion(event.id_event)}
+                        >
+                            <span>Commenter</span>
                         </button>
                         
                         <button
