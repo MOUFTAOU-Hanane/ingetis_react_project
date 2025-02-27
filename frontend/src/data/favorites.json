@@ -1,0 +1,18 @@
+[
+    { 
+        "id_favorite": 201, 
+        "id_oeuvre": 301, 
+        "titre": "Abstraction en Rouge", 
+        "artiste": "Jean Dumont", 
+        "type": "Peinture",
+        "image_url": "/images/abstraction-rouge.jpg"
+    },
+    { 
+        "id_favorite": 202, 
+        "id_oeuvre": 302, 
+        "titre": "Harmonie", 
+        "artiste": "Marie Lefèvre", 
+        "type": "Sculpture",
+        "image_url": "/images/harmonie-sculpture.jpg"
+    }
+]

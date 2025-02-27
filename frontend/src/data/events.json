@@ -1,0 +1,210 @@
+[
+    {
+        "id_event": 1,
+        "titre": "Conférence React",
+        "description": "Découvrez les nouveautés de React.",
+        "date_debut": "2025-02-22",
+        "date_fin": "2025-02-22",
+        "lieu": {
+            "id_lieu": 11,
+            "nom": "Palais des Congrès",
+            "adresse": "123 Avenue des Technologies",
+            "latitude": 48.8566,
+            "longitude": 2.3522,
+            "description": "Centre de conférences moderne, équipé pour des événements tech."
+        },
+        "programs": [
+            {
+                "id_program": 1,
+                "titre": "Introduction à React 19",
+                "description": "Présentation des nouvelles fonctionnalités",
+                "date_heure": "2025-02-22T09:00:00"
+            },
+            {
+                "id_program": 2,
+                "titre": "Atelier Hooks Avancés",
+                "description": "Pratique des hooks personnalisés",
+                "date_heure": "2025-02-22T14:00:00"
+            }
+        ],
+        "medias": [
+            {
+                "id_media": 1,
+                "id_event": 1,
+                "id_program": 1,
+                "type_media": "image",
+                "url_media": "/images/react-conf.jpg"
+            },
+            {
+                "id_media": 2,
+                "id_event": 1,
+                "id_program": 2,
+                "type_media": "vidéo",
+                "url_media": "/videos/hooks-workshop.mp4"
+            }
+        ],
+        "catalogs": [
+            {
+                "id_catalog": 1,
+                "id_event": 1,
+                "nom_catalogue": "Programme détaillé",
+                "description": "Tous les détails de la conférence"
+            }
+        ]
+    },
+    {
+        "id_event": 2,
+        "titre": "Atelier TypeScript",
+        "description": "Un atelier pratique pour apprendre TypeScript.",
+        "date_debut": "2025-02-25",
+        "date_fin": "2025-02-25",
+        "lieu": {
+            "id_lieu": 18,
+            "nom": "Campus Tech",
+            "adresse": "456 Rue du Code",
+            "latitude": 48.8582,
+            "longitude": 2.2945,
+            "description": "Un campus moderne dédié à l'innovation et à la technologie."
+        },
+        "programs": [
+            {
+                "id_program": 3,
+                "titre": "Les bases de TypeScript",
+                "description": "Fondamentaux et types basiques",
+                "date_heure": "2025-02-25T10:00:00"
+            }
+        ],
+        "medias": [
+            {
+                "id_media": 3,
+                "id_event": 2,
+                "id_program": 3,
+                "type_media": "image",
+                "url_media": "/images/typescript.jpg"
+            }
+        ],
+        "catalogs": []
+    },
+    {
+        "id_event": 3,
+        "titre": "Hackathon",
+        "description": "Un marathon de programmation.",
+        "date_debut": "2025-03-01",
+        "date_fin": "2025-03-02",
+        "lieu": {
+            "id_lieu": 17,
+            "nom": "Espace Innovation",
+            "adresse": "789 Boulevard des Startups",
+            "latitude": 48.8738,
+            "longitude": 2.2950,
+            "description": "Un espace dédié à l'innovation et à l'entrepreneuriat."
+        },
+        "programs": [
+            {
+                "id_program": 4,
+                "titre": "Cérémonie d'ouverture",
+                "description": "Présentation des challenges",
+                "date_heure": "2025-03-01T08:00:00"
+            },
+            {
+                "id_program": 5,
+                "titre": "Présentations finales",
+                "description": "Démonstration des projets",
+                "date_heure": "2025-03-02T16:00:00"
+            }
+        ],
+        "medias": [
+            {
+                "id_media": 4,
+                "id_event": 3,
+                "id_program": 4,
+                "type_media": "image",
+                "url_media": "/images/hackathon.jpg"
+            }
+        ],
+        "catalogs": [
+            {
+                "id_catalog": 2,
+                "id_event": 3,
+                "nom_catalogue": "Guide des participants",
+                "description": "Règles et informations pratiques"
+            }
+        ]
+    },
+    {
+        "id_event": 4,
+        "titre": "Séminaire DevOps",
+        "description": "Explorez les pratiques DevOps.",
+        "date_debut": "2025-03-05",
+        "date_fin": "2025-03-06",
+        "lieu": {
+            "id_lieu": 104,
+            "nom": "Tech Hub",
+            "adresse": "1010 Route du Cloud",
+            "latitude": 48.8580,
+            "longitude": 2.2944,
+            "description": "Un espace collaboratif pour les professionnels du secteur IT."
+        },
+        "programs": [
+            {
+                "id_program": 6,
+                "titre": "CI/CD Pipeline",
+                "description": "Mise en place d'un pipeline",
+                "date_heure": "2025-03-05T09:00:00"
+            }
+        ],
+        "medias": [],
+        "catalogs": []
+    },
+    {
+        "id_event": 5,
+        "titre": "Formation Docker",
+        "description": "Apprenez les bases de Docker.",
+        "date_debut": "2025-01-05",
+        "date_fin": "2025-01-05",
+        "lieu": {
+            "id_lieu": 105,
+            "nom": "Centre DevOps",
+            "adresse": "111 Rue des Conteneurs",
+            "latitude": 48.8647,
+            "longitude": 2.2874,
+            "description": "Un centre spécialisé dans les formations DevOps et Docker."
+        },
+        "programs": [],
+        "medias": [],
+        "catalogs": []
+    },
+    {
+        "id_event": 6,
+        "titre": "Conférence IA",
+        "description": "L'intelligence artificielle expliquée.",
+        "date_debut": "2025-03-15",
+        "date_fin": "2025-03-15",
+        "lieu": {
+            "id_lieu": 106,
+            "nom": "Institut AI",
+            "adresse": "222 Chemin des Algorithmes",
+            "latitude": 48.8590,
+            "longitude": 2.3456,
+            "description": "Institut de recherche et formation en intelligence artificielle."
+        },
+        "programs": [
+            {
+                "id_program": 7,
+                "titre": "Introduction au Machine Learning",
+                "description": "Concepts fondamentaux",
+                "date_heure": "2025-03-15T10:00:00"
+            }
+        ],
+        "medias": [
+            {
+                "id_media": 5,
+                "id_event": 6,
+                "id_program": 7,
+                "type_media": "vidéo",
+                "url_media": "/videos/ai-intro.mp4"
+            }
+        ],
+        "catalogs": []
+    }
+]

@@ -44,7 +44,7 @@ const Program = ProgramModel(sequelize, DataTypes)
       });
   };
   
-  module.exports = { initDb,User };
+  module.exports = { initDb,User ,Lieu};
 
   
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { FiMail, FiPhone, FiUser } from "react-icons/fi";
+import { Mail, Phone, User } from "lucide-react"; // icônes de lucide-react
 import apiClient from "../../../apiClient";
 import Layout from "../../../components/Layout";
 
 interface User {
     id: number;
-    name: string;
+    nom: string;
     email: string;
     photo: string;
-    phone: string;
-    bio: string;
+    telephone: string;
+    bibliographie: string;
 }
 
 const UsersList: React.FC = () => {
@@ -31,10 +31,6 @@ const UsersList: React.FC = () => {
         fetchUsers();
     }, []);
 
-    useEffect(() => {
-        console.log({users})
-    }, [users]);
-    
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -44,49 +40,52 @@ const UsersList: React.FC = () => {
     }
 
     return (
-        <Layout title='Liste des utilisateurs'>
+        <Layout title="Liste des utilisateurs">
             <div className="p-6">
-                {users && users?.length ? 
-                    <div className="overflow-x-auto">
-                        <table className="w-full border-collapse border border-gray-300">
-                            <thead className="bg-gray-200">
+                {users && users?.length ? (
+                    <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
+                        <table className="min-w-full text-sm text-gray-500">
+                            <thead className="text-purple-500 bg-white">
                                 <tr>
-                                    <th className="p-2 text-left">Photo</th>
-                                    <th className="p-2 text-left">Name</th>
-                                    <th className="p-2 text-left">Email</th>
-                                    <th className="p-2 text-left">Phone</th>
-                                    <th className="p-2 text-left">Bibliography</th>
+                                    <th className="px-6 py-3 text-left">Photo</th>
+                                    <th className="px-6 py-3 text-left">Nom</th>
+                                    <th className="px-6 py-3 text-left">Email</th>
+                                    <th className="px-6 py-3 text-left">Téléphone</th>
+                                    <th className="px-6 py-3 text-left">Bibliographie</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {users && users?.length && users?.map((user) => (
-                                    <tr key={user.id} className="border-b">
-                                        <td className="p-2">
+                                {users.map((user) => (
+                                    <tr key={user.id} className="border-b hover:bg-gray-100 hover:text-gray-800 text-white">
+                                        <td className="px-6 py-4">
                                             <img
-                                                src={user.photo}
-                                                alt={user.name}
-                                                className="w-10 h-10 rounded-full object-cover"
+                                                src={`http://localhost:3000${user.photo}`}
+                                                alt={user.nom}
+                                                className="w-12 h-12 rounded-full object-cover"
                                             />
                                         </td>
-                                        <td className="p-2 flex items-center gap-2">
-                                            <FiUser /> {user.name}
+                                        <td className="px-6 py-4">{user.nom}</td>
+                                        <td className="px-6 py-4">
+                                            <div className=" flex items-center gap-2">
+                                                <Mail size={16} /> {user.email}
+                                            </div>
                                         </td>
-                                        <td className="p-2 flex items-center gap-2">
-                                            <FiMail /> {user.email}
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2">
+                                                <Phone size={16} /> {user.telephone}
+                                            </div>
                                         </td>
-                                        <td className="p-2 flex items-center gap-2">
-                                            <FiPhone /> {user.phone}
-                                        </td>
-                                        <td className="p-2">{user.bio}</td>
+                                        <td className="px-6 py-4">{user.bibliographie}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                    </div> :
-                    <div>
-                        <h3>Pas encore d'utilisateurs à afficher.</h3>
                     </div>
-                }
+                ) : (
+                    <div className="flex justify-center items-center p-8">
+                        <h3 className="text-lg text-gray-600">Pas encore d'utilisateurs à afficher.</h3>
+                    </div>
+                )}
             </div>
         </Layout>
     );
