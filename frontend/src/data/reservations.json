@@ -1,0 +1,93 @@
+[
+    { 
+        "id_reservation": 101, 
+        "date": "2025-03-15", 
+        "nb_tickets": 2, 
+        "status": "confirmée",
+        "event": {
+            "id_event": 2,
+            "titre": "Atelier TypeScript",
+            "description": "Un atelier pratique pour apprendre TypeScript.",
+            "date_debut": "2025-02-25",
+            "date_fin": "2025-02-25",
+            "lieu": {
+                "id_lieu": 18,
+                "nom": "Campus Tech",
+                "adresse": "456 Rue du Code",
+                "latitude": 48.8582,
+                "longitude": 2.2945,
+                "description": "Un campus moderne dédié à l'innovation et à la technologie."
+            },
+            "programs": [
+                {
+                    "id_program": 3,
+                    "titre": "Les bases de TypeScript",
+                    "description": "Fondamentaux et types basiques",
+                    "date_heure": "2025-02-25T10:00:00"
+                }
+            ],
+            "medias": [
+                {
+                    "id_media": 3,
+                    "id_event": 2,
+                    "id_program": 3,
+                    "type_media": "image",
+                    "url_media": "/images/typescript.jpg"
+                }
+            ],
+            "catalogs": []
+        }
+    },
+    { 
+        "id_reservation": 102, 
+        "date": "2025-04-22", 
+        "nb_tickets": 1, 
+        "status": "en_attente",
+        "event": {
+            "id_event": 3,
+            "titre": "Hackathon",
+            "description": "Un marathon de programmation.",
+            "date_debut": "2025-03-01",
+            "date_fin": "2025-03-02",
+            "lieu": {
+                "id_lieu": 17,
+                "nom": "Espace Innovation",
+                "adresse": "789 Boulevard des Startups",
+                "latitude": 48.8738,
+                "longitude": 2.2950,
+                "description": "Un espace dédié à l'innovation et à l'entrepreneuriat."
+            },
+            "programs": [
+                {
+                    "id_program": 4,
+                    "titre": "Cérémonie d'ouverture",
+                    "description": "Présentation des challenges",
+                    "date_heure": "2025-03-01T08:00:00"
+                },
+                {
+                    "id_program": 5,
+                    "titre": "Présentations finales",
+                    "description": "Démonstration des projets",
+                    "date_heure": "2025-03-02T16:00:00"
+                }
+            ],
+            "medias": [
+                {
+                    "id_media": 4,
+                    "id_event": 3,
+                    "id_program": 4,
+                    "type_media": "image",
+                    "url_media": "/images/hackathon.jpg"
+                }
+            ],
+            "catalogs": [
+                {
+                    "id_catalog": 2,
+                    "id_event": 3,
+                    "nom_catalogue": "Guide des participants",
+                    "description": "Règles et informations pratiques"
+                }
+            ]
+        }
+    }
+]

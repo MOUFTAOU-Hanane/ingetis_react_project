@@ -22,7 +22,7 @@ import CreateOeuvre from './pages/oeuvres/CreateOeuvre';
 import EventsPage from './pages/client/events/EventsPage';
 import OeuvresPage from './pages/client/oeuvres/OeuvresPage';
 import EventDetails from './pages/client/events/EventDetails';
-import ClientDashboard from './pages/client/ClientDashboard';
+import ClientDashboard from './pages/client/dashboard/ClientDashboard';
 
 const AppRoutes = () => {
     return (
