@@ -201,7 +201,8 @@ const SignupForm: React.FC = () => {
                                 style={{ color: 'white' }}
                             >
                                 <MenuItem value="admin">Admin</MenuItem>
-                                <MenuItem value="user">Utilisateur</MenuItem>
+                                <MenuItem value="user">Participant</MenuItem>
+                                <MenuItem value="org">Organisateur</MenuItem>
                             </Select>
                             {formik.touched.role && formik.errors.role && (
                                 <FormHelperText error>{formik.errors.role}</FormHelperText>
