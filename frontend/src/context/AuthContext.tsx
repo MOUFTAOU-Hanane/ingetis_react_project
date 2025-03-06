@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
-    role: 'admin' | 'user';
+    role: 'admin' | 'user' | 'org';
 // Vous pouvez ajouter d'autres propriétés ici selon vos besoins
 }
 

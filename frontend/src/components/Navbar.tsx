@@ -86,22 +86,13 @@ const Navbar = () => {
                         </>
                     ) : (
                         <div className="flex items-center space-x-6">
-                            {user.role === 'user' && (
-                                <NavLink
-                                    to="/client/dashboard"
-                                    className="text-white/90 hover:text-white"
-                                >
-                                    Tableau de Bord
-                                </NavLink>
-                            )}
-                            {user.role === 'admin' && (
-                                <NavLink
-                                    to="/admin/dashboard"
-                                    className="text-white/90 hover:text-white"
-                                >
-                                    Tableau de Bord
-                                </NavLink>
-                            )}
+                            <NavLink
+                                to={`/${user.role}/dashboard`}
+                                className="text-white/90 hover:text-white"
+                            >
+                                Tableau de Bord
+                            </NavLink>
+
                             <button
                                 onClick={logout}
                                 className="px-4 py-2 bg-white text-purple-500 rounded-full hover:bg-white/90 transition-colors"

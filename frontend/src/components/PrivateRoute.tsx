@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface PrivateRouteProps {
-    allowedRoles: ('admin' | 'user')[];
+    allowedRoles: ('admin' | 'user' | 'org')[];
     element: React.ReactNode;
 }
 
