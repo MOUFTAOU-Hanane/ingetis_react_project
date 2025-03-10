@@ -59,7 +59,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/lieu', lieuRoutes);
 app.use('/api/events', eventRoutes);
-app.use('/api/program', programRoutes);
+app.use('/api/programs', programRoutes);
 app.use('/api/media', mediaRoutes);
 
 app.use('/api/catalogs', catalogueRoutes);

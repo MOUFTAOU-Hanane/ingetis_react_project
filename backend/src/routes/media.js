@@ -15,7 +15,7 @@ const fs = require('fs');
  * @swagger
  * /api/media:
  *   post:
- *     summary: Créer un média (upload de fichier)
+ *     summary: Créer plusieurs médias (upload de fichiers)
  *     tags: [Médias]
  *     requestBody:
  *       required: true
@@ -25,8 +25,10 @@ const fs = require('fs');
  *             type: object
  *             properties:
  *               media:
- *                 type: string
- *                 format: binary
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *               type_media:
  *                 type: string
  *                 example: "image"
@@ -44,34 +46,50 @@ const fs = require('fs');
  *                 example: 1
  *     responses:
  *       201:
- *         description: Média créé avec succès
+ *         description: Médias créés avec succès
  *       400:
- *         description: Aucune image téléchargée
+ *         description: Aucun fichier téléchargé
  *       500:
  *         description: Erreur serveur
  */
-router.post('/', upload.single('media'), async (req, res) => {
-  try {
-    const fileUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-    if (!fileUrl) {
+// Route pour ajouter plusieurs médias
+router.post('/', upload.array('media'), async (req, res) => {
+  try {
+    // Vérification si des fichiers ont été téléchargés
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: 'Aucun fichier téléchargé' });
     }
 
-    const media = await Media.create({
-      type_media: req.body.type_media,
-      url_media: fileUrl,
-      description: req.body.description,
-      id_event: req.body.id_event,
-      id_program: req.body.id_program,
-      id_catalog: req.body.id_catalog
-    });
+    const mediaArray = [];
 
-    res.status(201).json({ message: 'Média créé avec succès', data: media });
+    // Parcourir chaque fichier et créer un enregistrement pour chaque média dans la base de données
+    for (const file of req.files) {
+      const fileUrl = `/uploads/${file.filename}`;
+
+      // Créer un média dans la base de données
+      const media = await Media.create({
+        type_media: req.body.type_media,
+        url_media: fileUrl,
+        description: req.body.description,
+        id_event: req.body.id_event,
+        id_program: req.body.id_program,
+        id_catalog: req.body.id_catalog
+      });
+
+      mediaArray.push(media);  // Ajouter le média à l'array
+    }
+
+    // Répondre avec succès et renvoyer la liste des médias créés
+    res.status(201).json({ message: 'Médias créés avec succès', data: mediaArray });
+
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la création du média', error: error.message });
+    console.error("Erreur lors de la création des médias", error);
+    res.status(500).json({ message: 'Erreur serveur lors de la création des médias', error: error.message });
   }
 });
+
+
 
 /**
  * @swagger

@@ -44,7 +44,7 @@ Object.keys(models).forEach(modelName => {
 
 // Fonction pour initialiser la base de données
 const initDb = () => {
-    sequelize.sync({ force: true })  // `force: false` pour ne pas supprimer les données existantes
+    sequelize.sync({ force: false })  // `force: false` pour ne pas supprimer les données existantes
         .then(() => {
             console.log("✅ Les tables ont été créées avec succès !");
         })
