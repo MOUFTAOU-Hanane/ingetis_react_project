@@ -1,5 +1,5 @@
-    module.exports = (sequelize, DataTypes) => {
-        return sequelize.define('User', {
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
         id_user: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -14,7 +14,7 @@
             unique: true,
             allowNull: false,
             validate: {
-            isEmail: true
+                isEmail: true
             }
         },
         mot_de_passe: {
@@ -22,7 +22,7 @@
             allowNull: false
         },
         role: {
-            type: DataTypes.ENUM('admin', 'user'),
+            type: DataTypes.ENUM('admin', 'user', 'organisateur'),
             allowNull: false
         },
         photo: {
@@ -37,11 +37,16 @@
             type: DataTypes.TEXT,
             allowNull: true
         }
-        }, {
+    }, {
         timestamps: true,
         createdAt: 'created',
         updatedAt: false
-        });
-    
+    });
+
+    // Définition des associations
+    User.associate = function(models) {
+        User.hasMany(models.Event, { foreignKey: 'id_createur', as: 'events' });  
     };
-    
+
+    return User;
+};

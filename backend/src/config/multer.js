@@ -14,8 +14,8 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: 2 * 1024 * 1024 }, // Limite à 2MB
     fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png/;
-        const mimetype = filetypes.test(file.mimetype);
+        const filetypes = /jpeg|jpg|png|mp4|mov|avi/;
+           const mimetype = filetypes.test(file.mimetype);
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         if (mimetype && extname) {
             return cb(null, true);

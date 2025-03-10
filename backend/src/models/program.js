@@ -16,7 +16,12 @@ module.exports = (sequelize, DataTypes) => {
       date_heure: {
         type: DataTypes.DATE,
         allowNull: false
-      }
+      },
+      
+    id_event: {  // Clé étrangère vers Event
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
     }, {
       timestamps: true,
       createdAt: 'created',
