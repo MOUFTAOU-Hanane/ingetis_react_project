@@ -1,49 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Search, Filter } from 'lucide-react';
 import Layout from '../../../components/Layout';
 import { Oeuvre } from '../../../interfaces';
 import SearchBar from '../../../components/SearchBar';
+import apiClient from '../../../apiClient';
+import { toast } from 'react-toastify';
 
 const OeuvresPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [oeuvres] = useState<Oeuvre[]>([
-        {
-            id_oeuvre: 1,
-            id_user: 1,
-            titre: "Sculpture Moderne",
-            type: "sculpture",
-            description: "Une sculpture inspirée des formes géométriques modernes.",
-            prix: 2000,
-            image: "https://via.placeholder.com/400x400?text=Sculpture",
-        },
-        {
-            id_oeuvre: 2,
-            id_user: 2,
-            titre: "Peinture Abstraite",
-            type: "peinture",
-            description: "Une peinture qui exprime la complexité des émotions humaines.",
-            prix: 1500,
-            image: "https://via.placeholder.com/400x400?text=Peinture",
-        },
-        {
-            id_oeuvre: 3,
-            id_user: 3,
-            titre: "Vidéo Conceptuelle",
-            type: "vidéo",
-            description: "Un court-métrage explorant les limites de la perception humaine.",
-            prix: 1000,
-            image: "https://via.placeholder.com/400x400?text=Vidéo",
-        },
-        {
-            id_oeuvre: 4,
-            id_user: 4,
-            titre: "Image Digitale",
-            type: "image",
-            description: "Une image digitale traitée artistiquement pour représenter la nature.",
-            prix: 500,
-            image: "https://via.placeholder.com/400x400?text=Image",
-        }
-    ]);
+    const [oeuvres, setOeuvres] = useState<Oeuvre[]>();
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await apiClient.get('/oeuvres'); 
+                setOeuvres(response.data);
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des oeuvres !");
+                console.log(error);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedOeuvre, setSelectedOeuvre] = useState<Oeuvre | null>(null);
@@ -58,10 +37,16 @@ const OeuvresPage: React.FC = () => {
         setSelectedOeuvre(null);
     };
 
-    const filteredOeuvres = oeuvres.filter((oeuvre) =>
-        oeuvre.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        oeuvre.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredOeuvres = useMemo(() => {
+        if (oeuvres) {
+            return oeuvres.filter((oeuvre) =>
+                oeuvre.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                oeuvre.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+        return [];  // Retourne un tableau vide si oeuvres est undefined ou null
+    }, [oeuvres, searchTerm]);  // Ajout de searchTerm dans les dépendances   
+    
 
     return (
         <Layout title="Nos Œuvres">

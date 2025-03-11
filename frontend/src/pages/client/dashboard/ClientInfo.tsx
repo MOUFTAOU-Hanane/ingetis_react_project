@@ -12,7 +12,7 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ user }) => {
             <div className="mt-3 space-y-2">
                 <div className="flex justify-between">
                     <span className="text-gray-600">Nom</span>
-                    <span>{user?.name || 'Non défini'}</span>
+                    <span>{user?.nom || 'Non défini'}</span>
                 </div>
                 <div className="flex justify-between">
                     <span className="text-gray-600">Email</span>
@@ -20,7 +20,7 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ user }) => {
                 </div>
                 <div className="flex justify-between">
                     <span className="text-gray-600">Téléphone</span>
-                    <span>{user?.phone || 'Non défini'}</span>
+                    <span>{user?.telephone || 'Non défini'}</span>
                 </div>
             </div>
             <div className="mt-3">

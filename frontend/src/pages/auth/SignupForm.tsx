@@ -45,7 +45,7 @@ const SignupForm: React.FC = () => {
             try {
                 const formData = new FormData();
                 
-                // Ajoutez les champs au FormData
+                // Ajoute les champs au FormData
                 Object.entries(values).forEach(([key, value]) => {
                     if (key === 'photo' && value instanceof File) {
                         formData.append(key, value); // Ajoute le fichier photo
@@ -54,7 +54,7 @@ const SignupForm: React.FC = () => {
                     }
                 });
         
-                // Effectuez l'appel API avec l'en-tête multipart
+                // Effectue l'appel API avec l'en-tête multipart
                 const response = await apiClient.post('/auth/register', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',

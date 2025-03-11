@@ -24,6 +24,7 @@ import events from "../../../data/events.json";
 import Layout from "../../../components/Layout";
 import { Event } from "../../../interfaces";
 import { Program } from "../../../interfaces";
+import apiClient from "../../../apiClient";
 
 const EventPrograms: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -33,13 +34,25 @@ const EventPrograms: React.FC = () => {
     const [currentProgram, setCurrentProgram] = useState<Program | null>(null); // State for the program to be edited
 
     useEffect(() => {
-        const event = events.find((event) => event.id_event === parseInt(id || "0"));
-        setEventSelected(event);
-        if (event) {
-            setPrograms(event.programs || []);
-        } else {
-            toast.error("Événement non trouvé.");
-        }
+        const fetchData = async () => {
+            try {
+                const response = await apiClient.get('/events'); 
+                const event = response.data.find((event: Event) => event.id_event === parseInt(id || "0"));
+                setEventSelected(event);
+
+                if (event) {
+                    setPrograms(event.programs || []);
+                } else {
+                    toast.error("Événement non trouvé.");
+                }
+
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des programmes !");
+                console.log(error);
+            }
+        };
+
+        fetchData();
     }, [id]);
 
     const handleOpenModal = async (programToEdit?: Program) => {

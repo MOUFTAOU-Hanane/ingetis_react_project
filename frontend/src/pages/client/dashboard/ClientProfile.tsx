@@ -18,13 +18,13 @@ const ClientProfile: React.FC<ClientProfileProps> = ({ user }) => {
                     <div className="flex items-center justify-center mb-4">
                         <div className="w-24 h-24 rounded-full bg-purple-200 flex items-center justify-center">
                             <span className="text-2xl font-bold text-purple-600">
-                                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                                {user?.nom ? user.nom.charAt(0).toUpperCase() : 'U'}
                             </span>
                         </div>
                     </div>
                     
                     <div className="text-center mb-4">
-                        <h3 className="text-xl font-medium">{user?.name || 'Utilisateur'}</h3>
+                        <h3 className="text-xl font-medium">{user?.nom || 'Utilisateur'}</h3>
                         <p className="text-gray-600">{user?.email || 'exemple@email.com'}</p>
                     </div>
                 </div>

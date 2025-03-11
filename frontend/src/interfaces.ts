@@ -99,8 +99,8 @@ export interface Favorite {
 
 export interface User {
   id: number;
-  name: string;
+  nom: string;
   email: string;
-  phone?: string;
+  telephone?: string;
   role: 'user' | 'admin';
 }

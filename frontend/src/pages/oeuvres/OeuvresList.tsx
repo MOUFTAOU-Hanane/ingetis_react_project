@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, Edit, Trash, Plus } from "lucide-react";
 import Layout from "../../components/Layout";
 import OeuvreModal from "./OeuvreModal";
@@ -7,29 +7,30 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { Oeuvre } from "../../interfaces";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import apiClient from "../../apiClient";
 
-
-// Mock data for testing
-const mockOeuvres: Oeuvre[] = [
-    {
-        id_oeuvre: 1,
-        id_user: 101,
-        titre: "La Nuit Étoilée",
-        type: "peinture",
-        description: "Une interprétation moderne d'un ciel nocturne avec des touches de bleu profond et d'or",
-        prix: 1500,
-        image: "/api/placeholder/400/400"
-    },
-    // ... autres œuvres
-];
 
 const OeuvresList: React.FC = () => {
     const navigate = useNavigate();
-    const [oeuvres, setOeuvres] = useState<Oeuvre[]>(mockOeuvres);
+    const [oeuvres, setOeuvres] = useState<Oeuvre[]>();
     const [selectedOeuvre, setSelectedOeuvre] = useState<Oeuvre | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
     const [oeuvreToDelete, setOeuvreToDelete] = useState<Oeuvre | null>(null);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await apiClient.get('/oeuvres'); 
+                setOeuvres(response.data);
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des oeuvres !");
+                console.log(error);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     const handleOpenModal = (oeuvre: Oeuvre) => {
         setSelectedOeuvre(oeuvre);

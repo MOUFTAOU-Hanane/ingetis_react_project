@@ -23,6 +23,7 @@ import * as Yup from "yup";
 import events from "../../../data/events.json";
 import Layout from "../../../components/Layout";
 import { Catalog, Event } from "../../../interfaces";
+import apiClient from "../../../apiClient";
 
 const EventCatalogs: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -32,13 +33,25 @@ const EventCatalogs: React.FC = () => {
     const [currentCatalog, setCurrentCatalog] = useState<Catalog | null>(null);
 
     useEffect(() => {
-        const event = events.find((event) => event.id_event === parseInt(id || "0"));
-        setEventSelected(event ?? undefined);
-        if (event) {
-            setCatalogs(event.catalogs || []);
-        } else {
-            toast.error("Événement non trouvé.");
-        }
+        const fetchData = async () => {
+            try {
+                const response = await apiClient.get('/events'); 
+                const event = response.data.find((event: Event) => event.id_event === parseInt(id || "0"));
+                setEventSelected(event);
+
+                if (event) {
+                    setCatalogs(event.catalogs || []);
+                } else {
+                    toast.error("Événement non trouvé.");
+                }
+
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des programmes !");
+                console.log(error);
+            }
+        };
+
+        fetchData();
     }, [id]);
 
     const handleOpenModal = async (catalogToEdit?: Catalog) => {

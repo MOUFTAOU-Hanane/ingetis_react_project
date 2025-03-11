@@ -14,6 +14,7 @@ import Overview from './Overview';
 import Reservations from './Reservations';
 import { Favorites } from './Favorites';
 import ClientProfile from './ClientProfile';
+import apiClient from '../../../apiClient';
 
 const ClientDashboard: React.FC = () => {
     const { user } = useAuth() as { user: User | null };
@@ -23,24 +24,25 @@ const ClientDashboard: React.FC = () => {
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [favorites, setFavorites] = useState<Favorite[]>([]);
 
-    // Simuler le chargement des données
     useEffect(() => {
-        const fetchUserData = async (): Promise<void> => {
-        try {
-            // Simulation de délai d'API
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            setUserEvents(dataEvents);
-            setReservations(dataReservations);
-            setFavorites(dataFavorites);
-            setLoading(false);
-        } catch (error) {
-            toast.error('Erreur lors du chargement des données !');
-            setLoading(false);
-        }
+        const fetchData = async () => {
+            try {
+                const response = await apiClient.get('/events'); 
+                setUserEvents(response.data);
+
+                // A ajouter API
+                setReservations(dataReservations);
+                setFavorites(dataFavorites);
+                setLoading(false);
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des évènements !");
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        fetchUserData();
+        fetchData();
     }, []);
 
     return (

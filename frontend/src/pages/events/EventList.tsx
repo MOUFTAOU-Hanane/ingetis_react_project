@@ -24,9 +24,11 @@ const EventsList: React.FC = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                setEvents(dataEvents); // À remplacer par une requête API
+                const response = await apiClient.get('/events'); 
+                setEvents(response.data);
             } catch (error) {
-                console.error("Failed to fetch events:", error);
+                toast.error("Erreur lors de la récupération des évènements !");
+                console.log(error);
             } finally {
                 setLoading(false);
             }
@@ -74,11 +76,15 @@ const EventsList: React.FC = () => {
     };
 
     const filteredEvents = useMemo(() => {
-        return events.filter((event) => {
-            const currentDate = new Date();
-            const eventDate = new Date(event.date_debut);
-            return filterUpcoming ? eventDate >= currentDate : eventDate < currentDate;
-        });
+        if(events) {
+            return events.filter((event) => {
+                const currentDate = new Date();
+                const eventDate = new Date(event.date_debut);
+                return filterUpcoming ? eventDate >= currentDate : eventDate < currentDate;
+            });
+        }
+
+        return [];
     }, [events, filterUpcoming]);
 
     if (loading) {

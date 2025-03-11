@@ -6,6 +6,8 @@ import { EventCard } from './EventCard';
 import EventDetails from './EventDetails';
 import EventComment from './EventComment';
 import eventsData from '../../../data/events.json';
+import { toast } from 'react-toastify';
+import apiClient from '../../../apiClient';
 
 const EventsPage: React.FC = () => {
     const [events, setEvents] = useState<Event[]>([]);
@@ -14,9 +16,24 @@ const EventsPage: React.FC = () => {
     const [expandedEvents, setExpandedEvents] = useState<Set<number>>(new Set());
 
     useEffect(() => {
-        setEvents(eventsData);
-        setLoading(false);
+        const fetchEvents = async () => {
+            try {
+                const response = await apiClient.get('/events'); 
+                setEvents(response.data);
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des évènements !");
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEvents();
     }, []);
+
+    useEffect(() => {
+        console.log({events});
+    }, [events]);
 
     const toggleEventExpansion = (id: number) => {
         setExpandedEvents((prev) => {
