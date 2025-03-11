@@ -183,7 +183,7 @@ router.get('/:id', async (req, res) => {
             ]
         });
         if (!event) return res.status(404).json({ message: 'Événement non trouvé' });
-        res.status(200).json({ data: event });
+        res.status(200).json({  event });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération de l\'événement', error: error.message });
     }
