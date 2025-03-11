@@ -1,36 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Edit, Trash, Eye, Plus, List } from "lucide-react";
-import apiClient from "../../apiClient";
-import Layout from "../../components/Layout";
-import EventModal from "./EventModal"; // Import du modal pour afficher les détails
-import ConfirmationModal from "./ConfirmationModal"; // Import du modal de confirmation pour la suppression
+import React, { useEffect, useMemo, useState } from "react";
+import { Edit, Trash, Eye, Plus, AlertTriangle } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
-export interface Event {
-    id_event: number;
-    titre: string;
-    description: string;
-    date_debut: string;
-    date_fin: string;
-    id_lieu: number;
-}
+import dayjs from "dayjs";
+import apiClient from "../../apiClient";
+import Layout from "../../components/Layout";
+import EventModal from "./EventModal";
+import { Event } from "../../interfaces";
+import dataEvents from "../../data/events.json";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import DataTable from "../../components/DataTable"; // Assurez-vous que DataTable est correctement importé
 
 const EventsList: React.FC = () => {
     const navigate = useNavigate();
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<Event[]>(dataEvents);
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // Pour stocker l'événement sélectionné
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Pour contrôler l'ouverture du modal
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false); // Modal de confirmation
-    const [eventToDelete, setEventToDelete] = useState<Event | null>(null); // Pour stocker l'événement à supprimer
-    const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true); // Pour filtrer les événements à venir
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
+    const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
+    const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await apiClient.get("/admin/events");
-                setEvents(response.data);
+                setEvents(dataEvents); // À remplacer par une requête API
             } catch (error) {
                 console.error("Failed to fetch events:", error);
             } finally {
@@ -47,11 +41,11 @@ const EventsList: React.FC = () => {
     };
 
     const handleEdit = (event: Event) => {
-        navigate(`/admin/events/update/${event.id_event}`);
+        navigate(`/events/update/${event.id_event}`);
     };
 
     const handleAddEvent = () => {
-        navigate("/admin/events/create"); // Naviguer vers la page de création d'un nouvel événement
+        navigate("/events/create");
     };
 
     const handleCloseModal = () => {
@@ -64,30 +58,28 @@ const EventsList: React.FC = () => {
         setIsConfirmationOpen(true);
     };
 
-    const handleCloseConfirmation = () => {
-        setIsConfirmationOpen(false);
-        setEventToDelete(null);
-    };
-
-    const handleConfirmDelete = async () => {
+    const handleDeleteEvent = () => {
         if (!eventToDelete) return;
 
         try {
-            await apiClient.delete(`/admin/events/${eventToDelete.id_event}`);
-            setEvents(events.filter((event) => event.id_event !== eventToDelete.id_event));
+            setEvents((prevEvents) => prevEvents.filter((e) => e.id_event !== eventToDelete.id_event));
             toast.success("Événement supprimé avec succès !");
-            handleCloseConfirmation();
         } catch (error) {
-            console.error("Failed to delete event:", error);
-            toast.error("Erreur lors de la suppression de l'événement !");
+            console.error("Erreur de suppression:", error);
+            toast.error("Échec de la suppression de l'événement.");
+        } finally {
+            setIsConfirmationOpen(false);
+            setEventToDelete(null);
         }
     };
 
-    const filteredEvents = events.filter((event) => {
-        const currentDate = new Date();
-        const eventDate = new Date(event.date_debut);
-        return filterUpcoming ? eventDate >= currentDate : eventDate < currentDate;
-    });
+    const filteredEvents = useMemo(() => {
+        return events.filter((event) => {
+            const currentDate = new Date();
+            const eventDate = new Date(event.date_debut);
+            return filterUpcoming ? eventDate >= currentDate : eventDate < currentDate;
+        });
+    }, [events, filterUpcoming]);
 
     if (loading) {
         return (
@@ -97,27 +89,72 @@ const EventsList: React.FC = () => {
         );
     }
 
+    // Définition des colonnes du DataTable
+    const columns = [
+        {
+            label: "Titre",
+            key: "titre" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => (
+                <div className="flex items-center gap-2">
+                    {(event.programs.length === 0 || event.medias.length === 0) && (
+                        <AlertTriangle size={16} className="text-red-500" />
+                    )}
+                    {event.titre}
+                </div>
+            ),
+        },
+        {
+            label: "Description",
+            key: "description" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => event.description,
+        },
+        {
+            label: "Date début",
+            key: "date_debut" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => dayjs(event.date_debut).format("DD/MM/YYYY"),
+        },
+        {
+            label: "Date fin",
+            key: "date_fin" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => dayjs(event.date_fin).format("DD/MM/YYYY"),
+        },
+        {
+            label: "Lieu",
+            key: "lieu" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => event.lieu.adresse,
+        },
+        {
+            label: "Actions",
+            key: "actions" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: Event) => (
+                <div className="flex items-center gap-3">
+                    <Eye size={16} className="cursor-pointer text-green-600" onClick={() => handleOpenModal(event)} />
+                    <Edit size={16} className="cursor-pointer text-amber-500" onClick={() => handleEdit(event)} />
+                    <Trash size={16} className="cursor-pointer text-red-600" onClick={() => handleOpenConfirmation(event)} />
+                </div>
+            ),
+        },
+    ];
+
     return (
         <Layout title="Liste des événements">
             <div className="p-6">
-                {/* Bouton pour ajouter un nouvel événement */}
                 <button
                     onClick={handleAddEvent}
-                    className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2"
+                    className="mb-4 px-4 py-2 bg-amber-500 text-white rounded-lg flex items-center gap-2 cursor-pointer"
                 >
                     <Plus size={16} /> Ajouter un nouvel événement
                 </button>
 
-                {/* Filtrage des événements */}
                 <div className="flex justify-end mb-4">
                     <button
-                        className={`px-4 py-2 rounded-lg ${filterUpcoming ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"}`}
+                        className={`px-4 py-2 rounded-lg ${filterUpcoming ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-600"}`}
                         onClick={() => setFilterUpcoming(true)}
                     >
                         À venir
                     </button>
                     <button
-                        className={`ml-2 px-4 py-2 rounded-lg ${!filterUpcoming ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"}`}
+                        className={`ml-2 px-4 py-2 rounded-lg ${!filterUpcoming ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-600"}`}
                         onClick={() => setFilterUpcoming(false)}
                     >
                         Passés
@@ -125,55 +162,10 @@ const EventsList: React.FC = () => {
                 </div>
 
                 {filteredEvents.length > 0 ? (
-                    <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
-                        <table className="min-w-full text-sm text-gray-500">
-                            <thead className="bg-purple-500 text-white">
-                                <tr>
-                                    <th className="px-6 py-3 text-left">Titre</th>
-                                    <th className="px-6 py-3 text-left">Description</th>
-                                    <th className="px-6 py-3 text-left">Date début</th>
-                                    <th className="px-6 py-3 text-left">Date fin</th>
-                                    <th className="px-6 py-3 text-left">Lieu</th>
-                                    <th className="px-6 py-3 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredEvents.map((event) => (
-                                    <tr key={event.id_event} className="border-b hover:bg-gray-100">
-                                        <td className="px-6 py-4">{event.titre}</td>
-                                        <td className="px-6 py-4">{event.description}</td>
-                                        <td className="px-6 py-4">{event.date_debut}</td>
-                                        <td className="px-6 py-4">{event.date_fin}</td>
-                                        <td className="px-6 py-4">{event.id_lieu}</td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <Eye
-                                                    size={16}
-                                                    className="cursor-pointer text-green-600"
-                                                    onClick={() => handleOpenModal(event)}
-                                                />
-                                                <Edit
-                                                    size={16}
-                                                    className="cursor-pointer text-blue-600"
-                                                    onClick={() => handleEdit(event)}
-                                                />
-                                                <Trash
-                                                    size={16}
-                                                    className="cursor-pointer text-red-600"
-                                                    onClick={() => handleOpenConfirmation(event)}
-                                                />
-                                                <List
-                                                    size={16}
-                                                    className="cursor-pointer text-purple-600"
-                                                    onClick={() => {}}
-                                                />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <DataTable
+                        data={filteredEvents}
+                        columns={columns}  // Utilisation directe de columns
+                    />
                 ) : (
                     <div className="flex justify-center items-center p-8">
                         <h3 className="text-lg text-gray-600">Aucun événement à afficher.</h3>
@@ -181,16 +173,20 @@ const EventsList: React.FC = () => {
                 )}
             </div>
 
-            {/* Modal pour afficher les détails de l'événement */}
             <EventModal isOpen={isModalOpen} event={selectedEvent} onClose={handleCloseModal} />
 
-            {/* Modal de confirmation de suppression */}
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
-                title="Confirmation de suppression"
-                eventTitre={eventToDelete?.titre ?? "Anonyme"}
-                onConfirm={handleConfirmDelete}
-                onCancel={handleCloseConfirmation}
+                title={eventToDelete?.titre ?? "Cet événement"}
+                type="événement"
+                onConfirm={handleDeleteEvent}
+                onCancel={() => setIsConfirmationOpen(false)}
+                setObjectToDelete={setEventToDelete}
+                setIsConfirmationOpen={setIsConfirmationOpen}
+                objectToDelete={eventToDelete ? { id: eventToDelete.id_event } : null} 
+                setObject={setEvents}
+                objects={events}
+                idKey='id_event'
             />
         </Layout>
     );

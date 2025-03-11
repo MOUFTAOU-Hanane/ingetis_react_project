@@ -13,6 +13,15 @@ import CreateLieu from './pages/admin/lieux/CreateLieu';
 import AddParcours from './pages/admin/parcours/AddParcours';
 import ParcoursList from './pages/admin/parcours/ParcoursList';
 import EventsList from './pages/events/EventList';
+import CreateEvent from './pages/events/CreateEvent';
+import EventPrograms from './pages/events/programs/EventPrograms';
+import EventCatalogs from './pages/events/catalogs/EventCatalogs';
+import EventMedias from './pages/events/medias/EventMedias';
+import OeuvresList from './pages/oeuvres/OeuvresList';
+import CreateOeuvre from './pages/oeuvres/CreateOeuvre';
+import EventsPage from './pages/client/events/EventsPage';
+import OeuvresPage from './pages/client/oeuvres/OeuvresPage';
+import EventDetails from './pages/client/events/EventDetails';
 
 const AppRoutes = () => {
     return (
@@ -95,20 +104,110 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/admin/events/create" 
+                        path="/events/create" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
-                                element={<ParcoursList />} 
+                                element={<CreateEvent />} 
                             />
                         }
                     />
                     <Route
-                        path="/admin/events" 
+                        path="/events/update/:id" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['admin', 'user']}
+                                element={<CreateEvent />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
                                 element={<EventsList />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events/:id/programs" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<EventPrograms />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events/:id/catalogs" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<EventCatalogs />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/events/:id/medias" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<EventMedias />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/oeuvres" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin']}
+                                element={<OeuvresList />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/oeuvres/create" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<CreateOeuvre />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/oeuvres/update/:id" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['admin', 'user']}
+                                element={<CreateOeuvre />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/client/events" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['user']}
+                                element={<EventsPage />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/client/events/:id" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['user']}
+                                element={<EventDetails />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/client/oeuvres" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['user']}
+                                element={<OeuvresPage />} 
                             />
                         }
                     />

@@ -3,18 +3,10 @@ import { MapPin, Edit, Trash, Eye, Plus, List } from "lucide-react"; // Ajout de
 import apiClient from "../../../apiClient";
 import Layout from "../../../components/Layout";
 import LieuModal from "./LieuModal"; // Import du nouveau composant Modal
-import ConfirmationModal from "./ConfirmationModal"; // Import du modal de confirmation
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
-export interface Lieu {
-    id_lieu: number;
-    nom: string;
-    adresse: string;
-    latitude: number;
-    longitude: number;
-    description: string;
-}
+import { Lieu } from "../../../interfaces";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const LieuxList: React.FC = () => {
     const navigate = useNavigate();
@@ -84,7 +76,7 @@ const LieuxList: React.FC = () => {
             handleCloseConfirmation(); // Fermer le modal de confirmation
         } catch (error) {
             console.error("Failed to delete lieu:", error);
-            toast.success("Erreur lors de la suppression du lieu !");
+            toast.error("Erreur lors de la suppression du lieu !");
         }
     };
 
@@ -98,6 +90,14 @@ const LieuxList: React.FC = () => {
 
     return (
         <Layout title="Liste des lieux">
+            <div className="p-6">
+                <button
+                    onClick={() => navigate("/admin/lieux/create")}
+                    className="mb-4 px-4 py-2 bg-amber-500 text-white rounded-lg flex items-center gap-2 cursor-pointer"
+                >
+                    <Plus size={16} /> Ajouter un nouveau lieu
+                </button>
+            </div>
             <div className="p-6">
                 {lieux && lieux?.length ? (
                     <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
@@ -162,11 +162,18 @@ const LieuxList: React.FC = () => {
             {/* Modal de confirmation de suppression */}
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
-                title="Confirmation de suppression"
-                lieuNom={lieuToDelete?.nom ?? "Anonyme"}
+                title={lieuToDelete?.nom ?? "Anonyme"}
+                type="lieu"
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCloseConfirmation}
+                setObjectToDelete={setLieuToDelete}
+                setIsConfirmationOpen={setIsConfirmationOpen}
+                objectToDelete={lieuToDelete ? { id: lieuToDelete.id_lieu } : null}
+                setObject={setLieux}
+                objects={lieux}
+                idKey="id_lieu"
             />
+
         </Layout>
     );
 };

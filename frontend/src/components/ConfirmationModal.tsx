@@ -1,86 +1,80 @@
 import React from "react";
-import { LucideIcon } from "lucide-react";
-import { Button } from "@mui/material";
+import { toast } from "react-toastify";
 
 interface ConfirmationModalProps {
-    // Propriétés de base
     isOpen: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-    
-    // Personnalisation du contenu
     title: string;
-    message: string | React.ReactNode;
-    itemToDelete?: string;
-    
-    // Personnalisation des boutons
-    confirmLabel?: string;
-    cancelLabel?: string;
-    confirmIcon?: LucideIcon;
-    cancelIcon?: LucideIcon;
-    
-    // Personnalisation des styles
-    confirmButtonClassName?: string;
-    cancelButtonClassName?: string;
-    titleClassName?: string;
-    messageClassName?: string;
+    type: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+    setObjectToDelete: (object: any | null) => void;
+    setIsConfirmationOpen: (isOpen: boolean) => void;
+    objectToDelete: { id: number } | null;
+    setObject?: (objects: any[]) => void; 
+    objects?: any[];
+    idKey: string;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     isOpen,
-    onClose,
-    onConfirm,
     title,
-    message,
-    itemToDelete,
-    confirmLabel = "Confirmer",
-    cancelLabel = "Annuler",
-    confirmIcon: ConfirmIcon,
-    cancelIcon: CancelIcon,
-    confirmButtonClassName = "bg-red-600 hover:bg-red-700 text-white",
-    cancelButtonClassName = "bg-gray-600 hover:bg-gray-700 text-white",
-    titleClassName = "text-xl font-bold text-center mb-4 text-red-500",
-    messageClassName = "text-center text-gray-600"
+    type,
+    onConfirm,
+    onCancel,
+    setIsConfirmationOpen,
+    setObjectToDelete,
+    objectToDelete,
+    objects,
+    setObject,
+    idKey
 }) => {
     if (!isOpen) return null;
 
-    const renderMessage = () => {
-        if (typeof message === "string" && itemToDelete) {
-            return (
-                <p className={messageClassName}>
-                    {message}{" "}
-                    <span className="font-semibold">"{itemToDelete}"</span>
-                </p>
-            );
-        }
-        return <div className={messageClassName}>{message}</div>;
+    const handleCloseConfirmation = () => {
+        setIsConfirmationOpen(false);
+        setObjectToDelete(null);
     };
 
+    const handleConfirmDelete = async () => {
+        if (!objectToDelete) return;
+    
+        try {
+            if (setObject && objects) {
+                setObject(objects.filter((object) => object?.[idKey] !== objectToDelete.id));
+            }
+    
+            toast.success(`${type} supprimé avec succès !`);
+            handleCloseConfirmation();
+        } catch (error) {
+            console.error("Failed to delete:", error);
+            toast.error(`Erreur lors de la suppression de ${type} !`);
+        }
+    };
+    
+
     return (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/25">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
-                <div className="p-6">
-                    <h2 className={titleClassName}>{title}</h2>
-                    {renderMessage()}
-                    <div className="flex justify-center mt-6 gap-4">
-                        <Button
-                            onClick={onClose}
-                            className={cancelButtonClassName}
-                        >
-                            {cancelLabel}
-                            {CancelIcon && <CancelIcon className="ml-2" size={20} />}
-                        </Button>
-                        <Button
-                            onClick={onConfirm}
-                            className={confirmButtonClassName}
-                        >
-                            {confirmLabel}
-                            {ConfirmIcon && <ConfirmIcon className="ml-2" size={20} />}
-                        </Button>
-                    </div>
+        <>
+            {/* Overlay */}
+            <div className="fixed inset-0 backdrop-blur-sm bg-opacity-25 z-50" onClick={onCancel}></div>
+
+            {/* Modal Content */}
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 max-w-sm w-full z-50">
+                <h2 className="text-xl font-semibold mb-4 text-red-500 text-center">Confirmation de suppression</h2>
+                <div className="mb-4">
+                    <p>
+                        Êtes-vous sûr de vouloir supprimer le {type} <strong className="text-amber-500">{title}</strong> ?
+                    </p>
+                </div>
+                <div className="mt-6 flex justify-end gap-3">
+                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer" onClick={handleConfirmDelete}>
+                        Confirmer
+                    </button>
+                    <button className="px-4 py-2 bg-gray-300 text-black rounded-lg cursor-pointer" onClick={onCancel}>
+                        Annuler
+                    </button>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
