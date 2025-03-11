@@ -7,6 +7,8 @@ const router = express.Router();
  * /api/participants:
  *   post:
  *     summary: Crée un nouveau participant
+ *     tags: [Participants]
+
  *     description: Cette route permet de créer un participant en fonction des informations fournies.
  *     requestBody:
  *       required: true
@@ -36,6 +38,27 @@ router.post('/', async (req, res) => {
   const { statut, id_user, id_event } = req.body;
 
   try {
+    // Vérifier si l'utilisateur existe
+    const user = await User.findByPk(id_user);
+    if (!user) {
+      return res.status(400).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // Vérifier si l'événement existe
+    const event = await Event.findByPk(id_event);
+    if (!event) {
+      return res.status(400).json({ message: "Événement non trouvé" });
+    }
+
+    // Vérifier si l'utilisateur est déjà inscrit à cet événement
+    const existingParticipant = await Participant.findOne({
+      where: { id_user, id_event },
+    });
+
+    if (existingParticipant) {
+      return res.status(400).json({ message: "Cet utilisateur est déjà inscrit à cet événement." });
+    }
+
     // Créer un nouveau participant
     const newParticipant = await Participant.create({ statut, id_user, id_event });
 
@@ -49,11 +72,14 @@ router.post('/', async (req, res) => {
   }
 });
 
+
 /**
  * @swagger
  * /api/participants:
  *   get:
  *     summary: Récupère tous les participants
+ *     tags: [Participants]
+
  *     description: Cette route permet de récupérer la liste de tous les participants.
  *     responses:
  *       200:
@@ -75,6 +101,8 @@ router.get('/', async (req, res) => {
  * /api/participants/{id}:
  *   get:
  *     summary: Récupère un participant par son ID
+ *     tags: [Participants]
+
  *     description: Cette route permet de récupérer les détails d'un participant spécifique en utilisant son ID.
  *     parameters:
  *       - name: id
@@ -112,6 +140,8 @@ router.get('/:id', async (req, res) => {
  * /api/participants/{id}:
  *   put:
  *     summary: Met à jour un participant
+ *     tags: [Participants]
+
  *     description: Cette route permet de mettre à jour les informations d'un participant spécifique.
  *     parameters:
  *       - name: id
@@ -174,6 +204,8 @@ router.put('/:id', async (req, res) => {
  * /api/participants/{id}:
  *   delete:
  *     summary: Supprime un participant
+ *     tags: [Participants]
+
  *     description: Cette route permet de supprimer un participant en utilisant son ID.
  *     parameters:
  *       - name: id

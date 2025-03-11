@@ -63,8 +63,8 @@ app.use('/api/programs', programRoutes);
 app.use('/api/media', mediaRoutes);
 
 app.use('/api/catalogs', catalogueRoutes);
-app.use('/api/oeuvre', oeuvreRoutes);
-app.use('/api/participant', participantRoutes);
+app.use('/api/oeuvres', oeuvreRoutes);
+app.use('/api/participants', participantRoutes);
 
 
 
