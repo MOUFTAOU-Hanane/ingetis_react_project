@@ -1,0 +1,15 @@
+{
+    "name": "sampaniony/backend",
+    "autoload": {
+        "psr-4": {
+            "Sampaniony\\Backend\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sampaniony",
+            "email": "sampanionyra55@gmail.com"
+        }
+    ],
+    "require": {}
+}
