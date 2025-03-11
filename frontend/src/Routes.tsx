@@ -22,6 +22,7 @@ import CreateOeuvre from './pages/oeuvres/CreateOeuvre';
 import EventsPage from './pages/client/events/EventsPage';
 import OeuvresPage from './pages/client/oeuvres/OeuvresPage';
 import EventDetails from './pages/client/events/EventDetails';
+import ClientDashboard from './pages/client/dashboard/ClientDashboard';
 
 const AppRoutes = () => {
     return (
@@ -190,6 +191,15 @@ const AppRoutes = () => {
                             <PrivateRoute
                                 allowedRoles={['user']}
                                 element={<EventsPage />} 
+                            />
+                        }
+                    />
+                    <Route
+                        path="/client/dashboard" 
+                        element={
+                            <PrivateRoute
+                                allowedRoles={['user']}
+                                element={<ClientDashboard />} 
                             />
                         }
                     />

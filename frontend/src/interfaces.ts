@@ -76,3 +76,31 @@ export interface Parcours {
     date_debut: string;
     date_fin: string;
 }
+
+// Types communs pour le tableau de bord client
+export type TabType = 'overview' | 'reservations' | 'favorites' | 'profile';
+
+export interface Reservation {
+  id_reservation: number;
+  event?: Event;
+  date: string;
+  nb_tickets: number;
+  status: string;
+}
+
+export interface Favorite {
+  id_favorite: number;
+  id_oeuvre: number;
+  titre: string;
+  artiste: string;
+  type: string;
+  image_url?: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  role: 'user' | 'admin';
+}
