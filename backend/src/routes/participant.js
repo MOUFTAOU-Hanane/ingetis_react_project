@@ -191,7 +191,6 @@ router.put('/:id', async (req, res) => {
     await participant.update({ statut, id_user, id_event });
 
     res.status(200).json({
-      message: "Participant mis à jour avec succès",
       participant,
     });
   } catch (error) {

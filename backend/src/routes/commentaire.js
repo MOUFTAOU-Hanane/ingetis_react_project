@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
             return res.status(404).json({ message: "Utilisateur ou événement introuvable" });
         }
         const newComment = await Comment.create({ commentaire, id_user, id_event });
-        res.status(201).json({ message: "Commentaire ajouté avec succès", comment: newComment });
+        res.status(201).json({newComment });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de l'ajout du commentaire", error: error.message });
     }

@@ -74,7 +74,7 @@ router.post('/', upload.array('media'), async (req, res) => {
     }
 
     // Répondre avec succès et renvoyer la liste des médias créés
-    res.status(201).json({ message: 'Médias créés avec succès', data: mediaArray });
+    res.status(201).json({ mediaArray });
 
   } catch (error) {
     console.error("Erreur lors de la création des médias", error);
@@ -99,7 +99,7 @@ router.post('/', upload.array('media'), async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const media = await Media.findAll();
-    res.status(200).json({ data: media });
+    res.status(200).json({ media });
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération des médias', error: error.message });
   }
@@ -132,7 +132,7 @@ router.get('/:id', async (req, res) => {
     if (!media) {
       return res.status(404).json({ message: 'Média non trouvé' });
     }
-    res.status(200).json({ data: media });
+    res.status(200).json({ media });
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération du média', error: error.message });
   }
@@ -189,7 +189,7 @@ router.put('/:id', upload.single('media'), async (req, res) => {
     media.description = req.body.description || media.description;
 
     await media.save();
-    res.status(200).json({ message: 'Média mis à jour avec succès', data: media });
+    res.status(200).json({ media });
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la mise à jour du média', error: error.message });
   }
