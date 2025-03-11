@@ -195,7 +195,7 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/client/dashboard" 
+                        path="/user/dashboard" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['user']}
