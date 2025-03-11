@@ -13,7 +13,9 @@ const programRoutes = require('./src/routes/program.js');
 const catalogueRoutes = require('./src/routes/catalogue.js'); 
 const oeuvreRoutes = require('./src/routes/oeuvre.js'); 
 const participantRoutes = require('./src/routes/participant.js'); 
-const mediaRoutes = require('./src/routes/media.js');  // Correction ici
+const mediaRoutes = require('./src/routes/media.js');
+const commentRoutes = require('./src/routes/commentaire.js');  // Correction ici
+
 
 
 const bodyParser = require("body-parser");
@@ -65,6 +67,8 @@ app.use('/api/media', mediaRoutes);
 app.use('/api/catalogs', catalogueRoutes);
 app.use('/api/oeuvres', oeuvreRoutes);
 app.use('/api/participants', participantRoutes);
+app.use('/api/comments', commentRoutes);
+
 
 
 

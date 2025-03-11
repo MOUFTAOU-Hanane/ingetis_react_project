@@ -37,12 +37,18 @@ module.exports = (sequelize, DataTypes) => {
 
   // Définition des associations
   Event.associate = function(models) {
-    Event.belongsTo(models.User, { foreignKey: 'id_createur', as: 'createur' });  
-    Event.belongsTo(models.Lieu, { foreignKey: 'id_lieu', as: 'lieu' });  
-    Event.hasMany(models.Program, { foreignKey: 'id_event', as: 'programs' });
-    Event.hasMany(models.Media, { foreignKey: 'id_event', as: 'medias' });
-    Event.hasMany(models.Catalog, { foreignKey: 'id_event', as: 'catalogs' });
-    Event.hasMany(models.Participant, { foreignKey: 'id_event', as: 'participants' });
+    Event.belongsTo(models.User, { foreignKey: 'id_createur', as: 'createur',  onDelete: 'CASCADE', 
+      onUpdate: 'CASCADE'  });  
+    Event.belongsTo(models.Lieu, { foreignKey: 'id_lieu', as: 'lieu',  onDelete: 'CASCADE', 
+      onUpdate: 'CASCADE'  });  
+    Event.hasMany(models.Program, { foreignKey: 'id_event', as: 'programs' ,  onDelete: 'CASCADE', 
+      onUpdate: 'CASCADE' });
+    Event.hasMany(models.Media, { foreignKey: 'id_event', as: 'medias',  onDelete: 'CASCADE', 
+      onUpdate: 'CASCADE'  });
+    Event.hasMany(models.Catalog, { foreignKey: 'id_event', as: 'catalogs' ,  onDelete: 'CASCADE', 
+      onUpdate: 'CASCADE' });
+    Event.hasMany(models.Participant, { foreignKey: 'id_event', as: 'participants',  onDelete: 'CASCADE', 
+      onUpdate: 'CASCADE'  });
   };
 
   return Event;

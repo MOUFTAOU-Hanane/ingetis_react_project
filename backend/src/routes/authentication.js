@@ -146,7 +146,7 @@ router.post('/register', upload.single('photo'), async (req, res) => {
         role: newUser.role,
         bibliographie: newUser.bibliographie,
         telephone: newUser.telephone,
-        photo: photoProfil ? `http://localhost:3000${photoProfil}` : null
+        photo: photoProfil ? `http://localhost:3005${photoProfil}` : null
       }
     });
 

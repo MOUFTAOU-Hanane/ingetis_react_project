@@ -171,9 +171,11 @@ router.get('/:id', async (req, res) => {
     try {
         const event = await Event.findByPk(req.params.id, {
             include: [
-                { model: Program },
-                { model: Media },
-                { model: Catalog }
+                { model: Lieu, as: 'lieu' },
+                { model: Program, as: 'programs' },
+                { model: Media, as: 'medias' },
+                { model: Catalog, as: 'catalogs' },
+                { model: Participant, as: 'participants' }
             ]
         });
         if (!event) return res.status(404).json({ message: 'Événement non trouvé' });
