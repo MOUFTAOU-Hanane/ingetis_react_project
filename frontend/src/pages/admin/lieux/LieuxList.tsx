@@ -20,7 +20,7 @@ const LieuxList: React.FC = () => {
     useEffect(() => {
         const fetchLieux = async () => {
             try {
-                const response = await apiClient.get("/admin/lieux");
+                const response = await apiClient.get("/lieu");
                 setLieux(response.data);
             } catch (error) {
                 console.error("Failed to fetch lieux:", error);

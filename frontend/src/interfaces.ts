@@ -1,4 +1,4 @@
-export interface Lieu {
+export interface ILieu {
     id_lieu: number;
     nom: string;
     adresse: string;
@@ -7,14 +7,14 @@ export interface Lieu {
     description: string;
 }
 
-export interface Program {
+export interface IProgram {
     id_program?: number;
     titre: string;
     description: string;
     date_heure: string;
 }
 
-export interface Media {
+export interface IMedia {
     id_media: number;
     id_event?: number;
     id_program?: number;
@@ -23,26 +23,26 @@ export interface Media {
     url_media: string;
 }
 
-export interface Catalog {
+export interface ICatalog {
     id_catalog: number;
     id_event: number;
     nom_catalogue: string;
     description: string;
 }
 
-export interface Event {
+export interface IEvent {
     id_event: number;
     titre: string;
     description: string;
     date_debut: string;
     date_fin: string;
-    lieu: Lieu;
-    programs: Program[];
-    medias: Media[];
-    catalogs: Catalog[];
+    lieu: ILieu;
+    programs: IProgram[];
+    medias: IMedia[];
+    catalogs: ICatalog[];
 }
 
-export interface Oeuvre {
+export interface IOeuvre {
     id_oeuvre: number;
     id_user: number;
     titre: string;
@@ -52,7 +52,7 @@ export interface Oeuvre {
     image: string; // URL de l'image
 }
 
-export interface Participant {
+export interface IParticipant {
     id_participant: number;
     id_user: number;
     id_event: number;
@@ -60,7 +60,7 @@ export interface Participant {
     date_inscription: string;
 }
 
-export interface Comment {
+export interface IComment {
     id_comment: number;
     id_user: number;
     id_event: number;
@@ -68,11 +68,11 @@ export interface Comment {
     date_commentaire: string;
 }
 
-export interface Parcours {
+export interface IParcours {
     id_parcours: number;
     nom: string;
     description: string;
-    lieu: Lieu;
+    lieu: ILieu;
     date_debut: string;
     date_fin: string;
 }
@@ -80,7 +80,7 @@ export interface Parcours {
 // Types communs pour le tableau de bord client
 export type TabType = 'overview' | 'reservations' | 'favorites' | 'profile';
 
-export interface Reservation {
+export interface IReservation {
   id_reservation: number;
   event?: Event;
   date: string;
@@ -88,7 +88,7 @@ export interface Reservation {
   status: string;
 }
 
-export interface Favorite {
+export interface IFavorite {
   id_favorite: number;
   id_oeuvre: number;
   titre: string;
@@ -97,7 +97,7 @@ export interface Favorite {
   image_url?: string;
 }
 
-export interface User {
+export interface IUser {
   id: number;
   nom: string;
   email: string;

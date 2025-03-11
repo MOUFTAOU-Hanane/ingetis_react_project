@@ -23,33 +23,41 @@ import { toast } from "react-toastify";
 import { NavLink, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import events from "../../../data/events.json";
 import Layout from "../../../components/Layout";
-import { Event } from "../../../interfaces";
-import { Media, Program, Catalog } from "../../../interfaces";
+import { IEvent } from "../../../interfaces";
+import { IMedia } from "../../../interfaces";
+import apiClient from "../../../apiClient";
 
 const EventMedias: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [medias, setMedias] = useState<Media[]>([]);
+    const [medias, setMedias] = useState<IMedia[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [eventSelected, setEventSelected] = useState<Event>();
-    const [currentMedia, setCurrentMedia] = useState<Media | null>(null);
-    const [programs, setPrograms] = useState<Program[]>([]); // Fetch programs for dropdown
-    const [catalogs, setCatalogs] = useState<Catalog[]>([]); // Fetch catalogs for dropdown
+    const [eventSelected, setEventSelected] = useState<IEvent>();
+    const [currentMedia, setCurrentMedia] = useState<IMedia | null>(null);
 
     useEffect(() => {
-        const event = events.find((event) => event.id_event === parseInt(id || "0"));
-        setEventSelected(event);
-        if (event) {
-            setMedias(event.medias || []);
-            setPrograms(event.programs || []);
-            setCatalogs(event.catalogs || []);
-        } else {
-            toast.error("Événement non trouvé.");
-        }
+        const fetchData = async () => {
+            try {
+                const response = await apiClient.get('/events'); 
+                const event = response.data.find((event: IEvent) => event.id_event === parseInt(id || "0"));
+                setEventSelected(event);
+
+                if (event) {
+                    setMedias(event.medias || []);
+                } else {
+                    toast.error("Événement non trouvé.");
+                }
+
+            } catch (error) {
+                toast.error("Erreur lors de la récupération des médias !");
+                console.log(error);
+            }
+        };
+
+        fetchData();
     }, [id]);
 
-    const handleOpenModal = (mediaToEdit?: Media) => {
+    const handleOpenModal = (mediaToEdit?: IMedia) => {
         if (mediaToEdit) {
             setCurrentMedia(mediaToEdit);
         } else {
@@ -114,11 +122,11 @@ const EventMedias: React.FC = () => {
         ]);
     };
 
-    const removeMediaField = (index: number) => {
-        const updatedMedias = [...formik.values.medias];
-        updatedMedias.splice(index, 1);
-        formik.setFieldValue("medias", updatedMedias);
-    };
+    // const removeMediaField = (index: number) => {
+    //     const updatedMedias = [...formik.values.medias];
+    //     updatedMedias.splice(index, 1);
+    //     formik.setFieldValue("medias", updatedMedias);
+    // };
 
     const handleDeleteMedia = (mediaId: number) => {
         setMedias(medias.filter((media) => media.id_media !== mediaId));
@@ -196,26 +204,42 @@ const EventMedias: React.FC = () => {
 
             <Box sx={{ maxWidth: 600, margin: "auto", p: 3, backgroundColor: "white", borderRadius: "12px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
                 <List>
-                    {medias.length > 0 ? medias.map((media) => (
-                        <ListItem key={media.id_media} secondaryAction={
-                            <>
-                                <IconButton edge="end" onClick={() => handleOpenModal(media)}>
-                                    <Edit size={20} color="blue" />
-                                </IconButton>
-                                <IconButton edge="end" onClick={() => handleDeleteMedia(media.id_media)}>
-                                    <Trash2 size={20} color="red" />
-                                </IconButton>
-                            </>
-                        }>
-                            <ListItemText primary={media.type_media} secondary={media.url_media} />
-                        </ListItem>
-                    )) : (
+                    {medias.length > 0 ? medias.map((media) => {
+                        const isImage = /\.(jpeg|jpg|png|gif|webp)$/i.test(media.url_media);
+                        const isVideo = /\.(mp4|webm|ogg)$/i.test(media.url_media);
+
+                        return (
+                            <ListItem
+                                key={media.id_media}
+                                secondaryAction={
+                                    <>
+                                        <IconButton edge="end" onClick={() => handleOpenModal(media)}>
+                                            <Edit size={20} color="blue" />
+                                        </IconButton>
+                                        <IconButton edge="end" onClick={() => handleDeleteMedia(media.id_media)}>
+                                            <Trash2 size={20} color="red" />
+                                        </IconButton>
+                                    </>
+                                }
+                            >
+                                <ListItemText primary={media.type_media} />
+                                {isImage && <img src={media.url_media} alt="Media" className="w-20 h-20 object-cover rounded-md" />}
+                                {isVideo && (
+                                    <video controls className="w-20 h-20 rounded-md">
+                                        <source src={media.url_media} type="video/mp4" />
+                                        Votre navigateur ne supporte pas la lecture de vidéos.
+                                    </video>
+                                )}
+                            </ListItem>
+                        );
+                    }) : (
                         <div className="flex gap-2 items-center justify-center">
                             <AlertTriangle color="red" size={20} />
                             <span className="text-red-500">Veuillez ajouter des médias pour valider votre évènement</span>
                         </div>
                     )}
                 </List>
+
 
                 {/* Modal */}
                 <Dialog open={modalOpen} onClose={handleCloseModal} sx={{ backdropFilter: "blur(5px)" }}>
@@ -252,42 +276,6 @@ const EventMedias: React.FC = () => {
                                     sx={{ mb: 2 }}
                                 />
 
-                                <FormControl fullWidth sx={{ mb: 2 }}>
-                                    <InputLabel>Programme</InputLabel>
-                                    <Select
-                                        value={media.id_program}
-                                        onChange={(e) => {
-                                            const newMedias = [...formik.values.medias];
-                                            newMedias[index].id_program = e.target.value;
-                                            formik.setFieldValue("medias", newMedias);
-                                        }}
-                                    >
-                                        {programs.map((program) => (
-                                            <MenuItem key={program.id_program} value={program.id_program}>
-                                                {program.titre}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-
-                                <FormControl fullWidth sx={{ mb: 2 }}>
-                                    <InputLabel>Catalogue</InputLabel>
-                                    <Select
-                                        value={media.id_catalog}
-                                        onChange={(e) => {
-                                            const newMedias = [...formik.values.medias];
-                                            newMedias[index].id_catalog = e.target.value;
-                                            formik.setFieldValue("medias", newMedias);
-                                        }}
-                                    >
-                                        {catalogs.map((catalog) => (
-                                            <MenuItem key={catalog.id_catalog} value={catalog.id_catalog}>
-                                                {catalog.nom_catalogue}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-
                                 {index < formik.values.medias.length - 1 && <Divider sx={{ my: 2 }} />}
                             </Box>
                         ))}
@@ -296,7 +284,7 @@ const EventMedias: React.FC = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseModal} startIcon={<X />}>Annuler</Button>
-                        <Button onClick={formik.handleSubmit} variant="contained" startIcon={<Save />}>Sauvegarder</Button>
+                        <Button onClick={formik.handleSubmit} startIcon={<Save />}>Sauvegarder</Button>
                     </DialogActions>
                 </Dialog>
             </Box>

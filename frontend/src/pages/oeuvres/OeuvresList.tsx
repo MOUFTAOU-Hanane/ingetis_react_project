@@ -60,8 +60,9 @@ const OeuvresList: React.FC = () => {
         if (!oeuvreToDelete) return;
 
         try {
-            // Simulate API call
-            setOeuvres(oeuvres.filter((oeuvre) => oeuvre.id_oeuvre !== oeuvreToDelete.id_oeuvre));
+            if(oeuvres) {
+                setOeuvres(oeuvres.filter((oeuvre) => oeuvre.id_oeuvre !== oeuvreToDelete.id_oeuvre));
+            }
             toast.success("Œuvre supprimée avec succès !");
             handleCloseConfirmation();
         } catch (error) {
@@ -81,7 +82,7 @@ const OeuvresList: React.FC = () => {
                 </button>
             </div>
             <div className="p-6">
-                {oeuvres.length ? (
+                {oeuvres && oeuvres.length ? (
                     <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
                         <table className="min-w-full text-sm text-white">
                             <thead className="text-purple-500 bg-white">

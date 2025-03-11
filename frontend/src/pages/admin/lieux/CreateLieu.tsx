@@ -5,7 +5,6 @@ import {
     TextField,
     Button,
     Box,
-    Typography,
     Dialog,
     DialogActions,
     DialogContent,
@@ -18,10 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 import apiClient from "../../../apiClient";
 import Layout from "../../../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
-import { Lieu } from "./LieuxList";
+import { ILieu } from "../../../interfaces";
 
-
-// Validation du formulaire avec Yup
 const validationSchema = Yup.object({
     nom: Yup.string()
         .required("Le nom est requis")
@@ -39,54 +36,55 @@ const validationSchema = Yup.object({
 });
 
 const CreateLieu: React.FC = () => {
-    const { id } = useParams(); // Récupérer l'ID du lieu depuis l'URL
+    const { id } = useParams(); 
     const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
-    const [createdLieuId, setCreatedLieuId] = useState<string | null>(null); // Stocker l'ID du lieu créé
-
-    // Gestion du formulaire avec Formik
-    const formik = useFormik({
-        initialValues: {
-            nom: "",
-            adresse: "",
-            latitude: "",
-            longitude: "",
-            description: "",
-        },
-        validationSchema,
-        onSubmit: async (values, { resetForm }) => {
-            try {
-                if (id) {
-                    await apiClient.put(`/admin/lieux/${id}`, values); // Mise à jour du lieu
-                    toast.success("Lieu mis à jour !");
-                } else {
-                    const response = await apiClient.post("/admin/lieux", values); // Création du lieu
-                    toast.success("Lieu créé !");
-                    setCreatedLieuId(response.data?.lieu?.id_lieu ?? null); // Récupérer l'ID du lieu créé
-                    setOpenModal(true); // Ouvrir le modal après création
-                }
-                resetForm();
-            } catch (error) {
-                toast.error("Erreur lors de l'enregistrement du lieu");
-            }
-        },
-    });
+    const [createdLieuId, setCreatedLieuId] = useState<string | null>(null); 
+    const [lieu, setLieu] = useState<ILieu>();
 
     useEffect(() => {
         if (id) {
-            // Si un ID est présent, récupérer les données du lieu
             const fetchLieu = async () => {
                 try {
-                    const response = await apiClient.get(`/admin/lieux/${id}`);
-                    formik.setValues(response.data); // Remplir le formulaire avec les données
+                    const response = await apiClient.get(`/lieu/${id}`);
+                    setLieu(response.data); 
                 } catch (error) {
                     toast.error("Erreur lors de la récupération du lieu");
+                    console.log({error});
                 }
             };
 
             fetchLieu();
         }
-    }, [id, formik]);
+    }, [id]);
+
+    const formik = useFormik({
+        initialValues: {
+            nom: lieu?.nom ?? "",
+            adresse: lieu?.adresse ?? "",
+            latitude: lieu?.latitude ?? "",
+            longitude: lieu?.longitude ?? "",
+            description: lieu?.description ?? ""
+        },
+        validationSchema,
+        onSubmit: async (values, { resetForm }) => {
+            try {
+                if (id) {
+                    await apiClient.put(`/lieu/${id}`, values); 
+                    toast.success("Lieu mis à jour !");
+                } else {
+                    const response = await apiClient.post("/lieu", values); 
+                    toast.success("Lieu créé !");
+                    setCreatedLieuId(response.data?.lieu?.id_lieu ?? null); 
+                    setOpenModal(true); 
+                }
+                resetForm();
+            } catch (error) {
+                toast.error("Erreur lors de l'enregistrement du lieu");
+                console.log({error});
+            }
+        },
+    });
 
     const handleCloseModal = () => {
         setOpenModal(false);

@@ -6,19 +6,18 @@ import dayjs from "dayjs";
 import apiClient from "../../apiClient";
 import Layout from "../../components/Layout";
 import EventModal from "./EventModal";
-import { Event } from "../../interfaces";
-import dataEvents from "../../data/events.json";
+import { IEvent } from "../../interfaces";
 import ConfirmationModal from "../../components/ConfirmationModal";
-import DataTable from "../../components/DataTable"; // Assurez-vous que DataTable est correctement importé
+import DataTable from "../../components/DataTable"; 
 
 const EventsList: React.FC = () => {
     const navigate = useNavigate();
-    const [events, setEvents] = useState<Event[]>(dataEvents);
+    const [events, setEvents] = useState<IEvent[]>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
-    const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
+    const [eventToDelete, setEventToDelete] = useState<IEvent | null>(null);
     const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true);
 
     useEffect(() => {
@@ -37,12 +36,12 @@ const EventsList: React.FC = () => {
         fetchEvents();
     }, []);
 
-    const handleOpenModal = (event: Event) => {
+    const handleOpenModal = (event: IEvent) => {
         setSelectedEvent(event);
         setIsModalOpen(true);
     };
 
-    const handleEdit = (event: Event) => {
+    const handleEdit = (event: IEvent) => {
         navigate(`/events/update/${event.id_event}`);
     };
 
@@ -55,7 +54,7 @@ const EventsList: React.FC = () => {
         setSelectedEvent(null);
     };
 
-    const handleOpenConfirmation = (event: Event) => {
+    const handleOpenConfirmation = (event: IEvent) => {
         setEventToDelete(event);
         setIsConfirmationOpen(true);
     };
@@ -64,7 +63,7 @@ const EventsList: React.FC = () => {
         if (!eventToDelete) return;
 
         try {
-            setEvents((prevEvents) => prevEvents.filter((e) => e.id_event !== eventToDelete.id_event));
+            setEvents((prevEvents) => prevEvents ? prevEvents.filter((e) => e.id_event !== eventToDelete.id_event) : []);
             toast.success("Événement supprimé avec succès !");
         } catch (error) {
             console.error("Erreur de suppression:", error);
@@ -99,8 +98,8 @@ const EventsList: React.FC = () => {
     const columns = [
         {
             label: "Titre",
-            key: "titre" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
-            render: (event: Event) => (
+            key: "titre" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: IEvent) => (
                 <div className="flex items-center gap-2">
                     {(event.programs.length === 0 || event.medias.length === 0) && (
                         <AlertTriangle size={16} className="text-red-500" />
@@ -111,28 +110,28 @@ const EventsList: React.FC = () => {
         },
         {
             label: "Description",
-            key: "description" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
-            render: (event: Event) => event.description,
+            key: "description" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: IEvent) => event.description,
         },
         {
             label: "Date début",
-            key: "date_debut" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
-            render: (event: Event) => dayjs(event.date_debut).format("DD/MM/YYYY"),
+            key: "date_debut" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: IEvent) => dayjs(event.date_debut).format("DD/MM/YYYY"),
         },
         {
             label: "Date fin",
-            key: "date_fin" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
-            render: (event: Event) => dayjs(event.date_fin).format("DD/MM/YYYY"),
+            key: "date_fin" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: IEvent) => dayjs(event.date_fin).format("DD/MM/YYYY"),
         },
         {
             label: "Lieu",
-            key: "lieu" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
-            render: (event: Event) => event.lieu.adresse,
+            key: "lieu" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: IEvent) => event.lieu.adresse,
         },
         {
             label: "Actions",
-            key: "actions" as keyof Event,  // Corrigé : La clé doit être une clé de l'objet Event
-            render: (event: Event) => (
+            key: "actions" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            render: (event: IEvent) => (
                 <div className="flex items-center gap-3">
                     <Eye size={16} className="cursor-pointer text-green-600" onClick={() => handleOpenModal(event)} />
                     <Edit size={16} className="cursor-pointer text-amber-500" onClick={() => handleEdit(event)} />

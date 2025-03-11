@@ -11,32 +11,30 @@ import {
     ListItem,
     ListItemText,
     IconButton,
-    Typography,
     Chip,
     Divider,
 } from "@mui/material";
 import { Plus, Edit, Trash2, Save, X, AlertTriangle, ExternalLink } from "lucide-react";
 import { toast } from "react-toastify";
 import { NavLink, useParams } from "react-router-dom";
-import { FormikErrors, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import events from "../../../data/events.json";
 import Layout from "../../../components/Layout";
-import { Catalog, Event } from "../../../interfaces";
+import { ICatalog, IEvent } from "../../../interfaces";
 import apiClient from "../../../apiClient";
 
 const EventCatalogs: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [catalogs, setCatalogs] = useState<Catalog[]>([]);
+    const [catalogs, setCatalogs] = useState<ICatalog[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [eventSelected, setEventSelected] = useState<Event>();
-    const [currentCatalog, setCurrentCatalog] = useState<Catalog | null>(null);
+    const [eventSelected, setEventSelected] = useState<IEvent>();
+    const [currentCatalog, setCurrentCatalog] = useState<ICatalog | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await apiClient.get('/events'); 
-                const event = response.data.find((event: Event) => event.id_event === parseInt(id || "0"));
+                const event = response.data.find((event: IEvent) => event.id_event === parseInt(id || "0"));
                 setEventSelected(event);
 
                 if (event) {
@@ -54,7 +52,7 @@ const EventCatalogs: React.FC = () => {
         fetchData();
     }, [id]);
 
-    const handleOpenModal = async (catalogToEdit?: Catalog) => {
+    const handleOpenModal = async (catalogToEdit?: ICatalog) => {
         if (catalogToEdit) {
             await setCurrentCatalog(catalogToEdit);
         } else {
