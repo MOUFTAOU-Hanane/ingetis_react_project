@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Event, Participant, Lieu, Program, Media, Catalog } = require('../db/sequelize'); // Importe les modèles
+const { Event, Participant, Lieu, Program, Media, Catalog, Comment } = require('../db/sequelize'); // Importe les modèles
 
 /**
  * @swagger
@@ -112,7 +112,9 @@ router.get('/', async (req, res) => {
                 { model: Program, as: 'programs' },
                 { model: Media, as: 'medias' },
                 { model: Catalog, as: 'catalogs' },
-                { model: Participant, as: 'participants' }
+                { model: Participant, as: 'participants' },
+                { model: Comment, as: 'comments' }
+
             ]
         });
 
@@ -175,7 +177,9 @@ router.get('/:id', async (req, res) => {
                 { model: Program, as: 'programs' },
                 { model: Media, as: 'medias' },
                 { model: Catalog, as: 'catalogs' },
-                { model: Participant, as: 'participants' }
+                { model: Participant, as: 'participants' },
+                { model: Comment, as: 'comments' }
+
             ]
         });
         if (!event) return res.status(404).json({ message: 'Événement non trouvé' });

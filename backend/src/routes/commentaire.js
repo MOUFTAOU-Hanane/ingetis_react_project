@@ -13,9 +13,6 @@ const { Comment, User, Event } = require("../db/sequelize"); // Import des modè
  *         - id_user
  *         - id_event
  *       properties:
- *         id_comment:
- *           type: integer
- *           description: ID unique du commentaire
  *         commentaire:
  *           type: string
  *           description: Contenu du commentaire
@@ -25,15 +22,12 @@ const { Comment, User, Event } = require("../db/sequelize"); // Import des modè
  *         id_event:
  *           type: integer
  *           description: ID de l'événement concerné
- *         date_commentaire:
- *           type: string
- *           format: date-time
- *           description: Date de création du commentaire
+ 
  */
 
 /**
  * @swagger
- * /comments:
+ * /api/comments:
  *   post:
  *     summary: Ajouter un commentaire
  *     tags: [Comments]
@@ -64,42 +58,43 @@ router.post("/", async (req, res) => {
     }
 });
 
-/**
- * @swagger
- * /comments/event/{id_event}:
- *   get:
- *     summary: Récupérer les commentaires d'un événement
- *     tags: [Comments]
- *     parameters:
- *       - in: path
- *         name: id_event
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID de l'événement
- *     responses:
- *       200:
- *         description: Liste des commentaires
- *       500:
- *         description: Erreur serveur
- */
-router.get("/event/:id_event", async (req, res) => {
-    try {
-        const { id_event } = req.params;
-        const comments = await Comment.findAll({
-            where: { id_event },
-            include: [{ model: User, as: "auteur", attributes: ["id_user", "nom"] }],
-            order: [["date_commentaire", "DESC"]]
-        });
-        res.status(200).json(comments);
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la récupération des commentaires", error: error.message });
-    }
-});
+// /**
+//  * @swagger
+//  * /api/comments/event/{id_event}:
+//  * 
+//  *   get:
+//  *     summary: Récupérer les commentaires d'un événement
+//  *     tags: [Comments]
+//  *     parameters:
+//  *       - in: path
+//  *         name: id_event
+//  *         required: true
+//  *         schema:
+//  *           type: integer
+//  *         description: ID de l'événement
+//  *     responses:
+//  *       200:
+//  *         description: Liste des commentaires
+//  *       500:
+//  *         description: Erreur serveur
+//  */
+// router.get("/event/:id_event", async (req, res) => {
+//     try {
+//         const { id_event } = req.params;
+//         const comments = await Comment.findAll({
+//             where: { id_event },
+//             include: [{ model: User, as: "auteur", attributes: ["id_user", "nom"] }],
+//             order: [["date_commentaire", "DESC"]]
+//         });
+//         res.status(200).json(comments);
+//     } catch (error) {
+//         res.status(500).json({ message: "Erreur lors de la récupération des commentaires", error: error.message });
+//     }
+// });
 
 // /**
 //  * @swagger
-//  * /comments/{id}:
+//  * /api/comments/{id}:
 //  *   put:
 //  *     summary: Modifier un commentaire
 //  *     tags: [Comments]
@@ -146,7 +141,7 @@ router.get("/event/:id_event", async (req, res) => {
 
 /**
  * @swagger
- * /comments/{id}:
+ * /api/comments/{id}:
  *   delete:
  *     summary: Supprimer un commentaire
  *     tags: [Comments]
