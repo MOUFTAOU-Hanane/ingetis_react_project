@@ -21,8 +21,6 @@ module.exports = (sequelize, DataTypes) => {
   
     Media.associate = models => {
       Media.belongsTo(models.Event, { foreignKey: 'id_event' });
-      Media.belongsTo(models.Program, { foreignKey: 'id_program' });
-      Media.belongsTo(models.Catalog, { foreignKey: 'id_catalog' });
     };
   
     return Media;

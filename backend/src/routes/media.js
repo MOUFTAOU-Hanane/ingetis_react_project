@@ -3,7 +3,7 @@ const { Media } = require('../db/sequelize');
 const upload = require('../config/multer');  
 const router = express.Router();
 const fs = require('fs'); 
-
+const baseUrl = "http://localhost:3005"; 
 /**
  * @swagger
  * tags:
@@ -38,12 +38,7 @@ const fs = require('fs');
  *               id_event:
  *                 type: integer
  *                 example: 1
- *               id_program:
- *                 type: integer
- *                 example: 1
- *               id_catalog:
- *                 type: integer
- *                 example: 1
+ 
  *     responses:
  *       201:
  *         description: Médias créés avec succès
@@ -65,16 +60,14 @@ router.post('/', upload.array('media'), async (req, res) => {
 
     // Parcourir chaque fichier et créer un enregistrement pour chaque média dans la base de données
     for (const file of req.files) {
-      const fileUrl = `/uploads/${file.filename}`;
-
+      const fileUrl = `${baseUrl}/uploads/${file.filename}`;
       // Créer un média dans la base de données
       const media = await Media.create({
         type_media: req.body.type_media,
         url_media: fileUrl,
         description: req.body.description,
         id_event: req.body.id_event,
-        id_program: req.body.id_program,
-        id_catalog: req.body.id_catalog
+      
       });
 
       mediaArray.push(media);  // Ajouter le média à l'array
@@ -224,18 +217,11 @@ router.put('/:id', upload.single('media'), async (req, res) => {
  *         id_event:
  *           type: integer
  *           description: ID de l'événement associé
- *         id_program:
- *           type: integer
- *           description: ID du programme associé
- *         id_catalog:
- *           type: integer
- *           description: ID du catalogue associé
  *       required:
  *         - type_media
  *         - url_media
  *         - id_event
- *         - id_program
- *         - id_catalog
+ *         
  */
 router.delete('/:id', async (req, res) => {
   try {

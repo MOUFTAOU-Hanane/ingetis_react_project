@@ -3,6 +3,8 @@ const router = express.Router();
 const { Oeuvre, User } = require('../db/sequelize'); // Import des modèles
 const upload = require('../config/multer');  
 const fs = require('fs'); // Pour supprimer les anciens fichiers
+const baseUrl = "http://localhost:3005"; 
+
 
 /**
  * @swagger
@@ -51,7 +53,7 @@ const fs = require('fs'); // Pour supprimer les anciens fichiers
 router.post('/', upload.single('image'), async (req, res) => {
     try {
         const { titre, type, description, prix, id_user } = req.body;
-        const image = req.file ? `/uploads/${req.file.filename}` : null;
+        const image = req.file ? `${baseUrl}/uploads/${req.file.filename}` : null;
 
         const oeuvre = await Oeuvre.create({ titre, type, description, prix, image, id_user });
 
@@ -172,7 +174,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
             if (oeuvre.image) {
                 fs.unlinkSync(`.${oeuvre.image}`);
             }
-            image = `/uploads/${req.file.filename}`;
+            image = `${baseUrl}/uploads/${req.file.filename}`;
         }
 
         await oeuvre.update({ titre, type, description, prix, image, id_user });
