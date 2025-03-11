@@ -49,6 +49,8 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE' });
     Event.hasMany(models.Participant, { foreignKey: 'id_event', as: 'participants',  onDelete: 'CASCADE', 
       onUpdate: 'CASCADE'  });
+    Event.hasMany(models.Comment, { foreignKey: 'id_event', as: 'comments' });
+
   };
 
   return Event;

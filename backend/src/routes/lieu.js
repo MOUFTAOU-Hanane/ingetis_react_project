@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
   try {
     const { nom, adresse, latitude, longitude, description } = req.body;
     const nouveauLieu = await Lieu.create({ nom, adresse, latitude, longitude, description });
-    res.status(201).json({ message: 'Lieu créé avec succès', lieu: nouveauLieu });
+    res.status(201).json({ nouveauLieu });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la création du lieu', error: err.message });
   }
@@ -160,7 +160,7 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Lieu non trouvé' });
     }
     await lieu.update({ nom, adresse, latitude, longitude, description });
-    res.status(200).json({ message: 'Lieu mis à jour avec succès', lieu });
+    res.status(200).json({ lieu });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la mise à jour du lieu', error: err.message });
   }

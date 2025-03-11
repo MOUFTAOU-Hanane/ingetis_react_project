@@ -57,7 +57,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
         const oeuvre = await Oeuvre.create({ titre, type, description, prix, image, id_user });
 
-        res.status(201).json({ message: "Œuvre créée avec succès", oeuvre });
+        res.status(201).json({ oeuvre });
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de la création de l'œuvre", details: error.message });
     }
@@ -178,7 +178,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         }
 
         await oeuvre.update({ titre, type, description, prix, image, id_user });
-        res.status(200).json({ message: "Œuvre mise à jour", oeuvre });
+        res.status(200).json({  oeuvre });
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de la mise à jour", details: error.message });
     }

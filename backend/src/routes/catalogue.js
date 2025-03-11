@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
   try {
     const { nom_catalogue, description, id_event } = req.body;
     const nouveauCatalog = await Catalog.create({ nom_catalogue, description, id_event });
-    res.status(201).json({ message: 'Catalogue créé avec succès', catalog: nouveauCatalog });
+    res.status(201).json({ nouveauCatalog });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la création du catalogue', error: err.message });
   }
@@ -148,7 +148,7 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Catalogue non trouvé' });
     }
     await catalog.update({ nom_catalogue, description, id_event });
-    res.status(200).json({ message: 'Catalogue mis à jour avec succès', catalog });
+    res.status(200).json({ catalog });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la mise à jour du catalogue', error: err.message });
   }
