@@ -186,7 +186,7 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/client/events" 
+                        path="/user/events" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['user']}
@@ -204,7 +204,7 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/client/events/:id" 
+                        path="/user/events/:id" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['user']}
@@ -213,7 +213,7 @@ const AppRoutes = () => {
                         }
                     />
                     <Route
-                        path="/client/oeuvres" 
+                        path="/user/oeuvres" 
                         element={
                             <PrivateRoute
                                 allowedRoles={['user']}

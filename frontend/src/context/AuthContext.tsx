@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
     role: 'admin' | 'user' | 'org';
-// Vous pouvez ajouter d'autres propriétés ici selon vos besoins
+    id_user: number;
 }
 
 interface AuthContextType {
@@ -19,7 +19,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    console.log({sessionStorage})
+    // console.log({sessionStorage})
     const [user, setUser] = useState<User | null>(() => {
         const storedUser = sessionStorage.getItem('user');
         return storedUser ? JSON.parse(storedUser) : null;

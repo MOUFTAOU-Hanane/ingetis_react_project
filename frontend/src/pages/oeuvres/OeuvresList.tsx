@@ -4,19 +4,18 @@ import Layout from "../../components/Layout";
 import OeuvreModal from "./OeuvreModal";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-import { Oeuvre } from "../../interfaces";
+import { IOeuvre } from "../../interfaces";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import apiClient from "../../apiClient";
 
 
 const OeuvresList: React.FC = () => {
     const navigate = useNavigate();
-    const [oeuvres, setOeuvres] = useState<Oeuvre[]>();
-    const [selectedOeuvre, setSelectedOeuvre] = useState<Oeuvre | null>(null);
+    const [oeuvres, setOeuvres] = useState<IOeuvre[]>();
+    const [selectedOeuvre, setSelectedOeuvre] = useState<IOeuvre | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
-    const [oeuvreToDelete, setOeuvreToDelete] = useState<Oeuvre | null>(null);
+    const [oeuvreToDelete, setOeuvreToDelete] = useState<IOeuvre | null>(null);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -32,12 +31,12 @@ const OeuvresList: React.FC = () => {
         fetchEvents();
     }, []);
 
-    const handleOpenModal = (oeuvre: Oeuvre) => {
+    const handleOpenModal = (oeuvre: IOeuvre) => {
         setSelectedOeuvre(oeuvre);
         setIsModalOpen(true);
     };
 
-    const handleEdit = (oeuvre: Oeuvre) => {
+    const handleEdit = (oeuvre: IOeuvre) => {
         navigate(`/oeuvres/update/${oeuvre.id_oeuvre}`);
     };
 
@@ -46,7 +45,7 @@ const OeuvresList: React.FC = () => {
         setSelectedOeuvre(null);
     };
 
-    const handleOpenConfirmation = (oeuvre: Oeuvre) => {
+    const handleOpenConfirmation = (oeuvre: IOeuvre) => {
         setOeuvreToDelete(oeuvre);
         setIsConfirmationOpen(true);
     };
@@ -60,9 +59,9 @@ const OeuvresList: React.FC = () => {
         if (!oeuvreToDelete) return;
 
         try {
-            if(oeuvres) {
-                setOeuvres(oeuvres.filter((oeuvre) => oeuvre.id_oeuvre !== oeuvreToDelete.id_oeuvre));
-            }
+            await apiClient.delete(`/oeuvres/${oeuvreToDelete.id_oeuvre}`);
+
+            setOeuvres(oeuvres?.filter((oeuvre) => oeuvre.id_oeuvre !== oeuvreToDelete.id_oeuvre));
             toast.success("Œuvre supprimée avec succès !");
             handleCloseConfirmation();
         } catch (error) {
@@ -101,7 +100,9 @@ const OeuvresList: React.FC = () => {
                                         <td className="px-6 py-4">{oeuvre.type}</td>
                                         <td className="px-6 py-4">{oeuvre.prix} €</td>
                                         <td className="px-6 py-4">
-                                            <img src={oeuvre.image} alt={oeuvre.titre} className="h-12 w-12 object-cover" />
+                                            {oeuvre.image && 
+                                                <img src={oeuvre.image} alt={oeuvre.titre} className="h-12 w-12 object-cover" />
+                                            }
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
@@ -137,7 +138,7 @@ const OeuvresList: React.FC = () => {
             <OeuvreModal isOpen={isModalOpen} oeuvre={selectedOeuvre} onClose={handleCloseModal} />
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
-                title="Confirmation de suppression"
+                title={oeuvreToDelete?.titre ?? ""}
                 type="œuvre"
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCloseConfirmation}

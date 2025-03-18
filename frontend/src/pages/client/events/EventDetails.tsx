@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Event } from "../../../interfaces";
+import { IEvent } from "../../../interfaces";
 import { Calendar, Image, BookOpen, MapPin, Info, Clock } from "lucide-react";
 import { formatDate } from "./EventCard"; // Utilisez la fonction formatDate de EventCard
 import apiClient from "../../../apiClient";
@@ -8,14 +8,14 @@ import Layout from "../../../components/Layout";
 import { toast } from "react-toastify";
 
 const EventDetails: React.FC = () => {
-    const [event, setEvent] = useState<Event | null>(null);
+    const [event, setEvent] = useState<IEvent | null>(null);
     const { id } = useParams();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const response = await apiClient.get(`/events/${id}`);
-                setEvent(response.data);
+                setEvent(response.data.event);
             } catch (error) {
                 toast.error("Erreur lors de la récupération des évènements !");
                 console.log(error);
@@ -30,6 +30,7 @@ const EventDetails: React.FC = () => {
         const debut = new Date(dateDebut);
         const fin = new Date(dateFin);
 
+        console.log({dateDebut, dateFin}, dateDebut === dateFin)
         // Same day event
         if (dateDebut === dateFin) {
             return formatDate(dateDebut);

@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { MapPin, Edit, Trash, Eye, Plus, List } from "lucide-react"; // Ajout de l'icône "Plus"
+import { Edit, Trash, Eye, Plus, List } from "lucide-react"; // Ajout de l'icône "Plus"
 import apiClient from "../../../apiClient";
 import Layout from "../../../components/Layout";
 import LieuModal from "./LieuModal"; // Import du nouveau composant Modal
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Lieu } from "../../../interfaces";
+import { ILieu } from "../../../interfaces";
 import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const LieuxList: React.FC = () => {
     const navigate = useNavigate();
-    const [lieux, setLieux] = useState<Lieu[]>([]);
+    const [lieux, setLieux] = useState<ILieu[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedLieu, setSelectedLieu] = useState<Lieu | null>(null); // Pour stocker le lieu sélectionné pour le modal
+    const [selectedLieu, setSelectedLieu] = useState<ILieu | null>(null); // Pour stocker le lieu sélectionné pour le modal
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Pour contrôler l'ouverture du modal
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false); // Contrôle du modal de confirmation
-    const [lieuToDelete, setLieuToDelete] = useState<Lieu | null>(null); // Stocker le lieu à supprimer
+    const [lieuToDelete, setLieuToDelete] = useState<ILieu | null>(null); // Stocker le lieu à supprimer
 
     useEffect(() => {
         const fetchLieux = async () => {
@@ -24,6 +24,7 @@ const LieuxList: React.FC = () => {
                 setLieux(response.data);
             } catch (error) {
                 console.error("Failed to fetch lieux:", error);
+                toast.error("Il y a eu une erreur lors de la récupération des lieux !");
             } finally {
                 setLoading(false);
             }
@@ -33,17 +34,17 @@ const LieuxList: React.FC = () => {
     }, []);
 
     // Fonction pour ouvrir le modal des détails
-    const handleOpenModal = (lieu: Lieu) => {
+    const handleOpenModal = (lieu: ILieu) => {
         setSelectedLieu(lieu);
         setIsModalOpen(true);
     };
 
-    const handleEdit = (lieu: Lieu) => {
+    const handleEdit = (lieu: ILieu) => {
         navigate(`/admin/lieux/update/${lieu.id_lieu}`);
     };
 
     // Rediriger vers la page pour ajouter un parcours
-    const handleAddParcours = (lieu: Lieu) => {
+    const handleAddParcours = (lieu: ILieu) => {
         navigate(`/admin/lieux/${lieu.id_lieu}/parcours`);
     };
 
@@ -54,7 +55,7 @@ const LieuxList: React.FC = () => {
     };
 
     // Fonction pour ouvrir le modal de confirmation
-    const handleOpenConfirmation = (lieu: Lieu) => {
+    const handleOpenConfirmation = (lieu: ILieu) => {
         setLieuToDelete(lieu);
         setIsConfirmationOpen(true);
     };
@@ -70,7 +71,7 @@ const LieuxList: React.FC = () => {
         if (!lieuToDelete) return;
 
         try {
-            await apiClient.delete(`/admin/lieux/${lieuToDelete.id_lieu}`); // Suppression via l'API
+            await apiClient.delete(`/lieu/${lieuToDelete.id_lieu}`); // Suppression via l'API
             setLieux(lieux.filter((lieu) => lieu.id_lieu !== lieuToDelete.id_lieu)); // Mise à jour de la liste localement
             toast.success("Lieu supprimé avec succès !");
             handleCloseConfirmation(); // Fermer le modal de confirmation

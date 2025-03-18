@@ -25,10 +25,9 @@ import apiClient from "../../../apiClient";
 
 const EventCatalogs: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [catalogs, setCatalogs] = useState<ICatalog[]>([]);
+    const [catalog, setCatalog] = useState<ICatalog | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [eventSelected, setEventSelected] = useState<IEvent>();
-    const [currentCatalog, setCurrentCatalog] = useState<ICatalog | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,11 +37,10 @@ const EventCatalogs: React.FC = () => {
                 setEventSelected(event);
 
                 if (event) {
-                    setCatalogs(event.catalogs || []);
+                    setCatalog(event.catalogs?.[0] || null);
                 } else {
                     toast.error("Événement non trouvé.");
                 }
-
             } catch (error) {
                 toast.error("Erreur lors de la récupération des programmes !");
                 console.log(error);
@@ -52,230 +50,126 @@ const EventCatalogs: React.FC = () => {
         fetchData();
     }, [id]);
 
-    const handleOpenModal = async (catalogToEdit?: ICatalog) => {
-        if (catalogToEdit) {
-            await setCurrentCatalog(catalogToEdit);
-        } else {
-            setCurrentCatalog(null);
-        }
+    const handleOpenModal = () => {
         setModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
-        setCurrentCatalog(null);
+    };
+
+    const handleDeleteCatalog = async () => {
+        try {
+            await apiClient.delete(`/catalogs/${catalog?.id_catalog}`);
+
+            setCatalog(null);
+            toast.success("Catalogue supprimé avec succès !");
+        } catch (error) {
+            console.log({error})
+            toast.error("Erreur lors de la suppression");
+        }
     };
 
     const formik = useFormik({
         initialValues: {
-            catalogs: currentCatalog ? [{ ...currentCatalog }] : [{ nom_catalogue: "", description: "" }],
+            id_catalog: catalog ? catalog?.id_catalog : "",
+            id_event: eventSelected?.id_event,
+            nom_catalogue: catalog ? catalog.nom_catalogue : "",
+            description: catalog ? catalog.description : "",
         },
         validationSchema: Yup.object({
-            catalogs: Yup.array()
-                .of(
-                    Yup.object({
-                        nom_catalogue: Yup.string().required("Le nom du catalogue est requis"),
-                        description: Yup.string(),
-                    })
-                )
-                .min(1, "Il doit y avoir au moins un catalogue"),
+            nom_catalogue: Yup.string().required("Le nom du catalogue est requis"),
+            description: Yup.string(),
         }),
-        onSubmit: (values) => {
-            if (currentCatalog) {
-                // Mise à jour du catalogue existant avec l'id_event
-                setCatalogs(catalogs.map((catalog) =>
-                    catalog.id_catalog === currentCatalog.id_catalog
-                        ? { ...catalog, ...values.catalogs[0], id_event: eventSelected?.id_event ?? 0 }
-                        : catalog
-                ));
-                toast.success("Catalogue modifié avec succès !");
+        onSubmit: async (values) => {
+            if(values?.id_catalog) {
+                await apiClient.put(`/catalogs/${values?.id_catalog}`, values);
             } else {
-                // Ajout d'un nouveau catalogue avec l'id_event
-                setCatalogs([
-                    ...catalogs,
-                    ...values.catalogs.map(c => ({ ...c, id_catalog: Date.now() + Math.random(), id_event: eventSelected?.id_event ?? 0 }))
-                ]);
-                toast.success("Catalogue ajouté avec succès !");
+                await apiClient.post('/catalogs', values);
             }
+
+            setCatalog({ ...values, id_catalog: catalog?.id_catalog || Date.now(), id_event: eventSelected?.id_event ?? 0 });
+            toast.success(catalog ? "Catalogue modifié avec succès !" : "Catalogue ajouté avec succès !");
             handleCloseModal();
         },
     });
-    
 
     useEffect(() => {
-        if (currentCatalog) {
-            formik.setValues({
-                catalogs: [{ ...currentCatalog }],
-            });
-        } else {
-            formik.setValues({
-                catalogs: [{ nom_catalogue: "", description: "" }],
-            });
-        }
-    }, [currentCatalog]);
-
-    const addNewCatalogField = () => {
-        formik.setFieldValue("catalogs", [...formik.values.catalogs, { nom_catalogue: "", description: "" }]);
-    };
-
-    const handleDeleteCatalog = (catalogId: number) => {
-        setCatalogs(catalogs.filter((catalog) => catalog.id_catalog !== catalogId));
-    };
+        formik.setValues({
+            id_catalog: catalog?.id_catalog || "",
+            id_event: eventSelected?.id_event || undefined,
+            nom_catalogue: catalog?.nom_catalogue || "",
+            description: catalog?.description || "",
+        });
+    }, [catalog, eventSelected]);
+    
 
     return (
-        <Layout title={`Catalogues de l'évènement : ${eventSelected?.titre ?? ""}`}>
-            <div className="mb-4">
-                <div className="flex gap-2 mb-4">
-                    <div>
-                        <Chip
-                            label={
-                                <span className="flex gap-1 items-center">
-                                    {!eventSelected?.medias?.length && <AlertTriangle color="red" size={20} />} 
-                                    Médias 
-                                    <NavLink to={`/events/${id}/medias`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                                        <ExternalLink size={15} />
-                                    </NavLink>
-                                </span>
-                            }
-                            sx={{
-                                backgroundColor: '#FFB300', 
-                                color: 'white',
-                                display: 'flex',
-                                alignItems: 'center',
-                                cursor: 'pointer',
-                                fontSize: 'medium',
-                                '&:hover': {
-                                    backgroundColor: '#FF8F00',  
-                                    transform: 'scale(1.05)',
-                                    transition: 'all 0.3s ease',
-                                }
-                            }}
-                            title="Obligatoire"
-                        />
-                    </div>
-                    <div>
-                        <Chip
-                            label={
-                                <span className="flex gap-1 items-center">
-                                    {!eventSelected?.programs?.length && <AlertTriangle color="red" size={20} />} 
-                                    Programmes 
-                                    <NavLink to={`/events/${id}/programs`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                                        <ExternalLink size={15} />
-                                    </NavLink>
-                                </span>
-                            }
-                            sx={{
-                                backgroundColor: '#FFB300', 
-                                color: 'white',
-                                display: 'flex',
-                                alignItems: 'center',
-                                cursor: 'pointer',
-                                fontSize: 'medium',
-                                '&:hover': {
-                                    backgroundColor: '#FF8F00',  
-                                    transform: 'scale(1.05)',
-                                    transition: 'all 0.3s ease',
-                                }
-                            }}
-                            title="Facultatif"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <span className="text-xs flex text-red-800">
-                        <AlertTriangle color="red" size={15} /> : Ce n'est pas encore complet
-                    </span>
-                </div>
-            </div>
-
-            <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={() => handleOpenModal()}>
-                Ajouter des catalogues
+        <Layout title={`Catalogue de l'évènement : ${eventSelected?.titre ?? ""}`}>
+            <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={handleOpenModal}>
+                {catalog ? "Modifier le catalogue" : "Ajouter un catalogue"}
             </Button>
-            <Box sx={{ maxWidth: 600, margin: "auto", p: 3, backgroundColor: "white", borderRadius: "12px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
-                <List>
-                    {catalogs?.length > 0 ? 
-                        catalogs.map((catalog) => (
-                            <ListItem key={catalog.id_catalog} secondaryAction={
-                                <>
-                                    <IconButton edge="end" onClick={() => handleOpenModal(catalog)}>
-                                        <Edit size={20} color="blue" />
-                                    </IconButton>
-                                    <IconButton edge="end" onClick={() => handleDeleteCatalog(catalog.id_catalog)}>
-                                        <Trash2 size={20} color="red" />
-                                    </IconButton>
-                                </>
-                            }>
-                                <ListItemText primary={catalog.nom_catalogue} secondary={catalog.description} />
-                            </ListItem>
-                        )) : 
-                        <div className="flex gap-2 items-center justify-center">
-                            <AlertTriangle color="red" size={20}/>
-                            <span className="text-red-500">Veuillez ajouter des catalogues pour valider votre évènement</span>
-                        </div>
-                    }
-                </List>
+            {catalog && (
+                <Box sx={{ maxWidth: 600, margin: "auto", p: 3, backgroundColor: "white", borderRadius: "12px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
+                    <List>
+                        <ListItem secondaryAction={
+                            <>
+                                <IconButton edge="end" onClick={handleOpenModal}>
+                                    <Edit size={20} color="blue" />
+                                </IconButton>
+                                <IconButton edge="end" onClick={handleDeleteCatalog}>
+                                    <Trash2 size={20} color="red" />
+                                </IconButton>
+                            </>
+                        }>
+                            <ListItemText primary={catalog.nom_catalogue} secondary={catalog.description} />
+                        </ListItem>
+                    </List>
+                </Box>
+            )}
 
-                {/* Modal */}
-                <Dialog open={modalOpen} onClose={handleCloseModal} sx={{ backdropFilter: "blur(5px)" }}>
-                    <DialogTitle>{currentCatalog ? "Modifier le catalogue" : "Ajouter des catalogues"}</DialogTitle>
-                    <DialogContent>
-                        {formik.values.catalogs.map((catalog, index) => (
-                            <Box key={index} sx={{ mb: 2 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Nom du catalogue"
-                                    value={catalog.nom_catalogue}
-                                    onChange={(e) => formik.setFieldValue(`catalogs[${index}].nom_catalogue`, e.target.value)}
-                                    error={formik.touched.catalogs?.[index]?.nom_catalogue && Boolean(formik.errors.catalogs?.[index]?.nom_catalogue)}
-                                    helperText={
-                                        formik.touched.catalogs?.[index]?.nom_catalogue && formik.errors.catalogs?.[index]?.nom_catalogue
-                                    }
-                                    sx={{ mb: 1 }}
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="Description"
-                                    multiline
-                                    rows={3}
-                                    value={catalog.description}
-                                    onChange={(e) => formik.setFieldValue(`catalogs[${index}].description`, e.target.value)}
-                                    sx={{ mb: 1 }}
-                                />
-                                {index < formik.values.catalogs.length - 1 && <Divider sx={{ my: 2 }} />}
-
-                                {/* Bouton de suppression du catalogue */}
-                                <Button
-                                    color="error"
-                                    onClick={() => {
-                                        const updatedCatalogs = formik.values.catalogs.filter((_, i) => i !== index);
-                                        formik.setFieldValue("catalogs", updatedCatalogs);
-                                    }}
-                                    sx={{ mt: 1 }}
-                                >
-                                    Supprimer ce catalogue
-                                </Button>
-                            </Box>
-                        ))}
-                        {!currentCatalog && <Button variant="outlined" onClick={addNewCatalogField} startIcon={<Plus />}>Ajouter un autre catalogue</Button>}
-                    </DialogContent>
-
-                    <DialogActions>
-                        <Button onClick={handleCloseModal} startIcon={<X />}>Annuler</Button>
-                        <Button
-                            onClick={(e) => {
-                                e.preventDefault(); 
-                                formik.handleSubmit();
-                            }}
-                            variant="contained"
-                            startIcon={<Save />}
-                            >
-                            Sauvegarder
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Box>
+            {/* Modal */}
+            <Dialog open={modalOpen} onClose={handleCloseModal} sx={{ backdropFilter: "blur(5px)" }}>
+                <DialogTitle>{catalog ? "Modifier le catalogue" : "Ajouter un catalogue"}</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        fullWidth
+                        label="Nom du catalogue"
+                        value={formik.values.nom_catalogue}
+                        onChange={formik.handleChange}
+                        name="nom_catalogue"
+                        error={formik.touched.nom_catalogue && Boolean(formik.errors.nom_catalogue)}
+                        helperText={formik.touched.nom_catalogue && formik.errors.nom_catalogue}
+                        sx={{ mb: 1 }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Description"
+                        multiline
+                        rows={3}
+                        value={formik.values.description}
+                        onChange={formik.handleChange}
+                        name="description"
+                        sx={{ mb: 1 }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal} startIcon={<X />}>Annuler</Button>
+                    <Button
+                        onClick={(e) => {
+                            e.preventDefault(); 
+                            formik.handleSubmit();
+                        }}
+                        variant="contained"
+                        startIcon={<Save />}
+                    >
+                        Sauvegarder
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Layout>
     );
 };
+
 
 export default EventCatalogs;

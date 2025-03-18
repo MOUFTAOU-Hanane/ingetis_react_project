@@ -11,7 +11,7 @@ export interface IProgram {
     id_program?: number;
     titre: string;
     description: string;
-    date_heure: string;
+    date_heure: Date;
 }
 
 export interface IMedia {
@@ -49,7 +49,7 @@ export interface IOeuvre {
     type: "image" | "peinture" | "sculpture" | "vidéo" | string;
     description: string;
     prix: number;
-    image: string; // URL de l'image
+    image: null; // URL de l'image
 }
 
 export interface IParticipant {

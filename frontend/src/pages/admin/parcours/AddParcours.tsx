@@ -58,7 +58,7 @@ const AddParcours: React.FC = () => {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                await apiClient.post(`/admin/lieux/${id}/parcours`, values.parcours);
+                await apiClient.post(`/lieu/${id}/parcours`, values.parcours);
                 toast.success("Parcours ajoutés avec succès !");
                 navigate(`/admin/lieux`);
             } catch (error) {
@@ -83,7 +83,7 @@ const AddParcours: React.FC = () => {
         const fetchLieu = async () => {
             try {
                 if (id) {
-                    const response = await apiClient.get(`/admin/lieux/${id}`);
+                    const response = await apiClient.get(`/lieu/${id}`);
                     
                     setLieu(response.data);
                 }

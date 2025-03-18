@@ -90,7 +90,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
                     <div className="pt-2 flex justify-between items-center">
                         <button 
                             className="text-purple-300 hover:text-purple-100 transition-colors flex items-center gap-1"
-                            onClick={() => navigate(`/client/events/${event.id_event}`)}
+                            onClick={() => navigate(`/user/events/${event.id_event}`)}
                         >
                             <span>Détails</span>
                         </button>

@@ -34,22 +34,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         setIsConfirmationOpen(false);
         setObjectToDelete(null);
     };
-
-    const handleConfirmDelete = async () => {
-        if (!objectToDelete) return;
-    
-        try {
-            if (setObject && objects) {
-                setObject(objects.filter((object) => object?.[idKey] !== objectToDelete.id));
-            }
-    
-            toast.success(`${type} supprimé avec succès !`);
-            handleCloseConfirmation();
-        } catch (error) {
-            console.error("Failed to delete:", error);
-            toast.error(`Erreur lors de la suppression de ${type} !`);
-        }
-    };
     
 
     return (
@@ -66,7 +50,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                     </p>
                 </div>
                 <div className="mt-6 flex justify-end gap-3">
-                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer" onClick={handleConfirmDelete}>
+                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer" onClick={onConfirm}>
                         Confirmer
                     </button>
                     <button className="px-4 py-2 bg-gray-300 text-black rounded-lg cursor-pointer" onClick={onCancel}>

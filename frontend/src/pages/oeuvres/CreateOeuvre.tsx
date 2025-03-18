@@ -6,42 +6,49 @@ import { Save } from "lucide-react";
 import { toast } from "react-toastify";
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import apiClient from "../../apiClient";
 
 const validationSchema = Yup.object({
     titre: Yup.string().required("Le titre est requis").max(100, "Maximum 100 caractères"),
     description: Yup.string().max(500, "Maximum 500 caractères"),
     prix: Yup.number().required("Le prix est requis").positive("Le prix doit être un nombre valide"),
-    type: Yup.string().required("Le type est requis"),
-    image: Yup.string().url("L'image doit être une URL valide").required("L'image est requise"),
+    type: Yup.string().required("Le type est requis")
 });
 
 const CreateOrEditOeuvre: React.FC = () => {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams<{ id?: string }>();
     const [loading, setLoading] = useState<boolean>(!!id);
 
     const formik = useFormik({
         initialValues: {
+            id_user: user?.id_user ?? null,
             titre: "",
             description: "",
             prix: "",
             type: "image",
-            image: "",
+            image: null,
         },
         validationSchema,
-        onSubmit: (values, { resetForm }) => {
+        onSubmit: async (values, { resetForm }) => {
+            
             try {
                 if (id) {
-                    // Simuler la mise à jour de l'œuvre via API
+                    await apiClient.put(`/oeuvres/${id}`, values);
+
                     toast.success("Œuvre mise à jour avec succès !");
                 } else {
-                    // Simuler la création de l'œuvre via API
+                    await apiClient.post('/oeuvres', values);
+
                     toast.success("Œuvre créée avec succès !");
                 }
                 navigate("/oeuvres");
                 resetForm();
             } catch (error) {
                 toast.error("Erreur lors de l'enregistrement de l'œuvre !");
+                console.log({error})
             }
         },
     });
@@ -51,17 +58,25 @@ const CreateOrEditOeuvre: React.FC = () => {
             // Simuler la récupération des données d'une œuvre via API
             setTimeout(() => {
                 formik.setValues({
+                    id_user: user?.id_user ?? null,
                     titre: "Oeuvre exemple",
                     description: "Description de l'œuvre",
                     prix: "200",
                     type: "peinture",
-                    image: "https://example.com/image.jpg",
+                    image: null,
                 });
                 setLoading(false);
             }, 1000);
         }
     }, [id]);
 
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.currentTarget.files?.[0];
+        if (file) {
+            formik.setFieldValue("image", file);
+        }
+    };
+    
     return (
         <Layout title={id ? "Modifier une œuvre" : "Créer une œuvre"}>
             <Box
@@ -117,14 +132,31 @@ const CreateOrEditOeuvre: React.FC = () => {
                                 </Select>
                             </FormControl>
 
-                            <TextField
-                                size="small"
-                                fullWidth
-                                label="URL de l'image"
-                                {...formik.getFieldProps("image")}
-                                error={formik.touched.image && Boolean(formik.errors.image)}
-                                helperText={formik.touched.image && formik.errors.image}
-                            />
+                            <>
+                                <Button
+                                    variant="contained"
+                                    component="label"
+                                >
+                                    Télécharger une image
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        onChange={handleImageChange}
+                                    />
+                                </Button>
+
+                                {/* Affichage du nom du fichier sélectionné */}
+                                <TextField
+                                    size="small"
+                                    fullWidth
+                                    label="Fichier sélectionné"
+                                    value={formik.values.image ? formik.values.image?.name : ""}
+                                    InputProps={{ readOnly: true }}
+                                    error={formik.touched.image && Boolean(formik.errors.image)}
+                                    helperText={formik.touched.image && formik.errors.image}
+                                />
+                            </>
 
                             <Button type="submit" variant="contained" color="primary" fullWidth startIcon={<Save size={16} />}>
                                 {id ? "Mettre à jour" : "Sauvegarder"}

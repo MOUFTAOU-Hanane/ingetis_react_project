@@ -19,55 +19,54 @@ import { toast } from "react-toastify";
 import apiClient from "../../apiClient";
 import Layout from "../../components/Layout";
 import { useNavigate, useParams } from "react-router-dom";
-import events from "../../data/events.json";
-import { Event, Lieu } from "../../interfaces";
-
+import { IEvent, ILieu } from "../../interfaces";
+import { useAuth } from "../../context/AuthContext";
 
 const validationSchema = Yup.object({
     titre: Yup.string().required("Le titre est requis").max(100, "Maximum 100 caractères"),
     description: Yup.string().max(500, "Maximum 500 caractères"),
     date_debut: Yup.date().required("La date de début est requise"),
     date_fin: Yup.date().required("La date de fin est requise"),
-    lieu: Yup.number().required("Le lieu est requis").positive("Le lieu doit être un nombre valide"),
+    id_lieu: Yup.number().required("Le lieu est requis").positive("Le lieu doit être un nombre valide"),
 });
 
 const CreateEvent: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
+    const { user } = useAuth();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [warningModal, setWarningModal] = useState<boolean>(false);
-    const [lieuxData, setLieuxData] = useState<Lieu[]>([]);
-    const [eventsData, setEventsData] = useState<Event[]>(events);
-    const [oneEvent, setOneEvent] = useState<Event | undefined>();
+    const [lieuxData, setLieuxData] = useState<ILieu[]>([]);
+    const [oneEvent, setOneEvent] = useState<IEvent | null>(null);
 
-    useEffect(() => {
-        const fetchLieux = async () => {
-            try {
-                const response = await apiClient.get<Lieu[]>("admin/lieux");
-                setLieuxData(response.data);
-            } catch (error) {
-                toast.error("Erreur lors du chargement des lieux.");
-            }
-        };
+    const fetchLieux = async () => {
+        try {
+            const response = await apiClient.get("/lieu");
+            setLieuxData(response.data);
+        } catch (error) {
+            toast.error("Erreur lors du chargement des lieux.");
+            console.log({ error });
+        }
+    };
 
-        fetchLieux();
-    }, []);
-
-    useEffect(() => {
+    const fetchEvent = async () => {
         if (id) {
-            const eventToEdit = eventsData.find((event) => event.id_event === parseInt(id));
-            if (eventToEdit) {
-                setOneEvent(eventToEdit);
-                formik.setValues({
-                    titre: eventToEdit.titre,
-                    description: eventToEdit.description,
-                    date_debut: eventToEdit.date_debut,
-                    date_fin: eventToEdit.date_fin,
-                    lieu: eventToEdit.lieu.id_lieu.toString(),
-                });
+            try {
+                const response = await apiClient.get(`/events/${id}`);
+                setOneEvent(response.data.event);
+            } catch (error) {
+                toast.error("Erreur lors du chargement de l'événement.");
+                console.log({ error });
             }
         }
-    }, [id, eventsData]);
+    };
+
+    useEffect(() => {
+        fetchLieux();
+        if (id) {
+            fetchEvent();
+        }
+    }, [id]);
 
     const formik = useFormik({
         initialValues: {
@@ -75,53 +74,59 @@ const CreateEvent: React.FC = () => {
             description: "",
             date_debut: "",
             date_fin: "",
-            lieu: "",
+            id_lieu: ""
         },
         validationSchema,
-        onSubmit: async (values, { resetForm }) => {
+        onSubmit: async (values) => {
             try {
-                const lieu = lieuxData.find((place) => place.id_lieu === Number(values.lieu));
-
+                const lieu = lieuxData.find((place) => place.id_lieu === Number(values.id_lieu));
                 if (!lieu) {
                     toast.error("Le lieu sélectionné n'existe pas.");
                     return;
                 }
 
                 const newEventData = {
-                    ...values,
-                    id_event: id ? parseInt(id) : eventsData.length + 1,
-                    lieu: lieu,
+                    ...values, 
+                    id_createur: user?.id_user,
+                    id_event: id ? parseInt(id) : undefined,
+                    lieu: id ? { id_lieu: Number(values.id_lieu) } : Number(values.id_lieu),
                     programs: oneEvent?.programs || [],
                     medias: oneEvent?.medias || [],
                     catalogs: oneEvent?.catalogs || []
                 };
-
+                
                 if (!id) {
-                    setOneEvent(newEventData as Event);
-                    setEventsData((prevEvents) => [...prevEvents, newEventData as Event]);
+                    const response = await apiClient.post("/events", newEventData);
+                    setOneEvent(response.data.event);
                     toast.success("Événement créé avec succès !");
-                    resetForm();
                 } else {
-                    const updatedEvent = {
-                        ...newEventData,
-                        programs: oneEvent?.programs || [],
-                        medias: oneEvent?.medias || [],
-                        catalogs: oneEvent?.catalogs || []
-                    };
-
-                    setOneEvent(updatedEvent as Event);
-                    setEventsData((prevEvents) => prevEvents.map(event =>
-                        event.id_event === updatedEvent.id_event ? updatedEvent as Event : event
-                    ));
+                    const response = await apiClient.put(`/events/${id}`, newEventData);
+                    setOneEvent(response.data.event);
                     toast.success("Événement modifié avec succès !");
+                    navigate('/events');
                 }
                 
                 setOpenModal(true);
             } catch (error) {
                 toast.error("Erreur lors de la création ou modification de l'événement");
+                console.log({ error });
             }
         },
     });
+
+    // Update form values when event data is loaded
+    useEffect(() => {
+        console.log({oneEvent})
+        if (oneEvent) {
+            formik.setValues({
+                titre: oneEvent.titre || "",
+                description: oneEvent.description || "",
+                date_debut: oneEvent.date_debut ? oneEvent.date_debut.split("T")[0] : "",
+                date_fin: oneEvent.date_fin ? oneEvent.date_fin.split("T")[0] : "",
+                id_lieu: oneEvent.lieu?.id_lieu?.toString() || "",
+            });
+        }
+    }, [oneEvent]);
 
     return (
         <Layout title={id ? "Modifier un évènement" : "Créer un évènement"}>
@@ -153,6 +158,8 @@ const CreateEvent: React.FC = () => {
                             multiline
                             rows={3}
                             {...formik.getFieldProps("description")}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
                         />
 
                         <TextField
@@ -181,11 +188,11 @@ const CreateEvent: React.FC = () => {
                             helperText={formik.touched.date_fin && formik.errors.date_fin}
                         />
 
-                        <FormControl fullWidth size="small" error={formik.touched.lieu && Boolean(formik.errors.lieu)}>
+                        <FormControl fullWidth size="small" error={formik.touched.id_lieu && Boolean(formik.errors.id_lieu)}>
                             <InputLabel>Lieu</InputLabel>
                             <Select
                                 label="Lieu"
-                                {...formik.getFieldProps("lieu")}
+                                {...formik.getFieldProps("id_lieu")}
                             >
                                 {lieuxData.map((place) => (
                                     <MenuItem key={place.id_lieu} value={place.id_lieu}>
@@ -193,9 +200,9 @@ const CreateEvent: React.FC = () => {
                                     </MenuItem>
                                 ))}
                             </Select>
-                            {formik.touched.lieu && formik.errors.lieu && (
+                            {formik.touched.id_lieu && formik.errors.id_lieu && (
                                 <div style={{ color: "red", fontSize: "0.75rem" }}>
-                                    {formik.errors.lieu}
+                                    {formik.errors.id_lieu}
                                 </div>
                             )}
                         </FormControl>
@@ -213,74 +220,78 @@ const CreateEvent: React.FC = () => {
                 </form>
             </Box>
 
-            <Dialog 
-                open={openModal} 
-                onClose={() => setOpenModal(false)}
-                disableEscapeKeyDown
-            >
-                <DialogTitle>
-                    <span>Événement {id ? "modifié" : "créé"} avec succès !</span>
-                </DialogTitle>
-                <DialogContent>
-                    <div className="flex flex-col gap-4">
-                        <a 
-                            href={`/events/${oneEvent?.id_event}/programs/create`} 
-                            className="text-blue-600 hover:text-blue-800 text-lg font-semibold">
-                            Ajouter les programmes <span className="text-sm text-red-500">(obligatoire)</span>
-                        </a>
-                        <a 
-                            href={`/events/${oneEvent?.id_event}/medias/create`} 
-                            className="text-blue-600 hover:text-blue-800 text-lg font-semibold">
-                            Ajouter les médias <span className="text-sm text-red-500">(obligatoire)</span>
-                        </a>
-                        <a 
-                            href={`/events/${oneEvent?.id_event}/catalogs/create`} 
-                            className="text-blue-600 hover:text-blue-800 text-lg font-semibold">
-                            Ajouter les catalogss <span className="text-sm text-amber-500">(facultatif)</span>
-                        </a>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { setOpenModal(false); setWarningModal(true); }}>
-                        Plus tard
-                    </Button>
-                    <Button 
-                        variant="outlined" 
-                        color="secondary" 
-                        onClick={() => { 
-                            setOpenModal(false); 
-                            navigate(`/events/update/${oneEvent?.id_event}`); 
-                        }}
+            {!id && 
+                <>
+                    <Dialog 
+                        open={openModal} 
+                        onClose={() => setOpenModal(false)}
+                        disableEscapeKeyDown
                     >
-                        Annuler
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                        <DialogTitle>
+                            <span>Événement créé avec succès !</span>
+                        </DialogTitle>
+                        <DialogContent>
+                            <div className="flex flex-col gap-4">
+                                <a 
+                                    href={`/events/${oneEvent?.id_event}/programs`} 
+                                    className="text-blue-600 hover:text-blue-800 text-lg font-semibold">
+                                    Ajouter les programmes <span className="text-sm text-red-500">(obligatoire)</span>
+                                </a>
+                                <a 
+                                    href={`/events/${oneEvent?.id_event}/medias`} 
+                                    className="text-blue-600 hover:text-blue-800 text-lg font-semibold">
+                                    Ajouter les médias <span className="text-sm text-red-500">(obligatoire)</span>
+                                </a>
+                                <a 
+                                    href={`/events/${oneEvent?.id_event}/catalogs`} 
+                                    className="text-blue-600 hover:text-blue-800 text-lg font-semibold">
+                                    Ajouter les catalogues <span className="text-sm text-amber-500">(facultatif)</span>
+                                </a>
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => { setOpenModal(false); setWarningModal(true); }}>
+                                Plus tard
+                            </Button>
+                            <Button 
+                                variant="outlined" 
+                                color="secondary" 
+                                onClick={() => { 
+                                    setOpenModal(false); 
+                                    navigate("/events"); 
+                                }}
+                            >
+                                Annuler
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
 
-            <Dialog 
-                open={warningModal} 
-                onClose={() => setWarningModal(false)}
-                disableEscapeKeyDown
-            >
-                <DialogContent className="flex gap-4 items-center">
-                    <AlertTriangle size={15} color="red" style={{ marginRight: 8 }} />
-                    <span className="text-red-500">Votre événement ne sera pas visible si vous vous arrêtez là.</span>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => navigate("/events")}>
-                        D'accord
-                    </Button>
-                    <Button 
-                        variant="contained" 
-                        onClick={() => { 
-                            setWarningModal(false); 
-                            setOpenModal(true); 
-                        }}
+                    <Dialog 
+                        open={warningModal} 
+                        onClose={() => setWarningModal(false)}
+                        disableEscapeKeyDown
                     >
-                        Revenir en arrière
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                        <DialogContent className="flex gap-4 items-center">
+                            <AlertTriangle size={24} color="red" style={{ marginRight: 8 }} />
+                            <span className="text-red-500">Votre événement ne sera pas visible si vous vous arrêtez là.</span>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => navigate("/events")}>
+                                D'accord
+                            </Button>
+                            <Button 
+                                variant="contained" 
+                                onClick={() => { 
+                                    setWarningModal(false); 
+                                    setOpenModal(true); 
+                                }}
+                            >
+                                Revenir en arrière
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </>
+            } 
         </Layout>
     );
 };

@@ -47,6 +47,7 @@ const CreateLieu: React.FC = () => {
             const fetchLieu = async () => {
                 try {
                     const response = await apiClient.get(`/lieu/${id}`);
+                    console.log('REPONSE:', response.data)
                     setLieu(response.data); 
                 } catch (error) {
                     toast.error("Erreur lors de la récupération du lieu");
@@ -67,18 +68,20 @@ const CreateLieu: React.FC = () => {
             description: lieu?.description ?? ""
         },
         validationSchema,
-        onSubmit: async (values, { resetForm }) => {
+        onSubmit: async (values) => {
             try {
                 if (id) {
                     await apiClient.put(`/lieu/${id}`, values); 
                     toast.success("Lieu mis à jour !");
+                    navigate('/admin/lieux')
                 } else {
                     const response = await apiClient.post("/lieu", values); 
                     toast.success("Lieu créé !");
-                    setCreatedLieuId(response.data?.lieu?.id_lieu ?? null); 
+
+                    console.log('response', response.data, response.data?.nouveauLieu?.id_lieu)
+                    setCreatedLieuId(response.data?.nouveauLieu?.id_lieu ?? null); 
                     setOpenModal(true); 
                 }
-                resetForm();
             } catch (error) {
                 toast.error("Erreur lors de l'enregistrement du lieu");
                 console.log({error});
@@ -86,14 +89,26 @@ const CreateLieu: React.FC = () => {
         },
     });
 
+    useEffect(() => {
+        formik.setValues({
+            nom: lieu?.nom ?? "",
+            adresse: lieu?.adresse ?? "",
+            latitude: lieu?.latitude ?? "",
+            longitude: lieu?.longitude ?? "",
+            description: lieu?.description ?? ""
+        });
+    }, [lieu]);
+    
+
     const handleCloseModal = () => {
         setOpenModal(false);
+        navigate('/admin/lieux');
     };
 
     const handleAddParcours = () => {
         setOpenModal(false);
         if (createdLieuId) {
-            navigate(`/admin/lieux/${createdLieuId}/parcours/create`); // Rediriger vers la page de création de parcours avec l'ID
+            navigate(`/admin/lieux/${createdLieuId}/parcours`); // Rediriger vers la page de création de parcours avec l'ID
         }
     };
 
