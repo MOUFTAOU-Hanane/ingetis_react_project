@@ -2,6 +2,7 @@ const express = require("express");
 const path = require('path');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const authMiddleware = require('./src/middlewares/authMiddleware');
 
 const sequelize = require('./src/db/sequelize.js');
 const authRoutes = require('./src/routes/authentication.js');  
@@ -15,8 +16,6 @@ const oeuvreRoutes = require('./src/routes/oeuvre.js');
 const participantRoutes = require('./src/routes/participant.js'); 
 const mediaRoutes = require('./src/routes/media.js');
 const commentRoutes = require('./src/routes/commentaire.js');  // Correction ici
-
-
 
 const bodyParser = require("body-parser");
 const cors = require('cors');
@@ -34,6 +33,21 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API pour gérer les événements, utilisateurs, œuvres, etc.'
     },
+    components: {
+      securitySchemes: {
+        BearerAuth: { // Schéma de sécurité pour JWT
+          type: 'apiKey',
+          in: 'header',
+          name: 'Authorization',
+          description: 'Entrez votre token JWT dans le format `Bearer <token>`'
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [], // Applique le schéma de sécurité globalement
+      },
+    ],
   },
   apis: ['./src/routes/*.js'],  // Recherche des annotations Swagger dans tous les fichiers de routes
 };
@@ -55,22 +69,22 @@ const corsOptions = {
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-// Utilisation des routes
+// Utilisation des routes publiques (authentification)
 app.use('/api/auth', authRoutes);
+
+// Middleware global → protège toutes les routes suivantes
+app.use(authMiddleware);  // Appliquer le middleware d'auth après les routes publiques
+
+// Routes sécurisées
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/lieu', lieuRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/programs', programRoutes);
 app.use('/api/media', mediaRoutes);
-
 app.use('/api/catalogs', catalogueRoutes);
 app.use('/api/oeuvres', oeuvreRoutes);
 app.use('/api/participants', participantRoutes);
 app.use('/api/comments', commentRoutes);
-
-
-
-
 
 app.listen(port, () => console.log('API démarrée sur http://localhost:' + port));
