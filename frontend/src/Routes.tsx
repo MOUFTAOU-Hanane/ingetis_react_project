@@ -22,6 +22,7 @@ import EventsPage from "./pages/client/events/EventsPage";
 import OeuvresPage from "./pages/client/oeuvres/OeuvresPage";
 import EventDetails from "./pages/client/events/EventDetails";
 import ClientDashboard from "./pages/client/dashboard/ClientDashboard";
+import OrganisateurDashboard from "./pages/organisateur/dashboard/OrganisateurDashboard";
 
 // Définition stricte des rôles
 const ROLES = {
@@ -50,9 +51,9 @@ const routes: AppRoute[] = [
     { path: "/admin/lieux/update/:id", element: <CreateLieu />, allowedRoles: [ROLES.ADMIN] },
     { path: "/admin/lieux/:id/parcours/create", element: <AddParcours />, allowedRoles: [ROLES.ADMIN] },
     { path: "/admin/lieux/:id/parcours", element: <ParcoursList />, allowedRoles: [ROLES.ADMIN] },
+    { path: "/events", element: <EventsList />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
     { path: "/events/create", element: <CreateEvent />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
     { path: "/events/update/:id", element: <CreateEvent />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
-    { path: "/events", element: <EventsList />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
     { path: "/events/:id/programs", element: <EventPrograms />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
     { path: "/events/:id/catalogs", element: <EventCatalogs />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
     { path: "/events/:id/medias", element: <EventMedias />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
@@ -61,6 +62,7 @@ const routes: AppRoute[] = [
     { path: "/oeuvres/update/:id", element: <CreateOeuvre />, allowedRoles: [ROLES.ADMIN, ROLES.ORGANISATEUR] },
     { path: "/user/events", element: <EventsPage />, allowedRoles: [ROLES.USER] },
     { path: "/user/dashboard", element: <ClientDashboard />, allowedRoles: [ROLES.USER] },
+    { path: "/organisateur/dashboard", element: <OrganisateurDashboard />, allowedRoles: [ROLES.ORGANISATEUR] },
     { path: "/user/events/:id", element: <EventDetails />, allowedRoles: [ROLES.USER] },
     { path: "/user/oeuvres", element: <OeuvresPage />, allowedRoles: [ROLES.USER] },
 ];

@@ -9,6 +9,7 @@ import EventModal from "./EventModal";
 import { IEvent } from "../../interfaces";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import DataTable from "../../components/DataTable"; 
+import { useAuth } from "../../context/AuthContext";
 
 const EventsList: React.FC = () => {
     const navigate = useNavigate();
@@ -19,12 +20,17 @@ const EventsList: React.FC = () => {
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
     const [eventToDelete, setEventToDelete] = useState<IEvent | null>(null);
     const [filterUpcoming, setFilterUpcoming] = useState<boolean>(true);
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const response = await apiClient.get('/events'); 
-                setEvents(response.data);
+                const filteredEvents = user?.role === 'organisateur' 
+                    ? response.data.filter((obj: IEvent) => obj.createur.id_user === user.id_user) //Attente backend 
+                    : response.data;
+
+                setEvents(filteredEvents);
             } catch (error) {
                 toast.error("Erreur lors de la récupération des évènements !");
                 console.log(error);
@@ -59,10 +65,11 @@ const EventsList: React.FC = () => {
         setIsConfirmationOpen(true);
     };
 
-    const handleDeleteEvent = () => {
+    const handleDeleteEvent = async () => {
         if (!eventToDelete) return;
 
         try {
+            await apiClient.delete(`/events/${eventToDelete.id_event}`);
             setEvents((prevEvents) => prevEvents ? prevEvents.filter((e) => e.id_event !== eventToDelete.id_event) : []);
             toast.success("Événement supprimé avec succès !");
         } catch (error) {
@@ -98,7 +105,7 @@ const EventsList: React.FC = () => {
     const columns = [
         {
             label: "Titre",
-            key: "titre" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            key: "titre" as keyof IEvent,  
             render: (event: IEvent) => (
                 <div className="flex items-center gap-2">
                     {(event.programs.length === 0 || event.medias.length === 0) && (
@@ -110,27 +117,27 @@ const EventsList: React.FC = () => {
         },
         {
             label: "Description",
-            key: "description" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            key: "description" as keyof IEvent,  
             render: (event: IEvent) => event.description,
         },
         {
             label: "Date début",
-            key: "date_debut" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            key: "date_debut" as keyof IEvent,  
             render: (event: IEvent) => dayjs(event.date_debut).format("DD/MM/YYYY"),
         },
         {
             label: "Date fin",
-            key: "date_fin" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            key: "date_fin" as keyof IEvent,  
             render: (event: IEvent) => dayjs(event.date_fin).format("DD/MM/YYYY"),
         },
         {
             label: "Lieu",
-            key: "lieu" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            key: "lieu" as keyof IEvent,  
             render: (event: IEvent) => event.lieu.adresse,
         },
         {
             label: "Actions",
-            key: "actions" as keyof IEvent,  // Corrigé : La clé doit être une clé de l'objet Event
+            key: "actions" as keyof IEvent,  
             render: (event: IEvent) => (
                 <div className="flex items-center gap-3">
                     <Eye size={16} className="cursor-pointer text-green-600" onClick={() => handleOpenModal(event)} />

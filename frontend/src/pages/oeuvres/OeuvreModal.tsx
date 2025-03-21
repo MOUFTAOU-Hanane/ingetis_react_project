@@ -1,10 +1,10 @@
 import React from "react";
 import { X, Image, Tag } from "lucide-react"; // Import des icônes
-import { Oeuvre } from "../../interfaces";
+import { IOeuvre } from "../../interfaces";
 
 interface OeuvreModalProps {
     isOpen: boolean;
-    oeuvre: Oeuvre | null;
+    oeuvre: IOeuvre | null;
     onClose: () => void;
 }
 
@@ -23,7 +23,7 @@ const OeuvreModal: React.FC<OeuvreModalProps> = ({ isOpen, oeuvre, onClose }) =>
                 </button>
 
                 {/* Image de l'œuvre */}
-                <img src={oeuvre.image} alt={oeuvre.titre} className="w-full h-64 object-cover rounded-md" />
+                <img src={`http://localhost:3005${oeuvre.image}`} alt={oeuvre.titre} className="w-full h-64 object-cover rounded-md" />
 
                 {/* Titre de l'œuvre */}
                 <h2 className="text-2xl font-bold mt-4 text-center text-purple-600">{oeuvre.titre}</h2>

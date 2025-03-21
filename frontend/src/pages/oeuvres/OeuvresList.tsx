@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IOeuvre } from "../../interfaces";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import apiClient from "../../apiClient";
+import { useAuth } from "../../context/AuthContext";
 
 
 const OeuvresList: React.FC = () => {
@@ -16,12 +17,17 @@ const OeuvresList: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState<boolean>(false);
     const [oeuvreToDelete, setOeuvreToDelete] = useState<IOeuvre | null>(null);
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const response = await apiClient.get('/oeuvres'); 
-                setOeuvres(response.data);
+                const filteredOeuvres = user?.role === 'organisateur' 
+                    ? response.data.filter((obj: IOeuvre) => obj.User.id_user === user.id_user) //Attente backend : user mais pas User
+                    : response.data;
+
+                setOeuvres(filteredOeuvres);
             } catch (error) {
                 toast.error("Erreur lors de la récupération des oeuvres !");
                 console.log(error);
@@ -101,7 +107,7 @@ const OeuvresList: React.FC = () => {
                                         <td className="px-6 py-4">{oeuvre.prix} €</td>
                                         <td className="px-6 py-4">
                                             {oeuvre.image && 
-                                                <img src={oeuvre.image} alt={oeuvre.titre} className="h-12 w-12 object-cover" />
+                                                <img src={`http://localhost:3005${oeuvre.image}`} alt={oeuvre.titre} className="h-12 w-12 object-cover" />
                                             }
                                         </td>
                                         <td className="px-6 py-4">

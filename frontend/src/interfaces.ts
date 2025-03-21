@@ -40,11 +40,12 @@ export interface IEvent {
     programs: IProgram[];
     medias: IMedia[];
     catalogs: ICatalog[];
+    createur: IUser;
 }
 
 export interface IOeuvre {
     id_oeuvre: number;
-    id_user: number;
+    user: IUser;
     titre: string;
     type: "image" | "peinture" | "sculpture" | "vidéo" | string;
     description: string;
