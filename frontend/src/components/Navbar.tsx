@@ -12,16 +12,18 @@ const Navbar = () => {
 
     return (
         <nav className="backdrop-blur-sm">
-            <div className="container mx-auto flex justify-between items-center px-6 py-2">
-                {/* Logo and Brand */}
-                <div className="flex items-center">
-                    <span className="text-2xl font-bold text-white"><EventMasterLogo /></span>
+            <div className="container mx-auto px-6 py-2 flex items-center">
+                {/* Logo and Brand - Fixed width to maintain consistent spacing */}
+                <div className="w-1/4">
+                    <NavLink to="/" className="text-2xl font-bold text-white">
+                        <EventMasterLogo />
+                    </NavLink>
                 </div>
 
-                {/* Main Navigation for Desktop */}
-                <div className="hidden md:flex flex-grow justify-center space-x-8">
+                {/* Main Navigation - Centered with fixed width */}
+                <div className="w-2/4 flex justify-center">
                     {user && (
-                        <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem] flex items-center space-x-8">
+                        <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem] flex items-center space-x-8 mx-auto">
                             {(user.role === 'admin' || user.role === 'organisateur') && (
                                 <>
                                     <NavLink to="/events" className={({ isActive }) => `text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem] ${isActive ? 'bg-gray-200/50 backdrop-blur text-white' : ''}`}>Evenements</NavLink>
@@ -42,25 +44,28 @@ const Navbar = () => {
                     )}
                 </div>
 
-                {user ? (
-                    <div className="items-center space-x-4 ml-auto hidden md:flex">
-                        <NavLink to={`/${user.role}/dashboard`} className="text-white/80 hover:text-white">Tableau de Bord</NavLink>
-                        <button onClick={logout} className="px-4 py-2 bg-white text-purple-500 rounded-full hover:bg-white/90">Logout</button>
-                    </div>
-                ) : (
-                    <>
-                        <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Login</NavLink>
-                        <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">Sign Up</NavLink>
-                    </>
-                )}
+                {/* Auth Controls - Fixed width to maintain consistent spacing */}
+                <div className="w-1/4 flex justify-end">
+                    {user ? (
+                        <div className="hidden md:flex items-center space-x-4">
+                            <NavLink to={`/${user.role}/dashboard`} className="text-white/80 hover:text-white">Tableau de Bord</NavLink>
+                            <button onClick={logout} className="px-4 py-2 bg-white text-purple-500 rounded-full hover:bg-white/90">Logout</button>
+                        </div>
+                    ) : (
+                        <div className="hidden md:flex items-center space-x-4">
+                            <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Login</NavLink>
+                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">Sign Up</NavLink>
+                        </div>
+                    )}
 
-                {/* Mobile Menu Button */}
-                <div className="md:hidden">
-                    <button onClick={toggleMenu} className="text-white">
-                        <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+                    {/* Mobile Menu Button */}
+                    <div className="md:hidden">
+                        <button onClick={toggleMenu} className="text-white">
+                            <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -91,14 +96,12 @@ const Navbar = () => {
                             </div>
                         </div>
                     )}
-                    <div className="mt-4 flex items-center justify-between space-x-4">
-                        {!user ? (
-                            <>
-                                <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Login</NavLink>
-                                <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">Sign Up</NavLink>
-                            </>
-                        ) : null}
-                    </div>
+                    {!user && (
+                        <div className="mt-4 flex items-center justify-between space-x-4">
+                            <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Login</NavLink>
+                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">Sign Up</NavLink>
+                        </div>
+                    )}
                 </div>
             )}
         </nav>
