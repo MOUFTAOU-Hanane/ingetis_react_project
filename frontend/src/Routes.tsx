@@ -23,6 +23,7 @@ import OeuvresPage from "./pages/client/oeuvres/OeuvresPage";
 import EventDetails from "./pages/client/events/EventDetails";
 import ClientDashboard from "./pages/client/dashboard/ClientDashboard";
 import OrganisateurDashboard from "./pages/organisateur/dashboard/OrganisateurDashboard";
+import { Contact, PrivacyPolicy, TermsOfService } from "./pages/FooterElements";
 
 // Définition stricte des rôles
 const ROLES = {
@@ -65,6 +66,9 @@ const routes: AppRoute[] = [
     { path: "/organisateur/dashboard", element: <OrganisateurDashboard />, allowedRoles: [ROLES.ORGANISATEUR] },
     { path: "/user/events/:id", element: <EventDetails />, allowedRoles: [ROLES.USER] },
     { path: "/user/oeuvres", element: <OeuvresPage />, allowedRoles: [ROLES.USER] },
+    { path: "/privacy-policy", element: <PrivacyPolicy />},
+    { path: "/terms-of-service", element: <TermsOfService />},
+    { path: "/contact", element: <Contact />},
 ];
 
 const AppRoutes = () => {

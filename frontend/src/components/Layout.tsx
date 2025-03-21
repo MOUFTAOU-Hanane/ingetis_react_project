@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './Navbar';
+import { Link } from 'react-router-dom';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -42,15 +43,15 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                                     © {new Date().getFullYear()} Event Master. Tous droits réservés.
                                 </div>
                                 <div className="flex gap-6">
-                                    <a href="#" className="text-white/80 hover:text-white transition-colors">
-                                        Privacy Policy
-                                    </a>
-                                    <a href="#" className="text-white/80 hover:text-white transition-colors">
-                                        Terms of Service
-                                    </a>
-                                    <a href="#" className="text-white/80 hover:text-white transition-colors">
-                                        Contact
-                                    </a>
+                                    <Link to="/privacy-policy" className="text-white/80 hover:text-white transition-colors">
+                                        Politique de Confidentialité
+                                    </Link>
+                                    <Link to="/terms-of-service" className="text-white/80 hover:text-white transition-colors">
+                                        Conditions d'Utilisation
+                                    </Link>
+                                    <Link to="/contact" className="text-white/80 hover:text-white transition-colors">
+                                        Nous Contacter
+                                    </Link>
                                 </div>
                             </div>
                         </div>
