@@ -1,18 +1,16 @@
 import React from "react";
-import { MapPin, Info, X, ExternalLink } from "lucide-react"; // Import des icônes
-import { Lieu } from "./LieuxList"; // Assurez-vous que le type Lieu est bien exporté
+import { MapPin, Info, X } from "lucide-react"; // Import des icônes
+import { ILieu } from "../../../../interfaces";
+import Map from "../../../../components/Map";
 
 interface LieuModalProps {
     isOpen: boolean;
-    lieu: Lieu | null;
+    lieu: ILieu | null;
     onClose: () => void;
 }
 
 const LieuModal: React.FC<LieuModalProps> = ({ isOpen, lieu, onClose }) => {
     if (!isOpen || !lieu) return null;
-
-    // URL Google Maps avec latitude et longitude
-    const mapUrl = `https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}`;
 
     return (
         <div className="fixed inset-0 flex justify-center items-center backdrop-blur-sm bg-opacity-30 z-50">
@@ -53,15 +51,7 @@ const LieuModal: React.FC<LieuModalProps> = ({ isOpen, lieu, onClose }) => {
 
                 {/* Bouton "Voir dans le map" */}
                 <div className="mt-6 flex justify-center">
-                    <a
-                        href={mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-all"
-                    >
-                        <ExternalLink size={16} />
-                        Voir dans le map
-                    </a>
+                    <Map latitude={lieu.latitude} longitude={lieu.longitude} name={lieu.adresse}/>
                 </div>
             </div>
         </div>

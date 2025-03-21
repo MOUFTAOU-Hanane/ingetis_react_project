@@ -62,12 +62,12 @@ export interface IParticipant {
 }
 
 export interface IParcours {
-    id_parcours: number;
+    id_parcours?: number;
     nom: string;
     description: string;
-    lieu: ILieu;
-    date_debut: string;
-    date_fin: string;
+    // lieu: ILieu;
+    // date_debut: Date;
+    // date_fin: Date;
 }
 
 // Types communs pour le tableau de bord client

@@ -2,7 +2,7 @@ import React from "react";
 import { Trash, X } from "lucide-react";
 import { Button } from "@mui/material";
 
-interface ConfirmationModalProps {
+interface IConfirmationModalProps {
     title: string,
     isOpen: boolean;
     lieuNom: string | null;
@@ -10,7 +10,7 @@ interface ConfirmationModalProps {
     onCancel: () => void;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, lieuNom, onConfirm, onCancel }) => {
+const ConfirmationModal: React.FC<IConfirmationModalProps> = ({ isOpen, title, lieuNom, onConfirm, onCancel }) => {
     if (!isOpen) return null;
 
     return (
