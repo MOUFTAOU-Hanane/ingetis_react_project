@@ -1,14 +1,10 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface User {
-    role: 'admin' | 'user' | 'org';
-    id_user: number;
-}
+import { IUser } from '../interfaces';
 
 interface AuthContextType {
-    user: User | null;
-    login: (user: User) => void;
+    user: IUser | null;
+    login: (user: IUser) => void;
     logout: () => void;
 }
 
@@ -20,12 +16,12 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // console.log({sessionStorage})
-    const [user, setUser] = useState<User | null>(() => {
+    const [user, setUser] = useState<IUser | null>(() => {
         const storedUser = sessionStorage.getItem('user');
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    const login = (user: User) => {
+    const login = (user: IUser) => {
         setUser(user);
         sessionStorage.setItem('user', JSON.stringify(user)); 
     };

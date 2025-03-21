@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { Event } from '../../../interfaces';
-import { Calendar, MapPin, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { IEvent, IParticipant } from '../../../interfaces';
+import { Calendar, MapPin, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { toast } from 'react-toastify'; // Assure-toi d'avoir installé react-toastify
 import ConfirmationModal from './ConfirmationModal'; // Assure-toi de bien importer le modal
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
+import apiClient from '../../../apiClient';
 
 interface EventCardProps {
-    event: Event;
+    event: IEvent;
     toggleEventExpansion: (id: number) => void;
     expandedEvents: Set<number>;
 }
 
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: Date) => {
     return format(new Date(dateString), 'dd MMMM yyyy à HH:mm', { locale: fr });
 };
 
@@ -21,6 +23,27 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+    const [participants, setParticipants] = useState<IParticipant | []>([]);
+    const { user } = useAuth();
+
+    useEffect(() => {
+        const fetchParticipants = async () => {
+            try {
+                const response = await apiClient.get('/participants');
+                console.log('RESPONSE', response.data);
+
+                // Filtrer pour l'user connecté
+                const filtered = response.data.filter(
+                    (participant: IParticipant) => participant.user.id_user == user?.id_user
+                );
+                setParticipants(filtered); 
+            } catch (error) {
+                console.error('Error fetching participants:', error);
+            }
+        };
+    
+        fetchParticipants(); // Appel de la fonction quand le composant se monte
+    }, []);
 
     const handleOpenModal = (eventId: number) => {
         setSelectedEventId(eventId);
@@ -34,33 +57,31 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
 
     const handleRegister = async (eventId: number) => {
         try {
-            // Logique pour l'inscription (ici c'est simulé par un timeout)
-            const response = await new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    // On simule une inscription réussie ou échouée
-                    const success = Math.random() > 0.5; // Simule aléatoirement une réussite ou échec
-                    success ? resolve('Inscription réussie !') : reject('Erreur lors de l\'inscription');
-                }, 1000);
-            });
-
+            await apiClient.post('/participants', {id_event: eventId, id_user: user?.id_user, statut: 'demande' })
             // Si l'inscription est réussie
-            toast.success(response as string);
+            toast.success("Demande d'inscription réussie !");
+            setIsModalOpen(false);
+            setSelectedEventId(null);
         } catch (error) {
             // Si une erreur survient
             toast.error(error as string);
         }
     };
 
+    const isAlreadyRegistered = useMemo(() => {
+        return Object.values(participants).some((participant: IParticipant) => participant.event.id_event === event.id_event);
+    }, [participants, event.id_event]);
+
     return (
-        <div key={event.id_event} className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-white/15">
+        <div key={event.id_event} className="!h-[280px]">
             <div className="grid grid-cols-1 md:grid-cols-3">
                 {/* Event Image */}
                 <div className="md:col-span-1 h-64 md:h-full relative">
-                    <img
-                        src={event.medias[0]?.url_media || "/api/placeholder/400/600"}
-                        alt={event.titre}
-                        className="w-full h-full object-cover"
-                    />
+                        <img
+                            src={`http://localhost:3005${event.medias[0]?.url_media}` || "/api/placeholder/400/600"}
+                            alt={event.titre}
+                            className="w-full h-full object-cover"
+                        />
                     <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                         Événement
                     </div>
@@ -104,9 +125,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
                         
                         <button
                             className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-6 py-2 transition-colors font-medium"
-                            onClick={() => handleOpenModal(event.id_event)}
+                            onClick={() => isAlreadyRegistered ? undefined : handleOpenModal(event.id_event)}
                         >
-                            S'inscrire
+                            {isAlreadyRegistered ? 'Déjà inscrit' : 'S\'inscrire'}
                         </button>
                     </div>
                 </div>

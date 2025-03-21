@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Event } from '../../../interfaces';
+import { IEvent } from '../../../interfaces';
 import Layout from '../../../components/Layout';
 import SearchBar from '../../../components/SearchBar';
 import { EventCard } from './EventCard';
-import EventDetails from './EventDetails';
 import EventComment from './EventComment';
-import eventsData from '../../../data/events.json';
 import { toast } from 'react-toastify';
 import apiClient from '../../../apiClient';
 
 const EventsPage: React.FC = () => {
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<IEvent[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [expandedEvents, setExpandedEvents] = useState<Set<number>>(new Set());
@@ -19,7 +17,7 @@ const EventsPage: React.FC = () => {
         const fetchEvents = async () => {
             try {
                 const response = await apiClient.get('/events'); 
-                setEvents(response.data);
+                setEvents(response.data.filter((event: IEvent) => event.medias.length > 0 && event.programs.length > 0)); //Programmes et Médias non vide
             } catch (error) {
                 toast.error("Erreur lors de la récupération des évènements !");
                 console.log(error);
@@ -30,10 +28,6 @@ const EventsPage: React.FC = () => {
 
         fetchEvents();
     }, []);
-
-    useEffect(() => {
-        console.log({events});
-    }, [events]);
 
     const toggleEventExpansion = (id: number) => {
         setExpandedEvents((prev) => {
@@ -68,12 +62,10 @@ const EventsPage: React.FC = () => {
                 ) : (
                     <div className="grid grid-cols-1 gap-8">
                         {filteredEvents.map((event) => (
-                            <div key={event.id_event}>
+                            <div key={event.id_event} className='bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-white/15'>
                                 <EventCard event={event} toggleEventExpansion={toggleEventExpansion} expandedEvents={expandedEvents} />
                                 {expandedEvents.has(event.id_event) && (
-                                    <>
-                                        <EventComment eventId={event.id_event} />
-                                    </>
+                                    <EventComment event={event} />
                                 )}
                             </div>
                         ))}

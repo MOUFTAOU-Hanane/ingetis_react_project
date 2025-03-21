@@ -1,15 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { IEvent } from "../../../interfaces";
-import { Calendar, Image, BookOpen, MapPin, Info, Clock } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { IEvent, IParticipant } from "../../../interfaces";
+import { Calendar, Image, BookOpen, MapPin, Clock } from "lucide-react";
 import { formatDate } from "./EventCard"; // Utilisez la fonction formatDate de EventCard
 import apiClient from "../../../apiClient";
 import { useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
 import { toast } from "react-toastify";
+import Map from "../../../components/Map";
+import { useAuth } from "../../../context/AuthContext";
+import ConfirmationModal from "./ConfirmationModal";
 
 const EventDetails: React.FC = () => {
     const [event, setEvent] = useState<IEvent | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const { id } = useParams();
+    const [participants, setParticipants] = useState<IParticipant | []>([]);
+    const { user } = useAuth();
+
+    useEffect(() => {
+        const fetchParticipants = async () => {
+            try {
+                const response = await apiClient.get('/participants');
+                console.log('RESPONSE', response.data);
+
+                // Filtrer pour l'user connecté
+                if(id) {
+                    const filtered = response.data.filter(
+                        (participant: IParticipant) => participant.user.id_user == user?.id_user && participant?.event?.id_event == parseInt(id)
+                    );
+                    setParticipants(filtered); 
+                }
+            } catch (error) {
+                console.error('Error fetching participants:', error);
+            }
+        };
+    
+        fetchParticipants(); 
+    }, [id]);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -30,10 +57,9 @@ const EventDetails: React.FC = () => {
         const debut = new Date(dateDebut);
         const fin = new Date(dateFin);
 
-        console.log({dateDebut, dateFin}, dateDebut === dateFin)
         // Same day event
         if (dateDebut === dateFin) {
-            return formatDate(dateDebut);
+            return formatDate(new Date(dateDebut));
         }
 
         // Multi-day event
@@ -50,17 +76,45 @@ const EventDetails: React.FC = () => {
         return `${debutFormatted} - ${finFormatted}`;
     };
 
+    const isAlreadyRegistered = useMemo(() => {
+        return Object.values(participants).some((participant: IParticipant) => participant.event.id_event === event?.id_event);
+    }, [participants, event?.id_event]);
+
+    const handleModal = () => {
+        setIsModalOpen((prev) => !prev);
+    };
+
+    const handleRegister = async () => {
+        try {
+            await apiClient.post('/participants', {id_event: event?.id_event, id_user: user?.id_user, statut: 'demande' })
+            // Si l'inscription est réussie
+            toast.success("Demande d'inscription réussie !");
+            setIsModalOpen(false);
+        } catch (error) {
+            // Si une erreur survient
+            toast.error(error as string);
+        }
+    };
+
     return (
         <Layout title={event?.titre || "Détails de l'événement"}>
             {event && (
                 <>
+                    <div className="p-4 text-end">
+                        <button
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg px-6 py-2 transition-colors font-medium"
+                            onClick={() => isAlreadyRegistered ? undefined : handleModal()}
+                        >
+                            {isAlreadyRegistered ? 'Déjà inscrit' : 'S\'inscrire'}
+                        </button>
+                    </div>
                     {/* Event Header Section - Newly Added */}
                     <div className="mb-8">
                         {/* Main image if available */}
                         {event.medias && event.medias.length > 0 && (
                             <div className="w-full h-64 rounded-xl overflow-hidden mb-6">
                                 <img
-                                    src={event.medias[0].url_media}
+                                    src={`http://localhost:3005${event.medias[0].url_media}`}
                                     alt={event.titre}
                                     className="w-full h-full object-cover"
                                 />
@@ -98,29 +152,28 @@ const EventDetails: React.FC = () => {
                                 <Calendar size={18} />
                                 <span>Programme</span>
                             </h3>
-                            <div className="space-y-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {event.programs.map((program) => (
                                     <div
                                         key={program.id_program}
                                         className="bg-white/5 rounded-lg p-4"
                                     >
-                                        <div className="flex justify-between">
-                                            <h4 className="font-medium text-white">
-                                                {program.titre}
-                                            </h4>
-                                            <span className="text-purple-300">
-                                                {formatDate(program.date_heure)}
-                                            </span>
-                                        </div>
-                                        <p className="text-white/80 mt-1">{program.description}</p>
+                                    <div className="flex justify-between">
+                                        <h4 className="font-medium text-white">{program.titre}</h4>
+                                        <span className="text-purple-300">
+                                            {formatDate(program.date_heure)}
+                                        </span>
+                                    </div>
+                                    <p className="text-white/80 mt-1">{program.description}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     )}
 
+
                     {/* Media Gallery */}
-                    {event.medias.length > 1 && (
+                    {event.medias.length > 0 && (
                         <div className="mb-8">
                             <h3 className="text-xl font-semibold text-yellow-500 mb-3 flex items-center gap-2">
                                 <Image size={18} />
@@ -130,7 +183,7 @@ const EventDetails: React.FC = () => {
                                 {event.medias.map((media) => (
                                     <img
                                         key={media.id_media}
-                                        src={media.url_media}
+                                        src={`http://localhost:3005${media.url_media}`}
                                         alt="Média de l'événement"
                                         className="rounded-lg h-24 w-full object-cover"
                                     />
@@ -146,25 +199,22 @@ const EventDetails: React.FC = () => {
                                 <BookOpen size={18} />
                                 <span>Catalogues</span>
                             </h3>
-                            <div className="space-y-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                 {event.catalogs.map((catalog) => (
                                     <div
                                         key={catalog.id_catalog}
                                         className="bg-white/5 rounded-lg p-4"
                                     >
-                                        <h4 className="font-medium text-white">
-                                            {catalog.nom_catalogue}
-                                        </h4>
-                                        <p className="text-white/80 mt-1">{catalog.description}</p>
-                                        <button className="mt-2 text-purple-300 hover:text-purple-100 transition-colors flex items-center gap-1">
-                                            <Info size={14} />
-                                            <span>Télécharger</span>
-                                        </button>
+                                    <h4 className="font-medium text-white">
+                                        {catalog.nom_catalogue}
+                                    </h4>
+                                    <p className="text-white/80 mt-1">{catalog.description}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     )}
+
 
                     {/* Location */}
                     <div>
@@ -177,14 +227,18 @@ const EventDetails: React.FC = () => {
                             <p className="text-white/80">{event.lieu.adresse}</p>
                             <p className="text-white/80 mt-2">{event.lieu.description}</p>
                             <div className="mt-3 h-48 rounded-lg overflow-hidden bg-gray-200">
-                                <img
-                                    src={`/api/placeholder/800/400`}
-                                    alt="Plan du lieu"
-                                    className="w-full h-full object-cover"
-                                />
+                                <Map latitude={event.lieu.latitude} longitude={event.lieu.longitude} name={event.lieu.nom} />
                             </div>
                         </div>
                     </div>
+
+                    {/* Modal */}
+                    <ConfirmationModal
+                        isOpen={isModalOpen}
+                        eventId={event?.id_event}
+                        onClose={handleModal}
+                        onConfirm={handleRegister}
+                    />
                 </>
             )}
         </Layout>

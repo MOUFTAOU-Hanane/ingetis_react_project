@@ -1,12 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { Event, Favorite, Reservation } from '../../../interfaces';
+import { IEvent, IFavorite, IParticipant } from '../../../interfaces';
 import { formatDate, formatDateTime, isUpcoming } from '../../../helpers/utils';
 
 interface OverviewProps {
-    userEvents: Event[];
-    reservations: Reservation[];
-    favorites: Favorite[];
+    userEvents: IEvent[];
+    reservations: IParticipant[];
+    favorites: IFavorite[];
 }
 
 const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservations }) => {
@@ -34,7 +34,7 @@ const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservation
             <div className="mt-8">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-gray-800">Vos prochains événements</h2>
-                    <NavLink to="/client/events" className="text-purple-600 hover:text-purple-800">
+                    <NavLink to="/user/events" className="text-purple-600 hover:text-purple-800">
                         Voir tout
                     </NavLink>
                 </div>
@@ -46,7 +46,7 @@ const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservation
                                 {event.medias && event.medias[0] && (
                                     <div className="w-24 h-24 rounded-md overflow-hidden mr-4 bg-gray-100 flex-shrink-0">
                                     <img 
-                                        src={event.medias[0].url_media} 
+                                        src={`http://localhost:3005${event.medias[0].url_media}`} 
                                         alt={event.titre}
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
@@ -69,7 +69,7 @@ const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservation
                                             {isUpcoming(event.date_debut) ? 'À venir' : 'Passé'}
                                         </span>
                                         <NavLink 
-                                            to={`/client/events/${event.id_event}`} 
+                                            to={`/user/events/${event.id_event}`} 
                                             className="text-purple-600 hover:text-purple-800"
                                         >
                                             Détails
@@ -84,10 +84,10 @@ const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservation
                         <div className="col-span-2 text-center p-8 border rounded-lg">
                             <p className="text-gray-600">Aucun événement à venir. Découvrez notre catalogue d'événements !</p>
                             <NavLink 
-                            to="/client/events" 
-                            className="mt-4 inline-block px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700"
+                                to="/user/events" 
+                                className="mt-4 inline-block px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700"
                             >
-                            Parcourir les événements
+                                Parcourir les événements
                             </NavLink>
                         </div>
                     )}
@@ -105,9 +105,9 @@ const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservation
                             eventId: event.id_event
                         }))
                     )
-                        .sort((a, b) => new Date(a.date_heure).getTime() - new Date(b.date_heure).getTime())
-                        .slice(0, 3)
-                        .map(program => (
+                    .sort((a, b) => new Date(a.date_heure).getTime() - new Date(b.date_heure).getTime())
+                    .slice(0, 3)
+                    .map(program => (
                         <div key={program.id_program} className="flex items-center border-l-4 border-purple-500 pl-4 py-2">
                             <div className="mr-4 text-right min-w-24">
                                 <div className="text-gray-600 text-sm">{formatDateTime(program.date_heure).split('à')[0]}</div>
@@ -119,7 +119,7 @@ const Overview: React.FC <OverviewProps> = ({ userEvents, favorites, reservation
                             </div>
                         </div>
                     ))}
-                        {userEvents.flatMap(e => e.programs).length === 0 && (
+                    {userEvents.flatMap(e => e.programs).length === 0 && (
                         <p className="text-gray-600 text-center py-4">Aucun programme à venir</p>
                     )}
                 </div>

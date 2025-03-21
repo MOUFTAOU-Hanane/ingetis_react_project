@@ -9,10 +9,10 @@ interface ConfirmationModalProps {
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, eventId, onClose, onConfirm }) => {
-    if (!isOpen) return null; // Si le modal n'est pas ouvert, on ne l'affiche pas
+    if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+        <div className="fixed inset-0 flex items-start justify-center  bg-black/50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 className="text-xl font-semibold text-center mb-4">Veux-tu vraiment t'inscrire à cet événement ?</h2>
                 <div className="flex justify-around">

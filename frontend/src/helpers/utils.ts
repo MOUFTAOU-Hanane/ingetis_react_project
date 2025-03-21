@@ -5,13 +5,13 @@ export const formatDate = (dateString: string): string => {
 };
 
 // Formater une date et heure pour l'affichage
-export const formatDateTime = (dateTimeString: string): string => {
+export const formatDateTime = (dateTimeString: Date): string => {
     const options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
     };
     return new Date(dateTimeString).toLocaleDateString('fr-FR', options);
 };

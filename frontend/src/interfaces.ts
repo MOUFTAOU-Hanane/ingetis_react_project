@@ -54,18 +54,10 @@ export interface IOeuvre {
 
 export interface IParticipant {
     id_participant: number;
-    id_user: number;
-    id_event: number;
+    user: IUser;
+    event: IEvent;
     statut: string;
-    date_inscription: string;
-}
-
-export interface IComment {
-    id_comment: number;
-    id_user: number;
-    id_event: number;
-    commentaire: string;
-    date_commentaire: string;
+    date_inscription: Date;
 }
 
 export interface IParcours {
@@ -82,7 +74,7 @@ export type TabType = 'overview' | 'reservations' | 'favorites' | 'profile';
 
 export interface IReservation {
   id_reservation: number;
-  event?: Event;
+  event?: IEvent;
   date: string;
   nb_tickets: number;
   status: string;
@@ -97,10 +89,19 @@ export interface IFavorite {
   image_url?: string;
 }
 
+export interface IComment {
+    id_comment: number;
+    event: IEvent;
+    user?: IUser;
+    commentaire: string;
+    created: Date;
+}
+
 export interface IUser {
-  id: number;
-  nom: string;
-  email: string;
-  telephone?: string;
-  role: 'user' | 'admin';
+    id_user: number;
+    nom: string;
+    email: string;
+    telephone?: string;
+    bibliographie?: string;
+    role: 'user' | 'admin' | 'org';
 }

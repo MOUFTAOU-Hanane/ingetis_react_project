@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Search, Filter } from 'lucide-react';
 import Layout from '../../../components/Layout';
-import { Oeuvre } from '../../../interfaces';
+import { IOeuvre } from '../../../interfaces';
 import SearchBar from '../../../components/SearchBar';
 import apiClient from '../../../apiClient';
 import { toast } from 'react-toastify';
 
 const OeuvresPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [oeuvres, setOeuvres] = useState<Oeuvre[]>();
+    const [oeuvres, setOeuvres] = useState<IOeuvre[]>();
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -25,9 +24,9 @@ const OeuvresPage: React.FC = () => {
     }, []);
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-    const [selectedOeuvre, setSelectedOeuvre] = useState<Oeuvre | null>(null);
+    const [selectedOeuvre, setSelectedOeuvre] = useState<IOeuvre | null>(null);
 
-    const openModal = (oeuvre: Oeuvre) => {
+    const openModal = (oeuvre: IOeuvre) => {
         setSelectedOeuvre(oeuvre);
         setModalOpen(true);
     };
@@ -64,7 +63,7 @@ const OeuvresPage: React.FC = () => {
                         >
                             <div className="relative">
                                 <img
-                                    src={oeuvre.image}
+                                    src={`http://localhost:3005${oeuvre.image}`}
                                     alt={oeuvre.titre}
                                     className="w-full h-64 object-cover rounded-t-lg"
                                 />
@@ -100,12 +99,12 @@ const OeuvresPage: React.FC = () => {
                         <div className="relative">
                             {selectedOeuvre.type === 'vidéo' ? (
                                 <video controls autoPlay className="w-full rounded-xl">
-                                    <source src={selectedOeuvre.image} type="video/mp4" />
+                                    <source src={`http://localhost:3005${selectedOeuvre.image}`} type="video/mp4" />
                                     Votre navigateur ne supporte pas les vidéos.
                                 </video>
                             ) : (
                                 <img
-                                    src={selectedOeuvre.image}
+                                    src={`http://localhost:3005${selectedOeuvre.image}`}
                                     alt={selectedOeuvre.titre}
                                     className="w-full h-auto object-cover rounded-xl"
                                 />
