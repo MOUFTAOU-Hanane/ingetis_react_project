@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import EventMasterLogo from './EventMasterLogo';
@@ -99,6 +98,16 @@ const Navbar = () => {
                                         }
                                     >
                                         Evenements
+                                    </NavLink>
+                                    <NavLink
+                                        to="/admin/lieux"
+                                        className={({ isActive }) =>
+                                            `text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem] ${
+                                                isActive ? 'bg-gray-200/50 backdrop-blur text-white' : ''
+                                            }`
+                                        }
+                                    >
+                                        Lieux
                                     </NavLink>
                                     <NavLink
                                         to="/oeuvres"
