@@ -9,6 +9,6 @@ body {
     font-family: 'Comic Neue', sans-serif;
 }
 
-.Toastify {
+.Toastify__toast, .Toastify {
     font-family: 'Comic Neue', sans-serif !important;
 }
