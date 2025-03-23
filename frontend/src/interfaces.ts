@@ -104,5 +104,6 @@ export interface IUser {
     email: string;
     telephone?: string;
     bibliographie?: string;
+    photo?: string;
     role: 'user' | 'admin' | 'organisateur';
 }

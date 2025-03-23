@@ -53,8 +53,8 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <div className="hidden md:flex items-center space-x-4">
-                            <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Login</NavLink>
-                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">Sign Up</NavLink>
+                            <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Se connecter</NavLink>
+                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">S'inscrire</NavLink>
                         </div>
                     )}
 
@@ -98,8 +98,8 @@ const Navbar = () => {
                     )}
                     {!user && (
                         <div className="mt-4 flex items-center justify-between space-x-4">
-                            <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Login</NavLink>
-                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">Sign Up</NavLink>
+                            <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Se connecter</NavLink>
+                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">S'inscrire</NavLink>
                         </div>
                     )}
                 </div>
