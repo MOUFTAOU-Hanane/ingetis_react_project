@@ -81,7 +81,7 @@ const SignupForm: React.FC = () => {
             <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-purple-700 to-purple-900 flex-col items-center justify-center p-12">
                 <div className="text-center space-y-6">
                     <div className="flex items-center justify-center mb-6">
-                        <span className="text-white font-bold text-xl">Event Master</span>
+                        <span className="text-white font-bold text-xl">Event Culture</span>
                     </div>
                     <h1 className="text-3xl font-bold">Rejoignez-nous</h1>
                     <p className="text-lg opacity-80">Completez ces étapes pour créer un compte</p>

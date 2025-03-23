@@ -8,7 +8,7 @@ export const HeroSection = () => {
             transition={{ duration: 1 }}
         >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
-                Bienvenue dans Event Master
+                Bienvenue dans Event Culture
             </h2>
             <p className="text-lg md:text-xl text-white/90 mb-8">
                 Gérer, participer et découvrir des événements n'a jamais été aussi simple.

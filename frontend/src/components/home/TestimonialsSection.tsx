@@ -6,7 +6,7 @@ export const TestimonialsSection = () => {
         {
             name: "Marie Dupont",
             role: "Participant à l'événement \"Art et Culture\"",
-            content: "\"Un événement magnifique ! L'organisation était parfaite, et j'ai pu rencontrer des artistes incroyables. Merci Event Master pour cette expérience inoubliable !\""
+            content: "\"Un événement magnifique ! L'organisation était parfaite, et j'ai pu rencontrer des artistes incroyables. Merci Event Culture pour cette expérience inoubliable !\""
         },
         {
             name: "Jean Lefevre",

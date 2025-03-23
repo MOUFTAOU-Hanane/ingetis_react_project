@@ -21,15 +21,15 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
                 {/* Main content */}
                 <div className="relative z-10">
-                    <header className="py-12 px-6">
+                    {/* <header className="py-12 px-6">
                         <div className="container mx-auto">
                             <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">
                                 {title}
                             </h1>
                         </div>
-                    </header>
+                    </header> */}
 
-                    <main className="container mx-auto px-4 pb-16">
+                    <main className="container mx-auto px-4 pb-16 pt-8">
                         {/* Content wrapper with glass effect for content sections */}
                         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl">
                             {children}
@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                         <div className="container mx-auto px-4">
                             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                                 <div className="text-white/80">
-                                    © {new Date().getFullYear()} Event Master. Tous droits réservés.
+                                    © {new Date().getFullYear()} Event Culture. Tous droits réservés.
                                 </div>
                                 <div className="flex gap-6">
                                     <Link to="/privacy-policy" className="text-white/80 hover:text-white transition-colors">
