@@ -1,5 +1,5 @@
 // Formater une date pour l'affichage
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string | Date): string => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('fr-FR', options);
 };

@@ -4,10 +4,10 @@ import CommentItem from './CommentItem';
 import { IComment } from '../../../../interfaces';
 
 interface CommentsListProps {
-  comments: IComment[];
-  sortOrder: 'asc' | 'desc';
-  onSortChange: () => void;
-  onDeleteClick: (comment: IComment) => void;
+    comments: IComment[];
+    sortOrder: 'asc' | 'desc';
+    onSortChange: () => void;
+    onDeleteClick: (comment: IComment) => void;
 }
 
 const CommentsList: React.FC<CommentsListProps> = ({

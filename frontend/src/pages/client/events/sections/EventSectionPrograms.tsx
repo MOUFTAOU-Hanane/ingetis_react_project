@@ -1,7 +1,7 @@
 import React from 'react'
 import { IProgram } from '../../../../interfaces'
 import { Calendar } from 'lucide-react'
-import { formatDate } from '../EventCard'
+import { formatDate } from '../../../../helpers/utils'
 
 const EventSectionPrograms: React.FC<{ programs: IProgram[]}> = ({programs}) => {
     return (

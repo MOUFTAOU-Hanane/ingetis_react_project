@@ -26,8 +26,8 @@ export interface IMedia {
 export interface ICatalog {
     id_catalog: number;
     id_event: number;
-    nom_catalogue: string;
-    description: string;
+    nom_catalogue?: string | undefined;
+    description?: string | undefined;
 }
 
 export interface IEvent {
