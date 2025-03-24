@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { IEvent } from '../../../interfaces';
 import Layout from '../../../components/Layout';
 import SearchBar from '../../../components/SearchBar';
-import { EventCard } from './EventCard';
-import EventComment from './EventComment';
+import EventComment from './comments/EventComment';
 import { toast } from 'react-toastify';
 import apiClient from '../../../apiClient';
+import EventCard from './EventCard';
 
 const EventsPage: React.FC = () => {
     const [events, setEvents] = useState<IEvent[]>([]);
