@@ -1,5 +1,5 @@
 import React from 'react';
-import { IEvent, IFavorite, IParticipant } from '../../../interfaces';
+import { IEvent, IFavorite, IParticipant, IUser } from '../../../interfaces';
 import Overview from './Overview';
 import Reservations from './Reservations';
 import { Favorites } from './Favorites';
@@ -11,7 +11,7 @@ interface ClientDashboardTabsProps {
     userEvents: IEvent[];
     favorites: IFavorite[];
     reservations: IParticipant[];
-    user: any; // Utilisez le type approprié de votre contexte Auth
+    user: IUser; 
 }
 
 const ClientDashboardTabs: React.FC<ClientDashboardTabsProps> = ({ 

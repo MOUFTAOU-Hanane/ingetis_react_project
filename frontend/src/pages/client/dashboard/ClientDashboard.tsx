@@ -69,13 +69,15 @@ const ClientDashboard: React.FC = () => {
                             setActiveTab={setActiveTab}
                         />
                         
-                        <ClientDashboardTabs
-                            activeTab={activeTab}
-                            userEvents={userEvents}
-                            favorites={favorites}
-                            reservations={reservations}
-                            user={user}
-                        />
+                        {user && (
+                            <ClientDashboardTabs
+                                activeTab={activeTab}
+                                userEvents={userEvents}
+                                favorites={favorites}
+                                reservations={reservations}
+                                user={user}
+                            />
+                        )}
                     </div>
                 </div>
             )}
