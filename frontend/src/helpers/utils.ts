@@ -46,3 +46,13 @@ export const isUpcoming = (date: string): boolean => {
     const today = new Date();
     return eventDate > today;
 };
+
+export const formatDateLong = (dateString: string | undefined): string => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric' 
+    });
+};
