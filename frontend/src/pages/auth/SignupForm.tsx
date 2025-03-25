@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, MenuItem, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
+import { TextField, Button, MenuItem, FormControl, InputLabel, Select, FormHelperText, CircularProgress } from '@mui/material';
 import { Camera } from 'lucide-react';
 import { toast } from 'react-toastify';
 import apiClient from '../../apiClient';
@@ -29,6 +29,7 @@ const validationSchema = Yup.object({
 
 const SignupForm: React.FC = () => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const formik = useFormik<SignupFormValues>({
         initialValues: {
@@ -42,7 +43,12 @@ const SignupForm: React.FC = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
+            setIsLoading(true);
+            toast.loading("Inscription en cours...");
+
             try {
+                toast.dismiss();
+
                 const formData = new FormData();
                 
                 // Ajoute les champs au FormData
@@ -66,12 +72,16 @@ const SignupForm: React.FC = () => {
                     navigate('/login');
                 }
             } catch (error: any) {
+                toast.dismiss();
+
                 if (error.response?.data) {
                     toast.error(`Erreur : ${error.response.data.message}`);
                 } else {
                     toast.error('Une erreur inattendue est survenue.');
                 }
             }
+
+            setIsLoading(false);
         },
         
     });
@@ -300,9 +310,9 @@ const SignupForm: React.FC = () => {
                             variant="contained"
                             fullWidth
                             sx={{
-                                backgroundColor: '#9333ea',
+                                backgroundColor: isLoading ? '#a3a3a3' : '#9333ea',
                                 '&:hover': {
-                                    backgroundColor: '#7e22ce',
+                                    backgroundColor: isLoading ? '#a3a3a3' : '#7e22ce',
                                 },
                                 borderRadius: '8px',
                                 padding: '12px',
@@ -311,8 +321,16 @@ const SignupForm: React.FC = () => {
                                 textTransform: 'none',
                                 fontWeight: 'bold',
                             }}
+                            disabled={isLoading}
                         >
-                            Sign Up
+                            {isLoading ? (
+                                <div className='text-white flex gap-2 items-center'>
+                                    <span>Chargement...</span>
+                                    <CircularProgress size={16} sx={{ color: 'white' }} />
+                                </div>
+                            ) : (
+                                'S\'inscrire'
+                            )}                        
                         </Button>
                     </form>
 

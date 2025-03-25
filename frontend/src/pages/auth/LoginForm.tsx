@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, CircularProgress } from '@mui/material';
 import { toast } from 'react-toastify';
 import { NavLink, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
@@ -15,6 +15,7 @@ const validationSchema = Yup.object({
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues: {
@@ -23,7 +24,12 @@ const LoginForm: React.FC = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
+            setIsLoading(true);
+            toast.loading("Connexion en cours...");
+
             try {
+                toast.dismiss();
+
                 const response = await apiClient.post('/auth/login', values);
 
                 if (response.status === 200) {
@@ -35,12 +41,16 @@ const LoginForm: React.FC = () => {
                     navigate('/admin/dashboard');
                 }
             } catch (error: any) {
+                toast.dismiss();
+
                 if (error.response?.data) {
                     toast.error(`Erreur : ${error.response.data.message}`);
                 } else {
                     toast.error('Une erreur inattendue est survenue.');
                 }
             }
+
+            setIsLoading(false);
         },
     });
 
@@ -120,9 +130,9 @@ const LoginForm: React.FC = () => {
                             variant="contained"
                             fullWidth
                             sx={{
-                                backgroundColor: '#9333ea',
+                                backgroundColor: isLoading ? '#a3a3a3' : '#9333ea',
                                 '&:hover': {
-                                    backgroundColor: '#7e22ce',
+                                    backgroundColor: isLoading ? '#a3a3a3' : '#7e22ce',
                                 },
                                 borderRadius: '8px',
                                 padding: '12px',
@@ -131,8 +141,16 @@ const LoginForm: React.FC = () => {
                                 textTransform: 'none',
                                 fontWeight: 'bold',
                             }}
+                            disabled={isLoading}
                         >
-                            Se connecter
+                            {isLoading ? (
+                                <div className='text-white flex gap-2 items-center'>
+                                    <span>Chargement...</span>
+                                    <CircularProgress size={16} sx={{ color: 'white' }} />
+                                </div>
+                            ) : (
+                                'Se connecter'
+                            )}                        
                         </Button>
                     </form>
 

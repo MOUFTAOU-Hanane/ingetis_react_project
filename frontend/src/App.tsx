@@ -9,7 +9,7 @@ const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <ToastContainer 
-                position="top-right" 
+                position="bottom-right" 
                 autoClose={3000} 
                 hideProgressBar={false} 
                 newestOnTop={false} 
