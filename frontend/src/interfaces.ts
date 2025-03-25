@@ -11,7 +11,7 @@ export interface IProgram {
     id_program?: number;
     titre: string;
     description: string;
-    date_heure: Date;
+    date_heure: Date | string;
 }
 
 export interface IMedia {

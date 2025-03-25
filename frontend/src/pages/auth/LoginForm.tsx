@@ -28,7 +28,6 @@ const LoginForm: React.FC = () => {
             toast.loading("Connexion en cours...");
 
             try {
-                toast.dismiss();
 
                 const response = await apiClient.post('/auth/login', values);
 
@@ -37,6 +36,7 @@ const LoginForm: React.FC = () => {
                     sessionStorage.setItem('token', data.token);
                     sessionStorage.setItem('user', JSON.stringify(data));
                     login(data);
+                    toast.dismiss();
                     toast.success('Connexion réussie !');
                     navigate('/admin/dashboard');
                 }

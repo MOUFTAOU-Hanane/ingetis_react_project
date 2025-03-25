@@ -48,11 +48,11 @@ const EventInfo = ({ eventSelected, actualPage }: { eventSelected: any; actualPa
                     </div>
                 ))}
             </div>
-            <div>
+            {/* <div>
                 <span className="text-xs flex text-red-800">
                     <AlertTriangle color="red" size={15} /> : Ce n'est pas encore complet
                 </span>
-            </div>
+            </div> */}
         </div>
     );
 };

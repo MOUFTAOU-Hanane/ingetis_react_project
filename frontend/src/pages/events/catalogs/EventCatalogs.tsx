@@ -10,6 +10,7 @@ import { ICatalog, IEvent } from "../../../interfaces";
 import apiClient from "../../../apiClient";
 import CatalogsList from "./CatalogsList";
 import CatalogForm from "./CatalogForm";
+import EventInfo from "../EventInfo";
 
 const EventCatalogs: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -60,6 +61,8 @@ const EventCatalogs: React.FC = () => {
 
     return (
         <Layout title={`Catalogue de l'évènement : ${eventSelected?.titre ?? ""}`}>
+            <EventInfo eventSelected={eventSelected} actualPage="programs"/>
+
             <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={handleOpenModal}>
                 {catalog ? "Modifier le catalogue" : "Ajouter un catalogue"}
             </Button>
