@@ -10,7 +10,7 @@ const OeuvreModal: React.FC<OeuvreModalProps> = ({ oeuvre, onClose }) => {
     return (
         <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50" onClick={onClose}>
             <div
-                className="bg-white p-8 rounded-xl max-w-3xl w-full relative"
+                className="bg-white p-8 rounded-xl max-w-3xl w-full relative max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
@@ -20,9 +20,13 @@ const OeuvreModal: React.FC<OeuvreModalProps> = ({ oeuvre, onClose }) => {
                     ✕
                 </button>
 
-                <div className="relative">
+                <div className="relative mb-4 flex justify-center items-center">
                     {oeuvre.type === 'vidéo' ? (
-                        <video controls autoPlay className="w-full rounded-xl">
+                        <video 
+                            controls 
+                            autoPlay 
+                            className="max-w-full max-h-[60vh] object-contain rounded-xl"
+                        >
                             <source src={`http://localhost:3005${oeuvre.image}`} type="video/mp4" />
                             Votre navigateur ne supporte pas les vidéos.
                         </video>
@@ -30,11 +34,11 @@ const OeuvreModal: React.FC<OeuvreModalProps> = ({ oeuvre, onClose }) => {
                         <img
                             src={`http://localhost:3005${oeuvre.image}`}
                             alt={oeuvre.titre}
-                            className="w-full h-auto object-cover rounded-xl"
+                            className="max-w-full max-h-[60vh] object-contain rounded-xl"
                         />
                     )}
                 </div>
-                <div className="mt-4">
+                <div>
                     <h3 className="text-xl font-semibold">{oeuvre.titre}</h3>
                     <p className="mt-2">{oeuvre.description}</p>
                     <div className="mt-4 flex justify-between items-center">
