@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export const CallToActionSection = () => {
     return (
@@ -11,12 +12,16 @@ export const CallToActionSection = () => {
             <p className="text-lg md:text-xl text-white/90">
                 Vous êtes organisateur ? Créez facilement des événements, gérez les inscriptions et l'expérience de vos participants.
             </p>
-            <a
-                href="/"
+            <Link
+                to="/login"
+                state={{ 
+                    redirect: "/events/create", 
+                    roles: "organisateur" 
+                }}
                 className="mt-4 inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
             >
                 Créez un événement
-            </a>
+            </Link>
         </motion.div>
     );
 };

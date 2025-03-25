@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { IEvent } from "../../interfaces";
 
 interface EventCardProps {
@@ -28,12 +29,16 @@ export const EventCard = ({ event }: EventCardProps) => {
                 <strong>Lieu :</strong> {event.lieu.adresse}
             </p>
             <p className="text-white/90 mb-6">{event.description}</p>
-            <a
-                href="#"
+            <Link
+                to={`/user/events/${event?.id_event}`}
+                state={{ 
+                    redirect: `/user/events/${event?.id_event}`, 
+                    roles: "user" 
+                }}
                 className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
             >
                 Voir plus
-            </a>
+            </Link>
         </div>
     );
 };

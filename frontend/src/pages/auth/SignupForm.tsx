@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, MenuItem, FormControl, InputLabel, Select, FormHelperText, CircularProgress } from '@mui/material';
 import { Camera } from 'lucide-react';
 import { toast } from 'react-toastify';
 import apiClient from '../../apiClient';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 type SignupFormValues = {
     nom: string;
@@ -31,12 +31,17 @@ const SignupForm: React.FC = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const location = useLocation();
+        
+    const redirectPath = location.state?.redirect;
+    const allowedRoles = location.state?.roles;
+
     const formik = useFormik<SignupFormValues>({
         initialValues: {
             nom: '',
             email: '',
             mot_de_passe: '',
-            role: 'user',
+            role: allowedRoles ?? 'user',
             photo: null,
             telephone: '',
             bibliographie: '',
@@ -50,7 +55,6 @@ const SignupForm: React.FC = () => {
 
                 const formData = new FormData();
                 
-                // Ajoute les champs au FormData
                 Object.entries(values).forEach(([key, value]) => {
                     if (key === 'photo' && value instanceof File) {
                         formData.append(key, value); // Ajoute le fichier photo
@@ -70,7 +74,13 @@ const SignupForm: React.FC = () => {
                     toast.dismiss();
 
                     toast.success('Inscription réussie');
-                    navigate('/login');
+                    navigate('/login', {
+                        state: {
+                            email: values?.email,
+                            redirect: redirectPath ?? "",  
+                            roles: allowedRoles ?? ""  
+                        }
+                    });                
                 }
             } catch (error: any) {
                 toast.dismiss();
@@ -195,25 +205,38 @@ const SignupForm: React.FC = () => {
                             fullWidth
                             margin="normal"
                             error={formik.touched.role && Boolean(formik.errors.role)}
-                            style={{
+                            sx={{
                                 backgroundColor: '#1a1a1a',
                                 borderRadius: '8px',
                                 marginTop: '16px',
                                 marginBottom: '8px',
+                                '& .MuiSelect-select': {
+                                    color: 'white !important',
+                                    '&.Mui-disabled': {
+                                        color: 'rgba(255,255,255,0.5) !important',
+                                        WebkitTextFillColor: 'rgba(255,255,255,0.5) !important'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: 'rgba(255,255,255,0.7)',
+                                    '&.Mui-disabled': {
+                                        color: 'rgba(255,255,255,0.5)'
+                                    }
+                                }
                             }}
                         >
-                            <InputLabel style={{ color: 'rgba(255,255,255,0.7)' }}>Rôle</InputLabel>
+                            <InputLabel>Rôle</InputLabel>
                             <Select
                                 id="role"
                                 name="role"
                                 value={formik.values.role}
                                 onChange={formik.handleChange}
                                 label="Rôle"
-                                style={{ color: 'white' }}
+                                disabled={allowedRoles && allowedRoles.length > 0}
                             >
                                 <MenuItem value="admin">Admin</MenuItem>
                                 <MenuItem value="user">Participant</MenuItem>
-                                <MenuItem value="org">Organisateur</MenuItem>
+                                <MenuItem value="organisateur">Organisateur</MenuItem>
                             </Select>
                             {formik.touched.role && formik.errors.role && (
                                 <FormHelperText error>{formik.errors.role}</FormHelperText>

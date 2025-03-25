@@ -18,7 +18,7 @@ const Home = () => {
     const fetchEvents = async () => {
         try {
             const response = await apiClient.get('/events');
-            setEvents(response.data);
+            setEvents(response.data.filter((event: IEvent) => event.medias.length > 0 && event.programs.length > 0));
         } catch (err) {
             setError('Erreur lors du chargement des événements.');
         } finally {

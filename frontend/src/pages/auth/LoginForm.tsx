@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, CircularProgress } from '@mui/material';
 import { toast } from 'react-toastify';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
 import { useAuth } from '../../context/AuthContext';
 
@@ -17,9 +17,21 @@ const LoginForm: React.FC = () => {
     const { login } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const location = useLocation();
+    
+    let redirectPath = location.state?.redirect;
+    let allowedRoles = location.state?.roles;
+
+    if(location?.state?.from?.state?.redirect) {
+        redirectPath = location?.state?.from?.state?.redirect;
+    } 
+    if(location?.state?.from?.state?.roles) {
+        allowedRoles = location?.state?.from?.state?.roles;
+    }
+    
     const formik = useFormik({
         initialValues: {
-            email: '',
+            email: location.state?.email ?? '',
             mot_de_passe: '',
         },
         validationSchema,
@@ -38,7 +50,12 @@ const LoginForm: React.FC = () => {
                     login(data);
                     toast.dismiss();
                     toast.success('Connexion réussie !');
-                    navigate('/admin/dashboard');
+
+                    if(redirectPath) {
+                        navigate(redirectPath);
+                    } else {
+                        navigate('/admin/dashboard');
+                    }
                 }
             } catch (error: any) {
                 toast.dismiss();
@@ -157,7 +174,14 @@ const LoginForm: React.FC = () => {
                     <div className="text-center mt-4">
                         <p className="text-gray-400">
                             Vous n'avez pas de compte ? 
-                            <NavLink to="/register" className="text-purple-500 hover:underline">
+                            <NavLink 
+                                to={'/register'}
+                                state={{ 
+                                    redirect: redirectPath ?? "",
+                                    roles: allowedRoles ?? "" 
+                                }}
+                                className="text-purple-500 hover:underline"
+                            >
                                 S'inscrire
                             </NavLink>
                         </p>

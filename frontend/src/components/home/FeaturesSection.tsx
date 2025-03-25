@@ -29,12 +29,23 @@ export const FeaturesSection = () => {
             transition={{ duration: 1, delay: 0.5 }}
         >
             {features.map((feature, index) => (
-                <FeatureCard 
+                <motion.div
                     key={index}
-                    icon={feature.icon}
-                    title={feature.title}
-                    description={feature.description}
-                />
+                    whileHover={{ 
+                        scale: 1.05, 
+                        transition: { duration: 0.3 } 
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="hover:z-10"
+                >
+                    <div className="h-full flex">
+                        <FeatureCard 
+                            icon={feature.icon}
+                            title={feature.title}
+                            description={feature.description}
+                        />
+                    </div>
+                </motion.div>
             ))}
         </motion.div>
     );

@@ -8,7 +8,7 @@ interface FeatureCardProps {
 
 export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
     return (
-        <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-8 shadow-xl">
+        <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-8 shadow-xl w-full flex-grow">
             <div className="flex items-center justify-center mb-4">
                 {icon}
             </div>
