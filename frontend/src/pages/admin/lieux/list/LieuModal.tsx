@@ -15,7 +15,6 @@ const LieuModal: React.FC<LieuModalProps> = ({ isOpen, lieu, onClose }) => {
     return (
         <div className="fixed inset-0 flex justify-center items-center backdrop-blur-sm bg-opacity-30 z-50">
             <div className="bg-white p-6 rounded-2xl shadow-lg w-96 relative">
-                {/* Bouton de fermeture */}
                 <button
                     className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 cursor-pointer"
                     onClick={onClose}
@@ -23,13 +22,11 @@ const LieuModal: React.FC<LieuModalProps> = ({ isOpen, lieu, onClose }) => {
                     <X size={20} />
                 </button>
 
-                {/* Titre */}
                 <h2 className="text-2xl font-bold mb-6 text-center text-purple-600 flex items-center justify-center gap-2">
                     <MapPin size={24} className="text-purple-500" />
                     {lieu.nom}
                 </h2>
 
-                {/* Contenu principal */}
                 <div className="space-y-4 text-gray-700">
                     <div className="flex items-center gap-3">
                         <MapPin size={20} className="text-blue-500" />

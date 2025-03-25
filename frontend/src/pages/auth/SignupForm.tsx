@@ -47,7 +47,6 @@ const SignupForm: React.FC = () => {
             toast.loading("Inscription en cours...");
 
             try {
-                toast.dismiss();
 
                 const formData = new FormData();
                 
@@ -68,6 +67,8 @@ const SignupForm: React.FC = () => {
                 });
         
                 if (response.status === 201) {
+                    toast.dismiss();
+
                     toast.success('Inscription réussie');
                     navigate('/login');
                 }

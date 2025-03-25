@@ -32,7 +32,7 @@ const MediasList: React.FC<IMediasListProps> = ({medias, handleOpenModal, handle
                             }
                         >
                             <ListItemText primary={media.type_media} />
-                            {isImage && <img src={media.url_media} alt="Media" className="w-20 h-20 object-cover rounded-md" />}
+                            {isImage && <img src={`http://localhost:3005${media.url_media}`} alt="Media" className="w-20 h-20 object-cover rounded-md" />}
                             {isVideo && (
                                 <video controls className="w-20 h-20 rounded-md">
                                     <source src={media.url_media} type="video/mp4" />
