@@ -7,8 +7,10 @@ html, body {
 
 body {
     font-family: 'Comic Neue', sans-serif;
+    user-select: none;
 }
 
 .Toastify__toast, .Toastify {
     font-family: 'Comic Neue', sans-serif !important;
 }
+

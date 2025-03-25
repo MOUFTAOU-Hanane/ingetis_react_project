@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
 import { useAuth } from '../../context/AuthContext';
+import EventMasterLogo from '../../components/EventMasterLogo';
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Email invalide').required('Email est requis'),
@@ -28,7 +29,7 @@ const LoginForm: React.FC = () => {
     if(location?.state?.from?.state?.roles) {
         allowedRoles = location?.state?.from?.state?.roles;
     }
-    
+
     const formik = useFormik({
         initialValues: {
             email: location.state?.email ?? '',
@@ -72,119 +73,124 @@ const LoginForm: React.FC = () => {
     });
 
     return (
-        <div className="flex min-h-screen bg-black text-white">
-            <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-purple-700 to-purple-900 flex-col items-center justify-center p-12">
-                <div className="text-center space-y-6">
-                    <div className="flex items-center justify-center mb-6">
-                        <span className="text-white font-bold text-xl">Event Culture</span>
+        <div className="relative min-h-screen bg-black text-white">
+            <NavLink to="/" className="absolute top-4 left-4 z-10 text-2xl font-bold text-white">
+                <EventMasterLogo />
+            </NavLink>
+            <div className="flex min-h-screen bg-black text-white">
+                <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-purple-700 to-purple-900 flex-col items-center justify-center p-12">
+                    <div className="text-center space-y-6">
+                        <div className="flex items-center justify-center mb-6">
+                            <span className="text-white font-bold text-xl">Event Culture</span>
+                        </div>
+                        <h1 className="text-3xl font-bold">Bienvenue à nouveau</h1>
+                        <p className="text-lg opacity-80">Connectez-vous pour continuer</p>
                     </div>
-                    <h1 className="text-3xl font-bold">Bienvenue à nouveau</h1>
-                    <p className="text-lg opacity-80">Connectez-vous pour continuer</p>
                 </div>
-            </div>
 
-            <div className="w-full md:w-3/5 flex items-center justify-center p-6 md:p-12">
-                <div className="w-full max-w-md">
-                    <h2 className="text-2xl font-bold mb-2">Se connecter</h2>
-                    <p className="text-gray-400 mb-6">Entrez vos informations pour continuer</p>
+                <div className="w-full md:w-3/5 flex items-center justify-center p-6 md:p-12">
+                    <div className="w-full max-w-md">
+                        <h2 className="text-2xl font-bold mb-2">Se connecter</h2>
+                        <p className="text-gray-400 mb-6">Entrez vos informations pour continuer</p>
 
-                    <form onSubmit={formik.handleSubmit}>
-                        <TextField
-                            fullWidth
-                            id="email"
-                            name="email"
-                            label="Email"
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
-                            helperText={formik.touched.email && formik.errors.email}
-                            variant="outlined"
-                            margin="normal"
-                            placeholder="eg. johnfrancisco@gmail.com"
-                            InputProps={{
-                                style: {
-                                    backgroundColor: '#1a1a1a',
-                                    borderRadius: '8px',
-                                    color: 'white',
-                                },
-                            }}
-                            InputLabelProps={{
-                                style: {
-                                    color: 'rgba(255,255,255,0.7)',
-                                },
-                            }}
-                        />
-
-                        <TextField
-                            fullWidth
-                            id="mot_de_passe"
-                            name="mot_de_passe"
-                            label="Mot de passe"
-                            type="password"
-                            value={formik.values.mot_de_passe}
-                            onChange={formik.handleChange}
-                            error={formik.touched.mot_de_passe && Boolean(formik.errors.mot_de_passe)}
-                            helperText={formik.touched.mot_de_passe && formik.errors.mot_de_passe}
-                            variant="outlined"
-                            margin="normal"
-                            placeholder="Entrer votre mot de passe"
-                            InputProps={{
-                                style: {
-                                    backgroundColor: '#1a1a1a',
-                                    borderRadius: '8px',
-                                    color: 'white',
-                                },
-                            }}
-                            InputLabelProps={{
-                                style: {
-                                    color: 'rgba(255,255,255,0.7)',
-                                },
-                            }}
-                        />
-
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                backgroundColor: isLoading ? '#a3a3a3' : '#9333ea',
-                                '&:hover': {
-                                    backgroundColor: isLoading ? '#a3a3a3' : '#7e22ce',
-                                },
-                                borderRadius: '8px',
-                                padding: '12px',
-                                marginTop: '16px',
-                                marginBottom: '12px',
-                                textTransform: 'none',
-                                fontWeight: 'bold',
-                            }}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <div className='text-white flex gap-2 items-center'>
-                                    <span>Chargement...</span>
-                                    <CircularProgress size={16} sx={{ color: 'white' }} />
-                                </div>
-                            ) : (
-                                'Se connecter'
-                            )}                        
-                        </Button>
-                    </form>
-
-                    <div className="text-center mt-4">
-                        <p className="text-gray-400">
-                            Vous n'avez pas de compte ? 
-                            <NavLink 
-                                to={'/register'}
-                                state={{ 
-                                    redirect: redirectPath ?? "",
-                                    roles: allowedRoles ?? "" 
+                        <form onSubmit={formik.handleSubmit}>
+                            <TextField
+                                fullWidth
+                                id="email"
+                                name="email"
+                                label="Email"
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={(formik.touched.email && formik.errors.email) as string}
+                                variant="outlined"
+                                margin="normal"
+                                placeholder="eg. johnfrancisco@gmail.com"
+                                InputProps={{
+                                    style: {
+                                        backgroundColor: '#1a1a1a',
+                                        borderRadius: '8px',
+                                        color: 'white',
+                                    },
                                 }}
-                                className="text-purple-500 hover:underline"
+                                InputLabelProps={{
+                                    style: {
+                                        color: 'rgba(255,255,255,0.7)',
+                                    },
+                                }}
+                            />
+
+                            <TextField
+                                fullWidth
+                                id="mot_de_passe"
+                                name="mot_de_passe"
+                                label="Mot de passe"
+                                type="password"
+                                value={formik.values.mot_de_passe}
+                                onChange={formik.handleChange}
+                                error={formik.touched.mot_de_passe && Boolean(formik.errors.mot_de_passe)}
+                                helperText={formik.touched.mot_de_passe && formik.errors.mot_de_passe}
+                                variant="outlined"
+                                margin="normal"
+                                placeholder="Entrer votre mot de passe"
+                                InputProps={{
+                                    style: {
+                                        backgroundColor: '#1a1a1a',
+                                        borderRadius: '8px',
+                                        color: 'white',
+                                    },
+                                }}
+                                InputLabelProps={{
+                                    style: {
+                                        color: 'rgba(255,255,255,0.7)',
+                                    },
+                                }}
+                            />
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                    backgroundColor: isLoading ? '#a3a3a3' : '#9333ea',
+                                    '&:hover': {
+                                        backgroundColor: isLoading ? '#a3a3a3' : '#7e22ce',
+                                    },
+                                    borderRadius: '8px',
+                                    padding: '12px',
+                                    marginTop: '16px',
+                                    marginBottom: '12px',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                }}
+                                disabled={isLoading}
                             >
-                                S'inscrire
-                            </NavLink>
-                        </p>
+                                {isLoading ? (
+                                    <div className='text-white flex gap-2 items-center'>
+                                        <span>Chargement...</span>
+                                        <CircularProgress size={16} sx={{ color: 'white' }} />
+                                    </div>
+                                ) : (
+                                    'Se connecter'
+                                )}                        
+                            </Button>
+                        </form>
+
+                        <div className="text-center mt-4">
+                            <p className="text-gray-400">
+                                Vous n'avez pas de compte ? 
+                                <NavLink 
+                                    to={'/register'}
+                                    state={{ 
+                                        redirect: redirectPath ?? "",
+                                        roles: allowedRoles ?? "" 
+                                    }}
+                                    className="text-purple-500 hover:underline"
+                                >
+                                    S'inscrire
+                                </NavLink>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
