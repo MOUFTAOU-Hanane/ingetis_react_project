@@ -36,9 +36,9 @@ const swaggerOptions = {
     components: {
       securitySchemes: {
         BearerAuth: { // Schéma de sécurité pour JWT
-          type: 'apiKey',
-          in: 'header',
-          name: 'Authorization',
+          type: 'http',
+          scheme: 'bearer', // Spécifie que l'authentification est basée sur un bearer token
+          bearerFormat: 'JWT', // Indique que c'est un JWT
           description: 'Entrez votre token JWT dans le format `Bearer <token>`'
         },
       },
@@ -51,6 +51,7 @@ const swaggerOptions = {
   },
   apis: ['./src/routes/*.js'],  // Recherche des annotations Swagger dans tous les fichiers de routes
 };
+
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 

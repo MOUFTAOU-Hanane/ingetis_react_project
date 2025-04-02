@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');  // Pour générer un token JWT
 const { User } = require('../db/sequelize'); 
 const router = express.Router();
 const upload = require('../config/multer');  
+require('dotenv').config(); // Charge les variables d'environnement
+
 
 /**
  * @swagger
@@ -230,7 +232,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Générer un token JWT
-    const token = jwt.sign({ userId: user.id_user, role: user.role }, 'secret_key', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id_user, role: user.role }, process.env.JWT_SECRET, { expiresIn: '4h' });
 
     res.status(200).json({
       message: 'Connexion réussie',

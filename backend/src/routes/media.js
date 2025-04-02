@@ -15,7 +15,7 @@ const baseUrl = "http://localhost:3005";
  * @swagger
  * /api/media:
  *   post:
- *     summary: Créer plusieurs médias (upload de fichiers)
+ *     summary: Créer un ou plusieurs médias (upload de fichiers)
  *     tags: [Médias]
  *     requestBody:
  *       required: true
@@ -38,7 +38,12 @@ const baseUrl = "http://localhost:3005";
  *               id_event:
  *                 type: integer
  *                 example: 1
- 
+ *               titre:
+ *                 type: string
+ *                 example: "Photo d'événement"
+ *               auteur:
+ *                 type: string
+ *                 example: "John Doe"
  *     responses:
  *       201:
  *         description: Médias créés avec succès
@@ -49,6 +54,9 @@ const baseUrl = "http://localhost:3005";
  */
 
 // Route pour ajouter plusieurs médias
+
+
+
 router.post('/', upload.array('media'), async (req, res) => {
   try {
     // Vérification si des fichiers ont été téléchargés
@@ -56,29 +64,36 @@ router.post('/', upload.array('media'), async (req, res) => {
       return res.status(400).json({ message: 'Aucun fichier téléchargé' });
     }
 
-    const mediaArray = [];
-
-    // Parcourir chaque fichier et créer un enregistrement pour chaque média dans la base de données
-    for (const file of req.files) {
-      const fileUrl = `${baseUrl}/uploads/${file.filename}`;
-      // Créer un média dans la base de données
-      const media = await Media.create({
-        type_media: req.body.type_media,
-        url_media: fileUrl,
-        description: req.body.description,
-        id_event: req.body.id_event,
-      
-      });
-
-      mediaArray.push(media);  // Ajouter le média à l'array
+    // Vérification des données du corps de la requête
+    if (!req.body.id_event || !req.body.type_media) {
+      return res.status(400).json({ message: 'Informations incomplètes' });
     }
 
-    // Répondre avec succès et renvoyer la liste des médias créés
-    res.status(201).json({ mediaArray });
+    const mediaArray = [];
+
+    // Parcourir chaque fichier et créer un enregistrement pour chaque média
+    for (const file of req.files) {
+      const media = await Media.create({
+        type_media: req.body.type_media,     // Type unique pour tous les fichiers
+        url_media: `/uploads/${file.filename}`, // Stockage de l'URL du fichier
+        id_event: req.body.id_event, // L'événement auquel ils appartiennent
+      });
+
+      mediaArray.push(media);  // Ajouter l'objet média créé à la liste
+    }
+
+    // Répondre avec la liste des médias enregistrés
+    res.status(201).json({
+      message: `${mediaArray.length} média(s) enregistré(s) avec succès.`,
+      medias: mediaArray
+    });
 
   } catch (error) {
     console.error("Erreur lors de la création des médias", error);
-    res.status(500).json({ message: 'Erreur serveur lors de la création des médias', error: error.message });
+    res.status(500).json({
+      message: 'Erreur serveur lors de la création des médias',
+      error: error.message
+    });
   }
 });
 
