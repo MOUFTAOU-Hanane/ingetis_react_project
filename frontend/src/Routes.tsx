@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import SignupForm from "./pages/auth/SignupForm";
+import SignupForm from "./pages/auth/SignupPage";
 import LoginForm from "./pages/auth/LoginForm";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -24,6 +24,7 @@ import EventDetails from "./pages/client/events/EventDetails";
 import ClientDashboard from "./pages/client/dashboard/ClientDashboard";
 import OrganisateurDashboard from "./pages/organisateur/dashboard/OrganisateurDashboard";
 import { Contact, PrivacyPolicy, TermsOfService } from "./pages/FooterElements";
+import SignUpPage from "./pages/auth/SignupPage";
 
 // Définition stricte des rôles
 const ROLES = {
@@ -42,7 +43,7 @@ type AppRoute = {
 
 const routes: AppRoute[] = [
     { path: "/", element: <Home /> },
-    { path: "/register", element: <SignupForm /> },
+    { path: "/register", element: <SignUpPage /> },
     { path: "/login", element: <LoginForm /> },
     { path: "/admin/dashboard", element: <AdminDashboard />, allowedRoles: [ROLES.ADMIN] },
     { path: "/admin/users", element: <UsersList />, allowedRoles: [ROLES.ADMIN] },
