@@ -17,6 +17,7 @@
     "@mui/lab": "^6.0.0-beta.28",
     "@mui/material": "^6.4.5",
     "@mui/system": "^6.4.3",
+    "@mui/x-data-grid": "^7.28.1",
     "@mui/x-date-pickers": "^7.27.0",
     "@react-google-maps/api": "^2.20.6",
     "@shadcn/ui": "^0.0.4",
