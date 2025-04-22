@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Event, Participant, Lieu, Program, Media, Catalog, Comment } = require('../db/sequelize'); // Importe les modèles
+const { Evenement, Participant, Lieu, Programme, Media, Catalogue, Commentaire ,Utilisateur} = require('../db/sequelize'); // Importe les modèles
 
 /**
  * @swagger
@@ -66,7 +66,7 @@ const { Event, Participant, Lieu, Program, Media, Catalog, Comment } = require('
  */
 router.post('/', async (req, res) => {
     try {
-        const event = await Event.create(req.body);
+        const event = await Evenement.create(req.body);
         console.log (event)
         res.status(201).json({ event });
     } catch (error) {
@@ -107,14 +107,16 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
     try {
-        const events = await Event.findAll({
+        const events = await Evenement.findAll({
             include: [
                 { model: Lieu, as: 'lieu' },
-                { model: Program, as: 'programs' },
+                { model: Programme, as: 'programs' },
                 { model: Media, as: 'medias' },
-                { model: Catalog, as: 'catalogs' },
+                { model: Catalogue, as: 'catalogs' },
                 { model: Participant, as: 'participants' },
-                { model: Comment, as: 'comments' }
+                { model: Commentaire, as: 'comments' },
+                { model: Utilisateur, as: 'createur' }
+
 
             ]
         });
@@ -172,14 +174,16 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const event = await Event.findByPk(req.params.id, {
+        const event = await Evenement.findByPk(req.params.id, {
             include: [
                 { model: Lieu, as: 'lieu' },
-                { model: Program, as: 'programs' },
+                { model: Programme, as: 'programs' },
                 { model: Media, as: 'medias' },
-                { model: Catalog, as: 'catalogs' },
+                { model: Catalogue, as: 'catalogs' },
                 { model: Participant, as: 'participants' },
-                { model: Comment, as: 'comments' }
+                { model: Commentaire, as: 'comments' },
+                { model: Utilisateur, as: 'createur' }
+
 
             ]
         });
@@ -239,20 +243,22 @@ router.get('/:id', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
     try {
-        const event = await Event.findByPk(req.params.id);
+        const event = await Evenement.findByPk(req.params.id);
         if (!event) return res.status(404).json({ error: "Événement non trouvé" });
 
         await event.update(req.body);
 
         // Récupérer l'événement mis à jour avec ses relations
-        const updatedEvent = await Event.findByPk(req.params.id, {
+        const updatedEvent = await Evenement.findByPk(req.params.id, {
             include: [
                 { model: Lieu, as: 'lieu' },
-                { model: Program, as: 'programs' },
+                { model: Programme, as: 'programs' },
                 { model: Media, as: 'medias' },
-                { model: Catalog, as: 'catalogs' },
+                { model: Catalogue, as: 'catalogs' },
                 { model: Participant, as: 'participants' },
-                { model: Comment, as: 'comments' }
+                { model: Commentaire, as: 'comments' },
+                { model: Utilisateur, as: 'createur' }
+
             ]
         });
 
@@ -291,7 +297,7 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const event = await Event.findByPk(req.params.id);
+        const event = await Evenement.findByPk(req.params.id);
         if (!event) return res.status(404).json({ error: "Événement non trouvé" });
 
         await event.destroy();

@@ -1,10 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');  // Pour comparer les mots de passe hachés
 const jwt = require('jsonwebtoken');  // Pour générer un token JWT
-const { User } = require('../db/sequelize'); 
+const { Utilisateur } = require('../db/sequelize'); 
 const router = express.Router();
 const upload = require('../config/multer');  
 require('dotenv').config(); // Charge les variables d'environnement
+console.log(Utilisateur); // Si ça affiche undefined, c'est que le problème vient de l'import
 
 
 /**
@@ -116,7 +117,7 @@ router.post('/register', upload.single('photo'), async (req, res) => {
 
   try {
     // Vérifier si l'email existe déjà
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await Utilisateur.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
     }
@@ -129,7 +130,7 @@ router.post('/register', upload.single('photo'), async (req, res) => {
     const userRole = validRoles.includes(role) ? role : 'user';
 
     // Créer l'utilisateur
-    const newUser = await User.create({
+    const newUser = await Utilisateur.create({
       nom,
       email,
       mot_de_passe: hashedPassword,
@@ -220,7 +221,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Vérifier si l'utilisateur existe
-    const user = await User.findOne({ where: { email } });
+    const user = await Utilisateur.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé.' });
     }
@@ -333,7 +334,7 @@ router.put('/update-profile/:id', upload.single('photo'), async (req, res) => {
 
   try {
     // Rechercher l'utilisateur à modifier
-    const user = await User.findByPk(id);
+    const user = await Utilisateur.findByPk(id);
 
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });

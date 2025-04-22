@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Program, Event } = require('../db/sequelize'); // Assure-toi que les modèles sont correctement importés
+const { Programme, Evenement } = require('../db/sequelize'); // Assure-toi que les modèles sont correctement importés
 
 /**
  * @swagger
@@ -38,7 +38,7 @@ const { Program, Event } = require('../db/sequelize'); // Assure-toi que les mod
 router.post('/', async (req, res) => {
     try {
         const { titre, description, date_heure, id_event } = req.body;
-        const program = await Program.create({
+        const program = await Programme.create({
             titre,
             description,
             date_heure,
@@ -71,9 +71,9 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
     try {
-        const programs = await Program.findAll({
+        const programs = await Programme.findAll({
             include: {
-                model: Event,
+                model: Evenement,
                 attributes: ['id_event', 'titre']
             }
         });
@@ -111,9 +111,9 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const program = await Program.findByPk(req.params.id, {
+        const program = await Programme.findByPk(req.params.id, {
             include: {
-                model: Event,
+                model: Evenement,
                 attributes: ['id_event', 'titre']
             }
         });
@@ -173,7 +173,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { titre, description, date_heure, id_event } = req.body;
-        const program = await Program.findByPk(req.params.id);
+        const program = await Programme.findByPk(req.params.id);
 
         if (!program) {
             return res.status(404).json({ error: "Programme non trouvé" });
@@ -213,7 +213,7 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        const program = await Program.findByPk(req.params.id);
+        const program = await Programme.findByPk(req.params.id);
 
         if (!program) {
             return res.status(404).json({ error: "Programme non trouvé" });

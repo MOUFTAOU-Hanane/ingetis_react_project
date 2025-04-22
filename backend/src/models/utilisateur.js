@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
+    const Utilisateur = sequelize.define('Utilisateur', {
         id_user: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -44,9 +44,9 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     // Définition des associations
-    User.associate = function(models) {
-        User.hasMany(models.Event, { foreignKey: 'id_createur', as: 'events' });  
+    Utilisateur.associate = function(models) {
+        Utilisateur.hasMany(models.Evenement, { foreignKey: 'id_createur', as: 'events' });  
     };
 
-    return User;
+    return Utilisateur;
 };

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     });
   
     Media.associate = models => {
-      Media.belongsTo(models.Event, { foreignKey: 'id_event' });
+      Media.belongsTo(models.Evenement, { foreignKey: 'id_event' });
     };
   
     return Media;

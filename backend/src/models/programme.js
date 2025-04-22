@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Program = sequelize.define('Program', {
+    const Programme = sequelize.define('Programme', {
       id_program: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -28,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: false
     });
   
-    Program.associate = models => {
-      Program.belongsTo(models.Event, { foreignKey: 'id_event' });
+    Programme.associate = models => {
+      Programme.belongsTo(models.Evenement, { foreignKey: 'id_event' });
     };
   
-    return Program;
+    return Programme;
   };
   

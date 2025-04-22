@@ -1,21 +1,22 @@
 const express = require('express');
+const router = express.Router();
 const { Media } = require('../db/sequelize');
 const upload = require('../config/multer');  
-const router = express.Router();
-const fs = require('fs'); 
-const baseUrl = "http://localhost:3005"; 
+const fs = require('fs');
+const baseUrl = "http://localhost:3005";
+
 /**
  * @swagger
  * tags:
  *   name: Médias
- *   description: Gestion des médias (images, vidéos, etc.)
+ *   description: Gestion des fichiers média
  */
 
 /**
  * @swagger
  * /api/media:
  *   post:
- *     summary: Créer un ou plusieurs médias (upload de fichiers)
+ *     summary: Upload de plusieurs médias liés à un événement
  *     tags: [Médias]
  *     requestBody:
  *       required: true
@@ -24,80 +25,42 @@ const baseUrl = "http://localhost:3005";
  *           schema:
  *             type: object
  *             properties:
- *               media:
+ *               id_event:
+ *                 type: integer
+ *                 example: 1
+ *               medias:
  *                 type: array
  *                 items:
  *                   type: string
  *                   format: binary
- *               type_media:
- *                 type: string
- *                 example: "image"
- *               description:
- *                 type: string
- *                 example: "Une belle image"
- *               id_event:
- *                 type: integer
- *                 example: 1
- *               titre:
- *                 type: string
- *                 example: "Photo d'événement"
- *               auteur:
- *                 type: string
- *                 example: "John Doe"
  *     responses:
  *       201:
  *         description: Médias créés avec succès
- *       400:
- *         description: Aucun fichier téléchargé
  *       500:
  *         description: Erreur serveur
  */
+router.post('/', upload.array('medias', 10), async (req, res) => {
+    try {
+        const { id_event } = req.body;
+        const files = req.files;
 
-// Route pour ajouter plusieurs médias
+        if (!files || files.length === 0) {
+            return res.status(400).json({ message: "Aucun fichier envoyé." });
+        }
 
+        const medias = await Promise.all(files.map(file => {
+            return Media.create({
+                id_event,
+                type_media: file.mimetype,
+                url_media: `${baseUrl}/uploads/${file.filename}`
+            });
+        }));
 
-
-router.post('/', upload.array('media'), async (req, res) => {
-  try {
-    // Vérification si des fichiers ont été téléchargés
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: 'Aucun fichier téléchargé' });
+        res.status(201).json({ medias });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de l'upload", error: error.message });
     }
-
-    // Vérification des données du corps de la requête
-    if (!req.body.id_event || !req.body.type_media) {
-      return res.status(400).json({ message: 'Informations incomplètes' });
-    }
-
-    const mediaArray = [];
-
-    // Parcourir chaque fichier et créer un enregistrement pour chaque média
-    for (const file of req.files) {
-      const media = await Media.create({
-        type_media: req.body.type_media,     // Type unique pour tous les fichiers
-        url_media: `/uploads/${file.filename}`, // Stockage de l'URL du fichier
-        id_event: req.body.id_event, // L'événement auquel ils appartiennent
-      });
-
-      mediaArray.push(media);  // Ajouter l'objet média créé à la liste
-    }
-
-    // Répondre avec la liste des médias enregistrés
-    res.status(201).json({
-      message: `${mediaArray.length} média(s) enregistré(s) avec succès.`,
-      medias: mediaArray
-    });
-
-  } catch (error) {
-    console.error("Erreur lors de la création des médias", error);
-    res.status(500).json({
-      message: 'Erreur serveur lors de la création des médias',
-      error: error.message
-    });
-  }
 });
-
-
 
 /**
  * @swagger
@@ -107,17 +70,17 @@ router.post('/', upload.array('media'), async (req, res) => {
  *     tags: [Médias]
  *     responses:
  *       200:
- *         description: Liste des médias récupérée avec succès
+ *         description: Liste des médias
  *       500:
  *         description: Erreur serveur
  */
 router.get('/', async (req, res) => {
-  try {
-    const media = await Media.findAll();
-    res.status(200).json({ media });
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des médias', error: error.message });
-  }
+    try {
+        const medias = await Media.findAll();
+        res.status(200).json(medias);
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la récupération des médias", details: error.message });
+    }
 });
 
 /**
@@ -129,134 +92,64 @@ router.get('/', async (req, res) => {
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: integer
+ *         required: true
  *         description: ID du média
  *     responses:
  *       200:
- *         description: Média récupéré avec succès
+ *         description: Média récupéré
  *       404:
  *         description: Média non trouvé
- *       500:
- *         description: Erreur serveur
  */
 router.get('/:id', async (req, res) => {
-  try {
-    const media = await Media.findByPk(req.params.id);
-    if (!media) {
-      return res.status(404).json({ message: 'Média non trouvé' });
+    try {
+        const media = await Media.findByPk(req.params.id);
+        if (!media) return res.status(404).json({ error: "Média non trouvé" });
+        res.status(200).json(media);
+    } catch (error) {
+        res.status(500).json({ error: "Erreur serveur", details: error.message });
     }
-    res.status(200).json({ media });
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération du média', error: error.message });
-  }
 });
 
 /**
  * @swagger
  * /api/media/{id}:
- *   put:
- *     summary: Mettre à jour un média
+ *   delete:
+ *     summary: Supprimer un média
  *     tags: [Médias]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: integer
- *         description: ID du média
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               media:
- *                 type: string
- *                 format: binary
- *               type_media:
- *                 type: string
- *                 example: "video"
- *               description:
- *                 type: string
- *                 example: "Une vidéo mise à jour"
+ *         required: true
+ *         description: ID du média à supprimer
  *     responses:
  *       200:
- *         description: Média mis à jour avec succès
+ *         description: Média supprimé avec succès
  *       404:
  *         description: Média non trouvé
  *       500:
  *         description: Erreur serveur
  */
-router.put('/:id', upload.single('media'), async (req, res) => {
-  try {
-    const media = await Media.findByPk(req.params.id);
-    if (!media) {
-      return res.status(404).json({ message: 'Média non trouvé' });
-    }
-
-    const fileUrl = req.file ? `/uploads/${req.file.filename}` : media.url_media;
-
-    media.type_media = req.body.type_media || media.type_media;
-    media.url_media = fileUrl;
-    media.description = req.body.description || media.description;
-
-    await media.save();
-    res.status(200).json({ media });
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la mise à jour du média', error: error.message });
-  }
-});
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Media:
- *       type: object
- *       properties:
- *         id_media:
- *           type: integer
- *           description: ID du média
- *         type_media:
- *           type: string
- *           description: Type du média (image, vidéo, etc.)
- *         url_media:
- *           type: string
- *           description: URL du fichier média
- *         description:
- *           type: string
- *           description: Description du média
- *         id_event:
- *           type: integer
- *           description: ID de l'événement associé
- *       required:
- *         - type_media
- *         - url_media
- *         - id_event
- *         
- */
 router.delete('/:id', async (req, res) => {
-  try {
-    const media = await Media.findByPk(req.params.id);
-    if (!media) {
-      return res.status(404).json({ message: 'Média non trouvé' });
-    }
+    try {
+        const media = await Media.findByPk(req.params.id);
+        if (!media) return res.status(404).json({ error: "Média non trouvé" });
 
-    if (media.url_media) {
-      const filePath = `.${media.url_media}`;
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-    }
+        if (media.url_media) {
+            const filePath = `.${media.url_media.replace(baseUrl, '')}`;
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
 
-    await media.destroy();
-    res.status(200).json({ message: 'Média supprimé avec succès' });
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la suppression du média', error: error.message });
-  }
+        await media.destroy();
+        res.status(200).json({ message: "Média supprimé" });
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la suppression", details: error.message });
+    }
 });
 
 module.exports = router;

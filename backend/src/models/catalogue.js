@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Catalog = sequelize.define('Catalog', {
+  const Catalogue = sequelize.define('Catalogue', {
     id_catalog: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -23,9 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: false
   });
 
-  Catalog.associate = models => {
-    Catalog.belongsTo(models.Event, { foreignKey: 'id_event' });
+  Catalogue.associate = models => {
+    Catalogue.belongsTo(models.Evenement, { foreignKey: 'id_event' , as: 'event'});
   };
 
-  return Catalog;
+  
+  return Catalogue;
 };

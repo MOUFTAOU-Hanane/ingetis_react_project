@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../db/sequelize');  // Importer le modèle User
+const { Utilisateur } = require('../db/sequelize');  // Importer le modèle User
 
 /**
  * @swagger
@@ -69,7 +69,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     // Rechercher l'utilisateur par son ID
-    const user = await User.findByPk(id);
+    const user = await Utilisateur.findByPk(id);
 
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });

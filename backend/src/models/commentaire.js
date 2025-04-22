@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Comment = sequelize.define('Comment', {
+  const Commentaire = sequelize.define('Commentaire', {
       id_comment: {
           type: DataTypes.INTEGER,
           autoIncrement: true,
@@ -17,15 +17,15 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false, // ✅ Désactiver `createdAt` et `updatedAt`
   });
 
-  Comment.associate = models => {
-      Comment.belongsTo(models.User, { 
+  Commentaire.associate = models => {
+    Commentaire.belongsTo(models.Utilisateur, { 
           foreignKey: 'id_user', 
           as: 'user', // ✅ Alias pour "User"
           onDelete: 'CASCADE',
           onUpdate: 'CASCADE'
       });
 
-      Comment.belongsTo(models.Event, { 
+      Commentaire.belongsTo(models.Evenement, { 
           foreignKey: 'id_event', 
           as: 'event', // ✅ Alias pour "Event"
           onDelete: 'CASCADE',
@@ -33,5 +33,5 @@ module.exports = (sequelize, DataTypes) => {
       });
   };
 
-  return Comment;
+  return Commentaire;
 };

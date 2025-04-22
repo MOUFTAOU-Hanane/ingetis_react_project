@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     });
   
     Participant.associate = models => {
-      Participant.belongsTo(models.User, { foreignKey: 'id_user' });
-      Participant.belongsTo(models.Event, { foreignKey: 'id_event' });
+      Participant.belongsTo(models.Utilisateur, { foreignKey: 'id_user' });
+      Participant.belongsTo(models.Evenement, { foreignKey: 'id_event' });
     };
   
     return Participant;

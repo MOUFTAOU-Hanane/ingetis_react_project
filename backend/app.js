@@ -5,7 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 const authMiddleware = require('./src/middlewares/authMiddleware');
 
 const sequelize = require('./src/db/sequelize.js');
-const authRoutes = require('./src/routes/authentication.js');  
+const authRoutes = require('./src/routes/authentification.js');  
 const userRoutes = require('./src/routes/user.js');  
 const lieuRoutes = require('./src/routes/lieu.js'); 
 const adminRoutes = require('./src/routes/admin.js'); 
@@ -16,6 +16,10 @@ const oeuvreRoutes = require('./src/routes/oeuvre.js');
 const participantRoutes = require('./src/routes/participant.js'); 
 const mediaRoutes = require('./src/routes/media.js');
 const commentRoutes = require('./src/routes/commentaire.js');  // Correction ici
+const favorisRoutes = require('./src/routes/favoris.js'); 
+const ParcoursRoutes = require('./src/routes/parcours.js');  
+
+
 
 const bodyParser = require("body-parser");
 const cors = require('cors');
@@ -87,5 +91,9 @@ app.use('/api/catalogs', catalogueRoutes);
 app.use('/api/oeuvres', oeuvreRoutes);
 app.use('/api/participants', participantRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/favoris', favorisRoutes);
+app.use('/api/parcours', ParcoursRoutes);
+
+
 
 app.listen(port, () => console.log('API démarrée sur http://localhost:' + port));
