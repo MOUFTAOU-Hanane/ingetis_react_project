@@ -10,7 +10,7 @@ const ProgramItem: React.FC<ProgramItemProps> = ({ program }) => {
     const [date, time] = formatDateTime(program.date_heure).split('à');
 
     return (
-        <div className="flex items-center border-l-4 border-purple-500 pl-4 py-2">
+        <div className="flex items-center border-l-4 border-yellow-500 pl-4 py-2">
             <div className="mr-4 text-right min-w-24">
                 <div className="text-gray-600 text-sm">{date}</div>
                 <div className="font-medium">{time}</div>

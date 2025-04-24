@@ -22,8 +22,8 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
                 value={oeuvresCount} 
                 subtitle="dans la collection" 
                 Icon={Palette}
-                gradientFrom="from-purple-600" 
-                gradientTo="to-purple-800"
+                gradientFrom="from-yellow-600" 
+                gradientTo="to-yellow-800"
             />
             <StatCard 
                 title="Événements" 

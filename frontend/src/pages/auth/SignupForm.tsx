@@ -65,7 +65,7 @@ const SignupForm = () => {
                 });
         
                 // Effectue l'appel API avec l'en-tête multipart
-                const response = await apiClient.post('/auth/register', formData, {
+                const response = await apiClient.post('http://localhost:3005/api/auth/register', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -321,9 +321,9 @@ const SignupForm = () => {
                 variant="contained"
                 fullWidth
                 sx={{
-                    backgroundColor: isLoading ? '#a3a3a3' : '#9333ea',
+                    backgroundColor: isLoading ? '#eab308' : '#ca8a04',
                     '&:hover': {
-                        backgroundColor: isLoading ? '#a3a3a3' : '#7e22ce',
+                        backgroundColor: isLoading ? '#eab308' : '#ca8a04',
                     },
                     borderRadius: '8px',
                     padding: '12px',

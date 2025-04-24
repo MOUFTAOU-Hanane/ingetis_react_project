@@ -26,7 +26,7 @@ const OeuvreModal: React.FC<OeuvreModalProps> = ({ isOpen, oeuvre, onClose }) =>
                 <img src={`http://localhost:3005${oeuvre.image}`} alt={oeuvre.titre} className="w-full h-64 object-cover rounded-md" />
 
                 {/* Titre de l'œuvre */}
-                <h2 className="text-2xl font-bold mt-4 text-center text-purple-600">{oeuvre.titre}</h2>
+                <h2 className="text-2xl font-bold mt-4 text-center text-yellow-600">{oeuvre.titre}</h2>
 
                 {/* Informations de l'œuvre */}
                 <div className="space-y-4 text-gray-700 mt-4">

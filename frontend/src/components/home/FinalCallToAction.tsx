@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 export const FinalCallToAction = () => {
     return (
         <motion.div
-            className="mt-16 text-center py-12 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-lg shadow-lg"
+            className="mt-16 text-center py-12 bg-gradient-to-r from-yellow-600 via-indigo-600 to-blue-600 rounded-lg shadow-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 2.5 }}
@@ -17,7 +17,7 @@ export const FinalCallToAction = () => {
             <div>
                 <a
                     href="/login"
-                    className="inline-block bg-white text-purple-600 hover:bg-purple-100 px-8 py-4 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 mb-4 md:mb-0 md:mr-6"
+                    className="inline-block bg-white text-yellow-600 hover:bg-yellow-100 px-8 py-4 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 mb-4 md:mb-0 md:mr-6"
                 >
                     Se connecter
                 </a>

@@ -38,7 +38,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                         </span>
                         <NavLink 
                             to={`/user/events/${event.id_event}`} 
-                            className="text-purple-600 hover:text-purple-800"
+                            className="text-yellow-600 hover:text-yellow-800"
                         >
                             Détails
                         </NavLink>

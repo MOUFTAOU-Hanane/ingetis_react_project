@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
         <Layout title="Politique de Confidentialité">
             <div className="space-y-6 text-white">
                 <div className="flex items-center gap-3">
-                    <ShieldCheck className="w-6 h-6 text-purple-300" />
+                    <ShieldCheck className="w-6 h-6 text-yellow-300" />
                     <h2 className="text-2xl font-semibold">Protection des données</h2>
                 </div>
                 <p>
@@ -28,7 +28,7 @@ const TermsOfService = () => {
         <Layout title="Conditions d'Utilisation">
             <div className="space-y-6 text-white">
                 <div className="flex items-center gap-3">
-                    <FileText className="w-6 h-6 text-purple-300" />
+                    <FileText className="w-6 h-6 text-yellow-300" />
                     <h2 className="text-2xl font-semibold">Conditions générales</h2>
                 </div>
                 <p>
@@ -50,7 +50,7 @@ const Contact = () => {
         <Layout title="Contact">
             <div className="space-y-6 text-white">
                 <div className="flex items-center gap-3">
-                    <Mail className="w-6 h-6 text-purple-300" />
+                    <Mail className="w-6 h-6 text-yellow-300" />
                     <h2 className="text-2xl font-semibold">Nous contacter</h2>
                 </div>
                 <p>

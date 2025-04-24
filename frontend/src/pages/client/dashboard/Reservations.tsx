@@ -40,7 +40,7 @@ const Reservations: React.FC<Reservations> = ({reservations}) => {
                         </button>
                         <NavLink 
                             to={`/client/reservations/${reservation.id_reservation}`}
-                            className="px-4 py-1 bg-purple-600 text-white rounded-full hover:bg-purple-700"
+                            className="px-4 py-1 bg-yellow-600 text-white rounded-full hover:bg-yellow-700"
                         >
                             Détails
                         </NavLink>

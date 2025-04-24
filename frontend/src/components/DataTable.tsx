@@ -21,7 +21,7 @@ const DataTable = <T extends object>({
     return (
         <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
             <table className="min-w-full text-sm text-white">
-                <thead className="text-purple-500 bg-white">
+                <thead className="text-yellow-500 bg-white">
                     <tr>
                         {columns.map((column, index) => (
                             <th key={index} className="px-6 py-3 text-left font-semibold">

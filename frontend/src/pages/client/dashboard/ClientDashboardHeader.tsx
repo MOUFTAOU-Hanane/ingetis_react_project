@@ -12,8 +12,8 @@ const ClientDashboardHeader: React.FC<ClientDashboardHeaderProps> =({ activeTab,
                 onClick={() => setActiveTab('overview')}
                 className={`px-6 py-3 font-medium whitespace-nowrap ${
                     activeTab === 'overview'
-                    ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-gray-600 hover:text-purple-500'
+                    ? 'text-yellow-600 border-b-2 border-yellow-600'
+                    : 'text-gray-600 hover:text-yellow-500'
                 }`}
             >
                 Vue d'ensemble
@@ -22,8 +22,8 @@ const ClientDashboardHeader: React.FC<ClientDashboardHeaderProps> =({ activeTab,
                 onClick={() => setActiveTab('reservations')}
                 className={`px-6 py-3 font-medium whitespace-nowrap ${
                     activeTab === 'reservations'
-                    ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-gray-600 hover:text-purple-500'
+                    ? 'text-yellow-600 border-b-2 border-yellow-600'
+                    : 'text-gray-600 hover:text-yellow-500'
                 }`}
             >
                 Mes Réservations
@@ -32,8 +32,8 @@ const ClientDashboardHeader: React.FC<ClientDashboardHeaderProps> =({ activeTab,
                 onClick={() => setActiveTab('favorites')}
                 className={`px-6 py-3 font-medium whitespace-nowrap ${
                     activeTab === 'favorites'
-                    ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-gray-600 hover:text-purple-500'
+                    ? 'text-yellow-600 border-b-2 border-yellow-600'
+                    : 'text-gray-600 hover:text-yellow-500'
                 }`}
             >
                 Favoris
@@ -42,8 +42,8 @@ const ClientDashboardHeader: React.FC<ClientDashboardHeaderProps> =({ activeTab,
                 onClick={() => setActiveTab('profile')}
                 className={`px-6 py-3 font-medium whitespace-nowrap ${
                     activeTab === 'profile'
-                    ? 'text-purple-600 border-b-2 border-purple-600'
-                    : 'text-gray-600 hover:text-purple-500'
+                    ? 'text-yellow-600 border-b-2 border-yellow-600'
+                    : 'text-gray-600 hover:text-yellow-500'
                 }`}
             >
                 Profil

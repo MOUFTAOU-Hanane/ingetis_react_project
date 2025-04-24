@@ -2,6 +2,7 @@ import React from 'react';
 
 import { NavLink } from 'react-router-dom';
 import EventMasterLogo from '../../components/EventMasterLogo';
+import SignupForm from './SignupForm';
 
 const SignUpPage: React.FC = () => {
     return (
@@ -11,7 +12,7 @@ const SignUpPage: React.FC = () => {
             </NavLink>
             
             <div className="flex min-h-screen">
-                <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-purple-700 to-purple-900 flex-col items-center justify-center p-12">
+                <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-yellow-700 to-yellow-900 flex-col items-center justify-center p-12">
                     <div className="text-center space-y-6">
                         <div className="flex items-center justify-center mb-6">
                             <span className="text-white font-bold text-xl">Event Culture</span>
@@ -28,14 +29,18 @@ const SignUpPage: React.FC = () => {
 
                         <div className="relative flex justify-center mb-6">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-700"></div>
+                                <div className="w-full border-t border-gray-700">
+                                </div>
                             </div>
                         </div>
+
+                        <SignupForm />
+
 
                         <div className="text-center mt-4">
                             <p className="text-gray-400">
                                 Vous avez déjà un compte?
-                                <NavLink to="/login" className="text-purple-500 hover:underline">
+                                <NavLink to="/login" className="text-yellow-500 hover:underline">
                                     Se connecter
                                 </NavLink>
                             </p>

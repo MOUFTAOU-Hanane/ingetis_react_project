@@ -20,7 +20,7 @@ const ParcoursTable: React.FC<ParcoursTableProps> = ({ parcours, onEdit, onDelet
     return (
         <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
             <table className="min-w-full text-sm text-gray-500">
-                <thead className="bg-purple-500 text-white">
+                <thead className="bg-yellow-500 text-white">
                 <tr>
                     <th className="px-6 py-3 text-left">Nom</th>
                     {/* <th className="px-6 py-3 text-left">Lieu</th>

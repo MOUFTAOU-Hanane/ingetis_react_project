@@ -12,7 +12,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title, linkTo, linkText }
         <div className="flex justify-between items-center mt-8 mb-4">
             <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
             {linkTo && linkText && (
-                <NavLink to={linkTo} className="text-purple-600 hover:text-purple-800">
+                <NavLink to={linkTo} className="text-yellow-600 hover:text-yellow-800">
                     {linkText}
                 </NavLink>
             )}

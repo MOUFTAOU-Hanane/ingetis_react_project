@@ -19,20 +19,20 @@ const EventActions: React.FC<EventActionsProps> = ({
     return (
         <div className="pt-2 flex justify-between items-center">
             <button 
-                className="text-purple-300 hover:text-purple-100 transition-colors flex items-center gap-1"
+                className="text-yellow-300 hover:text-yellow-100 transition-colors flex items-center gap-1"
                 onClick={() => onViewDetails(eventId)}
             >
                 <span>Détails</span>
             </button>
             <button 
-                className="text-yellow-300 hover:text-purple-100 transition-colors flex items-center gap-1"
+                className="text-yellow-300 hover:text-yellow-100 transition-colors flex items-center gap-1"
                 onClick={() => onToggleComments(eventId)}
             >
                 <span>Commenter</span>
             </button>
             
             <button
-                className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-6 py-2 transition-colors font-medium"
+                className="bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg px-6 py-2 transition-colors font-medium"
                 onClick={() => !isRegistered && onRegister(eventId)}
                 disabled={isRegistered}
             >

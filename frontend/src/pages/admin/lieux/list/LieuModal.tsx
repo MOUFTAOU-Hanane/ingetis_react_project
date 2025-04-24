@@ -22,8 +22,8 @@ const LieuModal: React.FC<LieuModalProps> = ({ isOpen, lieu, onClose }) => {
                     <X size={20} />
                 </button>
 
-                <h2 className="text-2xl font-bold mb-6 text-center text-purple-600 flex items-center justify-center gap-2">
-                    <MapPin size={24} className="text-purple-500" />
+                <h2 className="text-2xl font-bold mb-6 text-center text-yellow-600 flex items-center justify-center gap-2">
+                    <MapPin size={24} className="text-yellow-500" />
                     {lieu.nom}
                 </h2>
 

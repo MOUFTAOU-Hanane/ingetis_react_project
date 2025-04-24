@@ -23,7 +23,7 @@ const OeuvreCard: React.FC<OeuvreCardProps> = ({ oeuvre, onClick }) => {
                     <p className="mt-2">{oeuvre.description}</p>
                     <div className="mt-4 flex justify-between items-center">
                         <span className="text-lg font-bold">{oeuvre.prix}€</span>
-                        <span className="bg-purple-500 text-white py-1 px-3 rounded-full">{oeuvre.type}</span>
+                        <span className="bg-yellow-500 text-white py-1 px-3 rounded-full">{oeuvre.type}</span>
                     </div>
                 </div>
             </div>

@@ -18,7 +18,7 @@ const EventSectionPrograms: React.FC<{ programs: IProgram[]}> = ({programs}) => 
                     >
                     <div className="flex justify-between">
                         <h4 className="font-medium text-white">{program.titre}</h4>
-                        <span className="text-purple-300">
+                        <span className="text-yellow-300">
                             {formatDate(program.date_heure)}
                         </span>
                     </div>

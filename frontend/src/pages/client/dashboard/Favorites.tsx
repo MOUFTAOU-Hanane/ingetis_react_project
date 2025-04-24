@@ -35,7 +35,7 @@ export const Favorites: React.FC<FavoritesProps> = ({ favorites }) => {
                                 </button>
                                 <NavLink 
                                     to={`/client/oeuvres/${favorite.id_oeuvre}`}
-                                    className="text-purple-600 hover:text-purple-800"
+                                    className="text-yellow-600 hover:text-yellow-800"
                                 >
                                     Voir détails
                                 </NavLink>

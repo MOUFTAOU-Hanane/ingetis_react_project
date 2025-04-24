@@ -12,7 +12,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
     return (
         <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
             <table className="min-w-full text-sm text-gray-500">
-                <thead className="text-purple-500 bg-white">
+                <thead className="text-yellow-500 bg-white">
                     <tr>
                         <th className="px-6 py-3 text-left">Photo</th>
                         <th className="px-6 py-3 text-left">Nom</th>

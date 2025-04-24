@@ -110,7 +110,7 @@ const ClientEditInfo: React.FC<ClientEditInfoProps> = ({ user, onClose }) => {
                         <button type="button" onClick={onClose} className="px-4 py-2 text-gray-700 border rounded-lg hover:bg-gray-100">
                             Annuler
                         </button>
-                        <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                        <button type="submit" className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
                             Enregistrer
                         </button>
                     </div>

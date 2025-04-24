@@ -23,7 +23,7 @@ const Navbar = () => {
                 {/* Main Navigation - Centered with fixed width */}
                 <div className="w-2/4 flex justify-center">
                     {user && (
-                        <div className="bg-purple-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem] flex items-center space-x-8 mx-auto">
+                        <div className="bg-yellow-500/90 backdrop-blur-sm px-6 py-2 rounded-[1.5rem] flex items-center space-x-8 mx-auto">
                             {(user.role === 'admin' || user.role === 'organisateur') && (
                                 <>
                                     <NavLink to="/events" className={({ isActive }) => `text-white/80 hover:text-white hover:bg-gray-200/50 hover:backdrop-blur transition-colors px-4 py-[2px] rounded-[1.5rem] ${isActive ? 'bg-gray-200/50 backdrop-blur text-white' : ''}`}>Evenements</NavLink>
@@ -49,12 +49,12 @@ const Navbar = () => {
                     {user ? (
                         <div className="hidden md:flex items-center space-x-4">
                             <NavLink to={`/${user.role}/dashboard`} className="text-white/80 hover:text-white">Tableau de Bord</NavLink>
-                            <button onClick={logout} className="px-4 py-2 bg-white text-purple-500 rounded-full hover:bg-white/90">Logout</button>
+                            <button onClick={logout} className="px-4 py-2 bg-white text-yellow-500 rounded-full hover:bg-white/90">Logout</button>
                         </div>
                     ) : (
                         <div className="hidden md:flex items-center space-x-4">
                             <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Se connecter</NavLink>
-                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">S'inscrire</NavLink>
+                            <NavLink to="/register" className="bg-white text-yellow-500 px-4 py-2 rounded-full">S'inscrire</NavLink>
                         </div>
                     )}
 
@@ -71,7 +71,7 @@ const Navbar = () => {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="md:hidden bg-purple-500/90 backdrop-blur-sm px-6 py-4">
+                <div className="md:hidden bg-yellow-500/90 backdrop-blur-sm px-6 py-4">
                     {user && (
                         <div className="space-y-4">
                             {(user.role === 'admin' || user.role === 'organisateur') && (
@@ -99,7 +99,7 @@ const Navbar = () => {
                     {!user && (
                         <div className="mt-4 flex items-center justify-between space-x-4">
                             <NavLink to="/login" className="text-white/90 hover:text-white px-4 py-2">Se connecter</NavLink>
-                            <NavLink to="/register" className="bg-white text-purple-500 px-4 py-2 rounded-full">S'inscrire</NavLink>
+                            <NavLink to="/register" className="bg-white text-yellow-500 px-4 py-2 rounded-full">S'inscrire</NavLink>
                         </div>
                     )}
                 </div>

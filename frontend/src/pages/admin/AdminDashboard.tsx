@@ -18,7 +18,7 @@ const AdminDashboard = () => {
                     <p className="text-white/80">Gérez tous les événements actifs et à venir. </p>
                     <NavLink
                         to="/admin/events"
-                        className="text-purple-700 hover:text-purple-900 hover:underline mt-4 inline-block"
+                        className="text-yellow-700 hover:text-yellow-900 hover:underline mt-4 inline-block"
                     >
                         Voir les événements
                     </NavLink>
@@ -30,7 +30,7 @@ const AdminDashboard = () => {
                     <p className="text-white/80">Consultez et gérez les utilisateurs enregistrés.</p>
                     <NavLink
                         to="/admin/users"
-                        className="text-purple-700 hover:text-purple-900 hover:underline mt-4 inline-block"
+                        className="text-yellow-700 hover:text-yellow-900 hover:underline mt-4 inline-block"
                     >
                         Voir les utilisateurs
                     </NavLink>
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
                     <p className="text-white/80">Gérez les lieux où les événements ont lieu.</p>
                     <NavLink
                         to="/admin/lieux"
-                        className="text-purple-700 hover:text-purple-900 hover:underline mt-4 inline-block"
+                        className="text-yellow-700 hover:text-yellow-900 hover:underline mt-4 inline-block"
                     >
                         Voir les lieux
                     </NavLink>

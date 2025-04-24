@@ -35,7 +35,7 @@ export const EventCard = ({ event }: EventCardProps) => {
                     redirect: `/user/events/${event?.id_event}`, 
                     roles: "user" 
                 }}
-                className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                className="inline-block bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
             >
                 Voir plus
             </Link>

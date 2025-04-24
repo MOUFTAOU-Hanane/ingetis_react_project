@@ -27,8 +27,8 @@ const LieuTable: React.FC<LieuTableProps> = ({
 
     return (
         <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
-            <table className="min-w-full text-sm text-white !hover:text-purple-500">
-                <thead className="text-purple-500 bg-white">
+            <table className="min-w-full text-sm text-white !hover:text-yellow-500">
+                <thead className="text-yellow-500 bg-white">
                 <tr>
                     <th className="px-6 py-3 text-left">Nom</th>
                     <th className="px-6 py-3 text-left">Adresse</th>
@@ -42,7 +42,7 @@ const LieuTable: React.FC<LieuTableProps> = ({
                     {lieux.map((lieu) => (
                         <tr
                             key={lieu.id_lieu}
-                            className="border-b hover:bg-purple-300 hover:text-gray-800"
+                            className="border-b hover:bg-yellow-300 hover:text-gray-800"
                         >
                             <td className="px-6 py-4">{lieu.nom}</td>
                             <td className="px-6 py-4">{lieu.adresse}</td>
@@ -68,7 +68,7 @@ const LieuTable: React.FC<LieuTableProps> = ({
                                 />
                                 <List
                                     size={16}
-                                    className="cursor-pointer text-purple-100"
+                                    className="cursor-pointer text-yellow-100"
                                     onClick={() => onAddParcours(lieu)}
                                 />
                                 </div>

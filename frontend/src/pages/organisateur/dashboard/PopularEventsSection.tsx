@@ -11,7 +11,7 @@ const PopularEventsSection: React.FC<PopularEventsSectionProps> = ({ topEvents }
     return (
         <div className="bg-white p-6 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
-                <Award className="text-purple-600 w-6 h-6 mr-2" />
+                <Award className="text-yellow-600 w-6 h-6 mr-2" />
                 <h2 className="text-xl font-bold text-gray-800">
                     Événements Populaires
                 </h2>
@@ -63,7 +63,7 @@ const PopularEventsSection: React.FC<PopularEventsSectionProps> = ({ topEvents }
                 </table>
             </div>
             <div className="mt-4 text-right">
-                <button className="text-sm text-purple-600 hover:text-purple-800 font-medium">
+                <button className="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
                     Voir tous les événements →
                 </button>
             </div>

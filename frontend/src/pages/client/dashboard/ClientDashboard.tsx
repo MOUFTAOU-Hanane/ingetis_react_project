@@ -51,7 +51,7 @@ const ClientDashboard: React.FC = () => {
 
     return (
         <Layout title="Tableau de bord">
-            <div className="bg-purple-600 text-white p-6">
+            <div className="bg-yellow-600 text-white p-6">
                 <div className="container mx-auto">
                 <p className="mt-2">Bienvenue, {user?.nom || 'Utilisateur'}</p>
                 </div>

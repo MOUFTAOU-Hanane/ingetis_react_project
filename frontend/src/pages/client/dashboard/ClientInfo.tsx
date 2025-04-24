@@ -32,7 +32,7 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ user }) => {
                     </div> */}
                 </div>
                 <div className="mt-3">
-                    <button className="text-purple-600 hover:text-purple-800" onClick={() => setOpenModal(true)}>
+                    <button className="text-yellow-600 hover:text-yellow-800" onClick={() => setOpenModal(true)}>
                         Modifier
                     </button>
                 </div>

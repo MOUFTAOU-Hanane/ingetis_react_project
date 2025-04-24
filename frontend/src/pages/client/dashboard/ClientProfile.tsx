@@ -48,8 +48,8 @@ const ClientProfile: React.FC<ClientProfileProps> = ({ user }) => {
                                     className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
                                 />
                             ) : (
-                                <div className="w-24 h-24 rounded-full bg-purple-200 flex items-center justify-center">
-                                    <span className="text-2xl font-bold text-purple-600">
+                                <div className="w-24 h-24 rounded-full bg-yellow-200 flex items-center justify-center">
+                                    <span className="text-2xl font-bold text-yellow-600">
                                         {user?.nom ? user.nom.charAt(0).toUpperCase() : 'U'}
                                     </span>
                                 </div>

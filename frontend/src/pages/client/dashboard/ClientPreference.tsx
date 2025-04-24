@@ -25,7 +25,7 @@ const ClientPreference: React.FC<ClientPreferenceProps> = () => {
             </div>
 
             <div className="mt-4">
-                <button className="px-4 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 text-sm">
+                <button className="px-4 py-2 bg-yellow-600 text-white rounded-full hover:bg-yellow-700 text-sm">
                 Enregistrer les préférences
                 </button>
             </div>

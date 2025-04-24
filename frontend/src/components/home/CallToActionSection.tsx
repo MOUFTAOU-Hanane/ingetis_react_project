@@ -18,7 +18,7 @@ export const CallToActionSection = () => {
                     redirect: "/events/create", 
                     roles: "organisateur" 
                 }}
-                className="mt-4 inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                className="mt-4 inline-block bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
             >
                 Créez un événement
             </Link>

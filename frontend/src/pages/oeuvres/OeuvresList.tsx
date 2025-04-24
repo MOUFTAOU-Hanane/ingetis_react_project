@@ -90,7 +90,7 @@ const OeuvresList: React.FC = () => {
                 {oeuvres && oeuvres.length ? (
                     <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
                         <table className="min-w-full text-sm text-white">
-                            <thead className="text-purple-500 bg-white">
+                            <thead className="text-yellow-500 bg-white">
                                 <tr>
                                     <th className="px-6 py-3 text-left">Titre</th>
                                     <th className="px-6 py-3 text-left">Type</th>
@@ -101,7 +101,7 @@ const OeuvresList: React.FC = () => {
                             </thead>
                             <tbody>
                                 {oeuvres.map((oeuvre) => (
-                                    <tr key={oeuvre.id_oeuvre} className="border-b hover:bg-purple-300 hover:text-gray-800">
+                                    <tr key={oeuvre.id_oeuvre} className="border-b hover:bg-yellow-300 hover:text-gray-800">
                                         <td className="px-6 py-4">{oeuvre.titre}</td>
                                         <td className="px-6 py-4">{oeuvre.type}</td>
                                         <td className="px-6 py-4">{oeuvre.prix} €</td>

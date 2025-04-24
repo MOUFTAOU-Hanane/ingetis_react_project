@@ -7,6 +7,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import apiClient from '../../apiClient';
 import { useAuth } from '../../context/AuthContext';
 import EventMasterLogo from '../../components/EventMasterLogo';
+import axios from 'axios';
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Email invalide').required('Email est requis'),
@@ -42,10 +43,11 @@ const LoginForm: React.FC = () => {
 
             try {
 
-                const response = await apiClient.post('/auth/login', values);
+                const response = await axios.post('http://localhost:3005/api/auth/login', values);
 
                 if (response.status === 200) {
                     const { data } = response.data;
+                    console.log({data})
                     sessionStorage.setItem('token', data.token);
                     sessionStorage.setItem('user', JSON.stringify(data));
                     login(data);
@@ -78,7 +80,7 @@ const LoginForm: React.FC = () => {
                 <EventMasterLogo />
             </NavLink>
             <div className="flex min-h-screen bg-black text-white">
-                <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-purple-700 to-purple-900 flex-col items-center justify-center p-12">
+                <div className="hidden md:flex md:w-2/5 bg-gradient-to-b from-yellow-700 to-yellow-900 flex-col items-center justify-center p-12">
                     <div className="text-center space-y-6">
                         <div className="flex items-center justify-center mb-6">
                             <span className="text-white font-bold text-xl">Event Culture</span>
@@ -152,9 +154,9 @@ const LoginForm: React.FC = () => {
                                 variant="contained"
                                 fullWidth
                                 sx={{
-                                    backgroundColor: isLoading ? '#a3a3a3' : '#9333ea',
+                                    backgroundColor: isLoading ? '#a3a3a3' : '#eab308', // yellow-500
                                     '&:hover': {
-                                        backgroundColor: isLoading ? '#a3a3a3' : '#7e22ce',
+                                        backgroundColor: isLoading ? '#a3a3a3' : '#ca8a04', // yellow-600
                                     },
                                     borderRadius: '8px',
                                     padding: '12px',
@@ -174,6 +176,7 @@ const LoginForm: React.FC = () => {
                                     'Se connecter'
                                 )}                        
                             </Button>
+
                         </form>
 
                         <div className="text-center mt-4">
@@ -185,7 +188,7 @@ const LoginForm: React.FC = () => {
                                         redirect: redirectPath ?? "",
                                         roles: allowedRoles ?? "" 
                                     }}
-                                    className="text-purple-500 hover:underline"
+                                    className="text-yellow-500 hover:underline"
                                 >
                                     S'inscrire
                                 </NavLink>

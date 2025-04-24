@@ -5,7 +5,7 @@ const EventMasterLogo = () => {
         width="50"
         height="50"
         viewBox="0 0 120 120"
-        className="fill-purple-500"
+        className="fill-yellow-500"
       >
         <circle cx="60" cy="60" r="55" stroke="white" strokeWidth="10" />
         <text
