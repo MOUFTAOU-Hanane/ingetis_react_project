@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Catalog } = require('../db/sequelize');
+const { Catalogue, Evenement } = require('../db/sequelize');
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ const { Catalog } = require('../db/sequelize');
 router.post('/', async (req, res) => {
   try {
     const { nom_catalogue, description, id_event } = req.body;
-    const nouveauCatalog = await Catalog.create({ nom_catalogue, description, id_event });
+    const nouveauCatalog = await Catalogue.create({ nom_catalogue, description, id_event });
     res.status(201).json({ nouveauCatalog });
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la création du catalogue', error: err.message });
@@ -61,7 +61,11 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
   try {
-    const catalogs = await Catalog.findAll();
+    const catalogs = await Catalogue.findAll({
+      include: [
+          { model: Evenement, as: 'event' }
+      ]
+    });
     res.status(200).json(catalogs);
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la récupération des catalogues', error: err.message });
@@ -92,7 +96,11 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const catalog = await Catalog.findByPk(id);
+    const catalog = await Catalogue.findByPk(id, {
+      include: [
+          { model: Evenement, as: 'event' }
+      ]
+    });
     if (!catalog) {
       return res.status(404).json({ message: 'Catalogue non trouvé' });
     }
@@ -143,7 +151,7 @@ router.put('/:id', async (req, res) => {
   const id = req.params.id;
   const { nom_catalogue, description, id_event } = req.body;
   try {
-    const catalog = await Catalog.findByPk(id);
+    const catalog = await Catalogue.findByPk(id);
     if (!catalog) {
       return res.status(404).json({ message: 'Catalogue non trouvé' });
     }
@@ -178,7 +186,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const catalog = await Catalog.findByPk(id);
+    const catalog = await Catalogue.findByPk(id);
     if (!catalog) {
       return res.status(404).json({ message: 'Catalogue non trouvé' });
     }
@@ -190,3 +198,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
+ 

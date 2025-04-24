@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Oeuvre, User } = require('../db/sequelize'); // Import des modèles
+const { Oeuvre, Utilisateur } = require('../db/sequelize'); // Import des modèles
 const upload = require('../config/multer');  
 const fs = require('fs'); // Pour supprimer les anciens fichiers
 const baseUrl = "http://localhost:3005"; 
@@ -77,7 +77,7 @@ router.post('/', upload.single('image'), async (req, res) => {
  */
 router.get('/', async (req, res) => {
     try {
-        const oeuvres = await Oeuvre.findAll({ include: [User] });
+        const oeuvres = await Oeuvre.findAll({ include: [  { model: Utilisateur, as: 'user' } ]});
         res.status(200).json(oeuvres);
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de la récupération des œuvres", details: error.message });
@@ -107,7 +107,7 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     try {
-        const oeuvre = await Oeuvre.findByPk(req.params.id, { include: [User] });
+        const oeuvre = await Oeuvre.findByPk(req.params.id, { include: [  { model: Utilisateur, as: 'user' } ]});
         if (!oeuvre) return res.status(404).json({ error: "Œuvre non trouvée" });
         res.status(200).json(oeuvre);
     } catch (error) {

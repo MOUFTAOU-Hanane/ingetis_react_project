@@ -1,15 +1,19 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
 // Importation des modèles
-const CatalogueModel = require('../models/catalog');
-const UserModel = require('../models/user');
-const EventModel = require('../models/event');
-const CommentModel = require('../models/commentaire');
+const CatalogueModel = require('../models/catalogue');
+const UtilisateurModel = require('../models/utilisateur');
+const EvenementModel = require('../models/evenement');
+const CommentaireModel = require('../models/commentaire');
 const LieuModel = require('../models/lieu');
 const MediaModel = require('../models/media');
 const OeuvreModel = require('../models/oeuvre');
 const ParticipantModel = require('../models/participant');
-const ProgramModel = require('../models/program');
+const ProgrammeModel = require('../models/programme');
+const FavorisModel = require('../models/favoris');
+const ParcoursModel = require('../models/parcours');
+
+
 
 // Connexion à la base de données
 const sequelize = new Sequelize('events', 'root', '', {
@@ -22,18 +26,21 @@ const sequelize = new Sequelize('events', 'root', '', {
 });
 
 // Création des modèles avec Sequelize
-const User = UserModel(sequelize, DataTypes);
+const Utilisateur = UtilisateurModel(sequelize, DataTypes);
 const Lieu = LieuModel(sequelize, DataTypes);
-const Event = EventModel(sequelize, DataTypes);
-const Catalog = CatalogueModel(sequelize, DataTypes);
-const Comment = CommentModel(sequelize, DataTypes);
+const Evenement = EvenementModel(sequelize, DataTypes);
+const Catalogue = CatalogueModel(sequelize, DataTypes);
+const Commentaire = CommentaireModel(sequelize, DataTypes);
 const Media = MediaModel(sequelize, DataTypes);
 const Oeuvre = OeuvreModel(sequelize, DataTypes);
 const Participant = ParticipantModel(sequelize, DataTypes);
-const Program = ProgramModel(sequelize, DataTypes);
+const Programme = ProgrammeModel(sequelize, DataTypes);
+const Favoris = FavorisModel(sequelize, DataTypes);
+const Parcours = ParcoursModel(sequelize, DataTypes);
+
 
 // Regrouper tous les modèles
-const models = { User, Lieu, Event, Catalog, Comment, Media, Oeuvre, Participant, Program };
+const models = { Utilisateur, Lieu, Evenement, Catalogue, Commentaire, Media, Oeuvre, Participant, Programme, Favoris, Parcours};
 
 // Initialiser les associations pour chaque modèle
 Object.keys(models).forEach(modelName => {

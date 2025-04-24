@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Comment, User, Event } = require("../db/sequelize"); // Import des modèles
+const { Commentaire, Utilisateur, Evenement } = require("../db/sequelize"); // Import des modèles
 
 /**
  * @swagger
@@ -46,12 +46,12 @@ const { Comment, User, Event } = require("../db/sequelize"); // Import des modè
 router.post("/", async (req, res) => {
     try {
         const { commentaire, id_user, id_event } = req.body;
-        const user = await User.findByPk(id_user);
-        const event = await Event.findByPk(id_event);
+        const user = await Utilisateur.findByPk(id_user);
+        const event = await Evenement.findByPk(id_event);
         if (!user || !event) {
             return res.status(404).json({ message: "Utilisateur ou événement introuvable" });
         }
-        const newComment = await Comment.create({ commentaire, id_user, id_event });
+        const newComment = await Commentaire.create({ commentaire, id_user, id_event });
         res.status(201).json({newComment });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de l'ajout du commentaire", error: error.message });
@@ -163,7 +163,7 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const comment = await Comment.findByPk(id);
+        const comment = await Commentaire.findByPk(id);
         if (!comment) {
             return res.status(404).json({ message: "Commentaire introuvable" });
         }

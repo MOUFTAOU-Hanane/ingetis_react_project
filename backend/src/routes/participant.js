@@ -1,5 +1,5 @@
 const express = require('express');
-const { Participant, User, Event } = require('../db/sequelize');  // Importer les modèles nécessaires
+const { Participant, Utilisateur, Evenement } = require('../db/sequelize');  // Importer les modèles nécessaires
 const router = express.Router();
 
 /**
@@ -39,13 +39,13 @@ router.post('/', async (req, res) => {
 
   try {
     // Vérifier si l'utilisateur existe
-    const user = await User.findByPk(id_user);
+    const user = await Utilisateur.findByPk(id_user);
     if (!user) {
       return res.status(400).json({ message: "Utilisateur non trouvé" });
     }
 
     // Vérifier si l'événement existe
-    const event = await Event.findByPk(id_event);
+    const event = await Evenement.findByPk(id_event);
     if (!event) {
       return res.status(400).json({ message: "Événement non trouvé" });
     }
