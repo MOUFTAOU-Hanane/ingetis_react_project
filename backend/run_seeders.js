@@ -11,7 +11,9 @@ const orderedSeeders = [
   'participants_seeder.js',
   'commentaire_seeder.js',
   'favoris_seeder.js',
-  'parcours_seeder.js'
+  'parcours_seeder.js',
+  'media_seeder.js',
+
 ];
 
 const runSeeders = async () => {
