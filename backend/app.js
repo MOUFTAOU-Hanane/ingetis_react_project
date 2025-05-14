@@ -77,6 +77,8 @@ app.use(cors(corsOptions));
 // Utilisation des routes publiques (authentification)
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/media', mediaRoutes);
+
 
 
 // Middleware global → protège toutes les routes suivantes
@@ -86,7 +88,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/lieu', lieuRoutes);
 app.use('/api/programs', programRoutes);
-app.use('/api/media', mediaRoutes);
 app.use('/api/catalogs', catalogueRoutes);
 app.use('/api/oeuvres', oeuvreRoutes);
 app.use('/api/participants', participantRoutes);
