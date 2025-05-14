@@ -74,10 +74,10 @@ const corsOptions = {
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-// Utilisation des routes publiques (authentification)
+
+app.use('/api/media', mediaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
-app.use('/api/media', mediaRoutes);
 
 
 
