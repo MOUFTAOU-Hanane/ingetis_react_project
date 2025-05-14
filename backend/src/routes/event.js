@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Evenement, Participant, Lieu, Programme, Media, Catalogue, Commentaire ,Utilisateur} = require('../db/sequelize'); // Importe les modèles
+const { Evenement, Participant, Lieu, Programme, Media, Catalogue, Commentaire, Utilisateur } = require('../db/sequelize'); // Importe les modèles
 const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
@@ -65,17 +65,16 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *               error: "Erreur lors de la création de l'événement"
  *               details: "Une description de l'erreur"
  */
-router.post('/', authMiddleware,async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     try {
         const event = await Evenement.create(req.body);
-        console.log (event)
+        console.log(event);
         res.status(201).json({ event });
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de la création de l'événement", details: error.message });
     }
 });
 
-/**
 /**
  * @swagger
  * /api/events:
@@ -117,8 +116,6 @@ router.get('/', async (req, res) => {
                 { model: Participant, as: 'participants' },
                 { model: Commentaire, as: 'comments' },
                 { model: Utilisateur, as: 'createur' }
-
-
             ]
         });
 
@@ -128,8 +125,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la récupération des événements", details: error.message });
     }
 });
-
-
 
 /**
  * @swagger
@@ -161,10 +156,6 @@ router.get('/', async (req, res) => {
  *                 catalog: [...]
  *       404:
  *         description: Événement non trouvé
- *         content:
- *           application/json:
- *             example:
- *               message: "Événement non trouvé"
  *       500:
  *         description: Erreur serveur
  *         content:
@@ -184,12 +175,10 @@ router.get('/:id', async (req, res) => {
                 { model: Participant, as: 'participants' },
                 { model: Commentaire, as: 'comments' },
                 { model: Utilisateur, as: 'createur' }
-
-
             ]
         });
         if (!event) return res.status(404).json({ message: 'Événement non trouvé' });
-        res.status(200).json({  event });
+        res.status(200).json({ event });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération de l\'événement', error: error.message });
     }
@@ -242,14 +231,13 @@ router.get('/:id', async (req, res) => {
  *               error: "Erreur lors de la mise à jour"
  *               details: "Une description de l'erreur"
  */
-router.put('/:id',authMiddleware, async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     try {
         const event = await Evenement.findByPk(req.params.id);
         if (!event) return res.status(404).json({ error: "Événement non trouvé" });
 
         await event.update(req.body);
 
-        // Récupérer l'événement mis à jour avec ses relations
         const updatedEvent = await Evenement.findByPk(req.params.id, {
             include: [
                 { model: Lieu, as: 'lieu' },
@@ -259,7 +247,6 @@ router.put('/:id',authMiddleware, async (req, res) => {
                 { model: Participant, as: 'participants' },
                 { model: Commentaire, as: 'comments' },
                 { model: Utilisateur, as: 'createur' }
-
             ]
         });
 
@@ -268,7 +255,6 @@ router.put('/:id',authMiddleware, async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la mise à jour", details: error.message });
     }
 });
-
 
 /**
  * @swagger
@@ -296,7 +282,7 @@ router.put('/:id',authMiddleware, async (req, res) => {
  *               error: "Erreur lors de la suppression"
  *               details: "Une description de l'erreur"
  */
-router.delete('/:id', authMiddleware,async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         const event = await Evenement.findByPk(req.params.id);
         if (!event) return res.status(404).json({ error: "Événement non trouvé" });
@@ -307,8 +293,5 @@ router.delete('/:id', authMiddleware,async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la suppression", details: error.message });
     }
 });
-
-
-// ✅ Route publique
 
 module.exports = router;
