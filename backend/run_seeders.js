@@ -8,11 +8,12 @@ const orderedSeeders = [
   'programme_seeder.js',
   'catalogue_seeder.js',
   'oeuvres_seeder.js',
-  'participants_seeder.js',
   'commentaire_seeder.js',
   'favoris_seeder.js',
   'parcours_seeder.js',
   'media_seeder.js',
+  'participants_seeder.js',
+
 
 ];
 

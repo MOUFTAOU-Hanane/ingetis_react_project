@@ -17,9 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    nb_participants: {  // Ajout du champ nb_participants
+    places_initial: {  // Ajout du champ nb_participants
       type: DataTypes.INTEGER,
-      defaultValue: 0,  // Valeur initiale à 0
+      allowNull: false
+    },
+    places_disponible: {  // Ajout du champ nb_participants
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     id_lieu: {  // Clé étrangère vers le lieu

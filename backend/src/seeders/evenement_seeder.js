@@ -11,7 +11,8 @@ module.exports = async () => {
         id_lieu: 1, // Assurez-vous que cet ID existe dans la table Lieu
         date_debut: '2025-06-01 09:00:00',
         date_fin: '2025-06-01 17:00:00',
-        nombre_participants: 100,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -21,7 +22,8 @@ module.exports = async () => {
         id_lieu: 2,
         date_debut: '2025-06-15 18:00:00',
         date_fin: '2025-06-17 02:00:00',
-        nombre_participants: 500,
+        places_initial: 30,
+        places_disponible: 30,
         created: new Date(),
       },
       {
@@ -31,7 +33,8 @@ module.exports = async () => {
         id_lieu: 3,
         date_debut: '2025-07-01 10:00:00',
         date_fin: '2025-07-01 18:00:00',
-        nombre_participants: 150,
+        places_initial: 40,
+        places_disponible: 40,
         created: new Date(),
       },
       {
@@ -41,7 +44,8 @@ module.exports = async () => {
         id_lieu: 4,
         date_debut: '2025-07-10 11:00:00',
         date_fin: '2025-07-10 19:00:00',
-        nombre_participants: 200,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -51,7 +55,8 @@ module.exports = async () => {
         id_lieu: 5,
         date_debut: '2025-08-05 09:00:00',
         date_fin: '2025-08-05 17:00:00',
-        nombre_participants: 50,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -61,7 +66,8 @@ module.exports = async () => {
         id_lieu: 6,
         date_debut: '2025-08-20 09:00:00',
         date_fin: '2025-08-20 16:00:00',
-        nombre_participants: 30,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -71,7 +77,8 @@ module.exports = async () => {
         id_lieu: 7,
         date_debut: '2025-09-01 14:00:00',
         date_fin: '2025-09-05 23:00:00',
-        nombre_participants: 300,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -81,7 +88,8 @@ module.exports = async () => {
         id_lieu: 8,
         date_debut: '2025-09-10 08:30:00',
         date_fin: '2025-09-10 18:00:00',
-        nombre_participants: 100,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -91,7 +99,8 @@ module.exports = async () => {
         id_lieu: 9,
         date_debut: '2025-09-20 10:00:00',
         date_fin: '2025-09-20 17:00:00',
-        nombre_participants: 150,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -101,7 +110,8 @@ module.exports = async () => {
         id_lieu: 10,
         date_debut: '2025-10-02 09:00:00',
         date_fin: '2025-10-02 17:00:00',
-        nombre_participants: 120,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -111,7 +121,8 @@ module.exports = async () => {
         id_lieu: 11,
         date_debut: '2025-10-10 10:00:00',
         date_fin: '2025-10-10 16:00:00',
-        nombre_participants: 500,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -121,7 +132,8 @@ module.exports = async () => {
         id_lieu: 12,
         date_debut: '2025-10-15 08:30:00',
         date_fin: '2025-10-15 18:00:00',
-        nombre_participants: 80,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -131,7 +143,8 @@ module.exports = async () => {
         id_lieu: 13,
         date_debut: '2025-11-01 10:00:00',
         date_fin: '2025-11-02 18:00:00',
-        nombre_participants: 50,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -141,7 +154,8 @@ module.exports = async () => {
         id_lieu: 14,
         date_debut: '2025-11-10 20:00:00',
         date_fin: '2025-11-10 23:00:00',
-        nombre_participants: 200,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
       {
@@ -151,7 +165,8 @@ module.exports = async () => {
         id_lieu: 15,
         date_debut: '2025-11-20 09:00:00',
         date_fin: '2025-11-20 18:00:00',
-        nombre_participants: 180,
+        places_initial: 50,
+        places_disponible: 50,
         created: new Date(),
       },
     ]);
