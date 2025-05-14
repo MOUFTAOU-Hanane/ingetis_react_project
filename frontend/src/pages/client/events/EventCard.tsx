@@ -55,12 +55,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
 
     const isRegistered = isRegisteredForEvent(event.id_event);
     const imageUrl = event.medias[0]?.url_media 
-        ? `http://localhost:3005${event.medias[0].url_media}` 
+        ? `${event.medias[0].url_media}` 
         : "/api/placeholder/400/600";
 
     return (
-        <div key={event.id_event} className="!h-[280px]">
-            <div className="grid grid-cols-1 md:grid-cols-3">
+        <div key={event.id_event} className="">
+            <div className="grid grid-cols-1">
                 {/* Event Image */}
                 <EventSectionImage imageUrl={imageUrl} title={event.titre} />
 

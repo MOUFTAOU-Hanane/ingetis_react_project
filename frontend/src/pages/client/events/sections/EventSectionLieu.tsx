@@ -6,7 +6,7 @@ import Map from '../../../../components/Map'
 const EventSectionLieu: React.FC<{ lieu: ILieu}> = ({lieu}) => {
     return (
         <div>
-            <h3 className="text-xl font-semibold text-yellow-500 mb-3 flex items-center gap-2">
+            <h3 className="text-xl font-semibold text-yellow-900 mb-3 flex items-center gap-2">
                 <MapPin size={18} />
                 <span>Lieu</span>
             </h3>

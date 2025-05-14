@@ -9,7 +9,7 @@ const EventSectionHeader: React.FC<{ event: IEvent }> = ({ event }) => {
             {event.medias && event.medias.length > 0 && (
                 <div className="w-full h-64 rounded-xl overflow-hidden mb-6">
                     <img
-                        src={`http://localhost:3005${event.medias[0].url_media}`}
+                        src={`${event.medias[0].url_media}`}
                         alt={event.titre}
                         className="w-full h-full object-cover"
                     />
@@ -20,7 +20,7 @@ const EventSectionHeader: React.FC<{ event: IEvent }> = ({ event }) => {
             <h1 className="text-3xl font-bold text-white mb-2">
                 {event.titre}
             </h1>
-            <div className="flex items-center text-yellow-300 mb-4">
+            <div className="flex items-center text-yellow-900 mb-4">
                 <Clock size={16} className="mr-1" />
                 <span>{formatDateRange(event.date_debut, event.date_fin)}</span>
                 {event.lieu && (

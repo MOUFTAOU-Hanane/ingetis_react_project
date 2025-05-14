@@ -22,8 +22,8 @@ const CommentsList: React.FC<CommentsListProps> = ({
 
     const sortedComments = [...comments].sort((a, b) =>
         sortOrder === 'asc'
-        ? new Date(a.created).getTime() - new Date(b.created).getTime()
-        : new Date(b.created).getTime() - new Date(a.created).getTime()
+        ? new Date(a.date_commentaire).getTime() - new Date(b.date_commentaire).getTime()
+        : new Date(b.date_commentaire).getTime() - new Date(a.date_commentaire).getTime()
     );
 
     return (

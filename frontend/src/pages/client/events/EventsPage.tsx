@@ -60,9 +60,12 @@ const EventsPage: React.FC = () => {
                         <p className="text-white text-xl">Aucun événement trouvé</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                         {filteredEvents.map((event) => (
-                            <div key={event.id_event} className='bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-white/15'>
+                            <div 
+                                key={event.id_event} 
+                                className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-white/15"
+                            >
                                 <EventCard event={event} toggleEventExpansion={toggleEventExpansion} expandedEvents={expandedEvents} />
                                 {expandedEvents.has(event.id_event) && (
                                     <EventComment event={event} />

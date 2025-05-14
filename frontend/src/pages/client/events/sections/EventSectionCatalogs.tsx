@@ -5,7 +5,7 @@ import { BookOpen } from 'lucide-react'
 const EventSectionCatalogs: React.FC<{ catalogs: ICatalog[]}> = ({catalogs}) => {
     return (
         <div className="mb-8">
-            <h3 className="text-xl font-semibold text-yellow-500 mb-3 flex items-center gap-2">
+            <h3 className="text-xl font-semibold text-yellow-900 mb-3 flex items-center gap-2">
                 <BookOpen size={18} />
                 <span>Catalogues</span>
             </h3>

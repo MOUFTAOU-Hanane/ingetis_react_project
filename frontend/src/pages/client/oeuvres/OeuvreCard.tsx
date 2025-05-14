@@ -14,7 +14,7 @@ const OeuvreCard: React.FC<OeuvreCardProps> = ({ oeuvre, onClick }) => {
         >
             <div className="relative">
                 <img
-                    src={`http://localhost:3005${oeuvre.image}`}
+                    src={`${oeuvre.image}`}
                     alt={oeuvre.titre}
                     className="w-full h-64 object-cover rounded-t-lg"
                 />

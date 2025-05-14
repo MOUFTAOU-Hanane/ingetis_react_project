@@ -37,6 +37,7 @@ export interface IEvent {
     date_debut: string;
     date_fin: string;
     lieu: ILieu;
+    comments: IComment[];
     programs: IProgram[];
     medias: IMedia[];
     catalogs: ICatalog[];
@@ -95,7 +96,7 @@ export interface IComment {
     event: IEvent;
     user?: IUser;
     commentaire: string;
-    created: Date;
+    date_commentaire: Date;
 }
 
 export interface IUser {

@@ -13,7 +13,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onDeleteClick }) => 
         <div className="p-2 bg-white/20 rounded-lg flex justify-between items-start">
             <div>
                 <p className="text-sm text-white">
-                    <strong>{comment.user?.nom}</strong> - {new Date(comment.created).toLocaleString()}
+                    <strong>{comment.user?.nom}</strong> {new Date(comment.date_commentaire).toLocaleString()}
                 </p>
                 <p className="text-white mt-1">{comment.commentaire}</p>
             </div>

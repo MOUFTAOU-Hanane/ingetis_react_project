@@ -12,7 +12,7 @@ interface EventCommentProps {
 }
 
 const EventComment: React.FC<EventCommentProps> = ({ event }) => {
-    const [comments, setComments] = useState<IComment[]>([]);
+    const [comments, setComments] = useState<IComment[]>(event.comments);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
     const [deleteState, setDeleteState] = useState<{
         comment: IComment | null;
@@ -24,38 +24,25 @@ const EventComment: React.FC<EventCommentProps> = ({ event }) => {
 
     const { user } = useAuth();
 
-    useEffect(() => {
-        const fetchComments = async () => {
-        try {
-            const fetchedComments = await commentService.fetchByEvent(event.id_event);
-            setComments(fetchedComments);
-        } catch (error) {
-            toast.error("Impossible de charger les commentaires.");
-        }
-        };
-
-        fetchComments();
-    }, [event.id_event]);
-
     const handleCommentSubmit = async (commentText: string) => {
         try {
-        const response = await commentService.create(
-            event.id_event,
-            commentText,
-            user?.id_user
-        );
-        
-        const newCommentObject: IComment = {
-            id_comment: response.id_comment,
-            event,
-            commentaire: commentText,
-            user: user ?? undefined,
-            created: new Date(Date.now())
-        };
-        
-        setComments([...comments, newCommentObject]);
+            const response = await commentService.create(
+                event.id_event,
+                commentText,
+                user?.id_user
+            );
+            
+            const newCommentObject: IComment = {
+                id_comment: response.id_comment,
+                event,
+                commentaire: commentText,
+                user: user ?? undefined,
+                date_commentaire: new Date(Date.now())
+            };
+            
+            setComments([...comments, newCommentObject]);
         } catch (error) {
-        toast.error("Échec de l'ajout du commentaire.");
+            toast.error("Échec de l'ajout du commentaire.");
         }
     };
 
@@ -111,8 +98,8 @@ const EventComment: React.FC<EventCommentProps> = ({ event }) => {
                 setObjectToDelete={() => {
                     if (deleteState.comment) {
                         setDeleteState({
-                        ...deleteState,
-                        comment: deleteState.comment
+                            ...deleteState,
+                            comment: deleteState.comment
                         });
                     }
                 }}

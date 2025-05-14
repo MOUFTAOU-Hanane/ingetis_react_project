@@ -33,8 +33,8 @@ const OeuvresPage: React.FC = () => {
 
     const filteredOeuvres = useMemo(() => {
         return oeuvres.filter((oeuvre) =>
-            oeuvre.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            oeuvre.description.toLowerCase().includes(searchTerm.toLowerCase())
+            oeuvre.description && (oeuvre.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            oeuvre.description.toLowerCase().includes(searchTerm.toLowerCase()))
         );
     }, [oeuvres, searchTerm]);
 

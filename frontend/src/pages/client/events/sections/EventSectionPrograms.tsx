@@ -6,7 +6,7 @@ import { formatDate } from '../../../../helpers/utils'
 const EventSectionPrograms: React.FC<{ programs: IProgram[]}> = ({programs}) => {
     return (
         <div className="mb-8">
-            <h3 className="text-xl font-semibold text-yellow-500 mb-3 flex items-center gap-2">
+            <h3 className="text-xl font-semibold text-yellow-900 mb-3 flex items-center gap-2">
                 <Calendar size={18} />
                 <span>Programme</span>
             </h3>
@@ -18,7 +18,7 @@ const EventSectionPrograms: React.FC<{ programs: IProgram[]}> = ({programs}) => 
                     >
                     <div className="flex justify-between">
                         <h4 className="font-medium text-white">{program.titre}</h4>
-                        <span className="text-yellow-300">
+                        <span className="text-yellow-900">
                             {formatDate(program.date_heure)}
                         </span>
                     </div>

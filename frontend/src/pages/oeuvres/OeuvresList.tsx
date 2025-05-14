@@ -24,7 +24,7 @@ const OeuvresList: React.FC = () => {
             try {
                 const response = await apiClient.get('/oeuvres'); 
                 const filteredOeuvres = user?.role === 'organisateur' 
-                    ? response.data.filter((obj: IOeuvre) => obj.User.id_user === user.id_user) //Attente backend : user mais pas User
+                    ? response.data.filter((obj: IOeuvre) => obj.user.id_user === user.id_user) //Attente backend : user mais pas User
                     : response.data;
 
                 setOeuvres(filteredOeuvres);

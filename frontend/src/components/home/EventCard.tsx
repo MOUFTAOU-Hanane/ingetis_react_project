@@ -10,7 +10,7 @@ export const EventCard = ({ event }: EventCardProps) => {
         <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-6 shadow-xl">
             {event.medias?.[0]?.url_media ? (
                 <img
-                    src={`http://localhost:3005${event.medias[0].url_media}`}
+                    src={`${event.medias[0].url_media}`}
                     alt={event.titre}
                     className="w-full h-56 object-cover rounded-t-lg mb-4"
                 />
