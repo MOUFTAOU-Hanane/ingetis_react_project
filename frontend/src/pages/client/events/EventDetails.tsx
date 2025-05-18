@@ -27,7 +27,7 @@ const EventDetails: React.FC = () => {
                 // Filtrer pour l'user connecté
                 if(id) {
                     const filtered = response.data.filter(
-                        (participant: IParticipant) => participant.user.id_user == user?.id_user && participant?.event?.id_event == parseInt(id)
+                        (participant: IParticipant) => participant.participants.id_user == user?.id_user && participant?.event?.id_event == parseInt(id)
                     );
                     setParticipants(filtered); 
                 }

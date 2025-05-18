@@ -60,6 +60,7 @@ export interface IParticipant {
     event: IEvent;
     statut: string;
     date_inscription: Date;
+    participants: IUser;
 }
 
 export interface IParcours {

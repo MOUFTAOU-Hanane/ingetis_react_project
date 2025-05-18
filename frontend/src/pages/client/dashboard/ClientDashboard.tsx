@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { CircularProgress } from '@mui/material';
 import ClientDashboardHeader from './ClientDashboardHeader';
 import ClientDashboardTabs from './ClientDashboardTabs';
-import { fetchEvents, fetchParticipants } from '../../../services/apiService';
+import { fetchEvents, fetchFavorites, fetchParticipants } from '../../../services/apiService';
 
 const ClientDashboard: React.FC = () => {
     const { user } = useAuth();
@@ -19,23 +19,23 @@ const ClientDashboard: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const eventsData = await fetchEvents();
-                setUserEvents(eventsData.filter((event: IEvent) => 
-                    event.medias.length > 0 && event.programs.length > 0
-                ));
-
-                const participantsData = await fetchParticipants();
-                // Commenté dans le code d'origine, donc je garde la même logique
-                // const userReservations = participantsData.filter(
-                //     (reservation: IParticipant) => reservation.user.id_user === user?.id_user
-                // );
-                setReservations([]);
-
-                // Note: Je suppose que vous souhaiterez importer les favoris depuis l'API plutôt que du JSON
-                // Pour le moment, je garde la même fonctionnalité
-                import('../../../data/favorites.json').then(module => {
-                    setFavorites(module.default);
-                });
+                
+                if(user)  {
+                    const eventsData = await fetchEvents();
+                    setUserEvents(eventsData.filter((event: IEvent) => 
+                        event.medias.length > 0 && event.programs.length > 0
+                    ));
+    
+                    const participantsData = await fetchParticipants();
+                    const userReservations = participantsData.filter(
+                        (reservation: IParticipant) => reservation.participants.id_user === user?.id_user
+                    );
+                    setReservations(userReservations);
+                    
+                    const userFavorites = await fetchFavorites(user?.id_user);
+                    console.log({userFavorites})
+                    setFavorites(userFavorites);
+                }
 
                 setLoading(false);
             } catch (error) {

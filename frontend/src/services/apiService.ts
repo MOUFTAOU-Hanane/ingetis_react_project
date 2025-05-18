@@ -33,12 +33,8 @@ export const fetchParticipants = async (): Promise<IParticipant[]> => {
  */
 export const fetchFavorites = async (userId: number): Promise<IFavorite[]> => {
     try {
-        // Dans une implémentation réelle, cela serait un appel API
-        // comme: const response = await apiClient.get(`/users/${userId}/favorites`);
-        
-        // Pour l'instant, on importe le fichier JSON
-        const favoritesModule = await import('../data/favorites.json');
-        return favoritesModule.default;
+        const response = await apiClient.get(`/favoris/${userId}`);
+        return response.data;
     } catch (error) {
         console.error('Erreur lors de la récupération des favoris:', error);
         throw error;

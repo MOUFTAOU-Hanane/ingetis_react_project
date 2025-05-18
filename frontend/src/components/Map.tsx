@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 
@@ -14,11 +15,28 @@ interface MapComponentProps {
 }
 
 const Map: React.FC<MapComponentProps> = ({ latitude, longitude, name }) => {
+    const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+    useEffect(() => {
+        const updateOnlineStatus = () => setIsOnline(navigator.onLine);
+        window.addEventListener("online", updateOnlineStatus);
+        window.addEventListener("offline", updateOnlineStatus);
+        return () => {
+            window.removeEventListener("online", updateOnlineStatus);
+            window.removeEventListener("offline", updateOnlineStatus);
+        };
+    }, []);
+
     return (
-        <div className="w-full h-64"> 
-            <MapContainer 
-                center={[latitude, longitude]} 
-                zoom={15} 
+        <div className="relative w-full h-64">
+            {!isOnline && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-80 text-red-600 font-semibold text-center p-4">
+                    Vous êtes hors ligne.<br />La carte ne peut pas être chargée.
+                </div>
+            )}
+            <MapContainer
+                center={[latitude, longitude]}
+                zoom={15}
                 style={{ height: "100%", width: "100%" }}
                 className="z-0"
             >
