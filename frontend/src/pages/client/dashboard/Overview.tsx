@@ -47,7 +47,7 @@ const Overview: React.FC<OverviewProps> = ({ userEvents, reservations, favorites
                     valueColor="text-blue-800"
                 />
                 <StatCard 
-                    title="Oeuvres favorites"
+                    title="Evènements favoris"
                     value={favorites.length}
                     bgColor="bg-pink-50"
                     textColor="text-pink-700"

@@ -75,20 +75,18 @@ export interface IParcours {
 export type TabType = 'overview' | 'reservations' | 'favorites' | 'profile';
 
 export interface IReservation {
-  id_reservation: number;
-  event?: IEvent;
-  date: string;
-  nb_tickets: number;
-  status: string;
+    id_reservation: number;
+    event?: IEvent;
+    date: string;
+    nb_tickets: number;
+    status: string;
 }
 
 export interface IFavorite {
-  id_favorite: number;
-  id_oeuvre: number;
-  titre: string;
-  artiste: string;
-  type: string;
-  image_url?: string;
+    id_favorite: number;
+    event: IEvent;
+    user: IUser;
+    created: Date;
 }
 
 export interface IComment {

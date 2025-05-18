@@ -14,7 +14,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                 {event.medias && event.medias[0] && (
                     <div className="w-24 h-24 rounded-md overflow-hidden mr-4 bg-gray-100 flex-shrink-0">
                         <img 
-                            src={`http://localhost:3005${event.medias[0].url_media}`} 
+                            src={`${event.medias[0].url_media}`} 
                             alt={event.titre}
                             className="w-full h-full object-cover"
                             onError={(e) => {

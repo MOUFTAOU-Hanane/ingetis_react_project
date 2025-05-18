@@ -8,11 +8,13 @@ import { CallToActionSection } from '../components/home/CallToActionSection';
 import { TestimonialsSection } from '../components/home/TestimonialsSection';
 import { UpcomingEventsSection } from '../components/home/UpcomingEventsSection';
 import { FinalCallToAction } from '../components/home/FinalCallToAction';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
     const [events, setEvents] = useState<IEvent[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
+    const { user } = useAuth();
 
     // Fonction pour récupérer les événements via l'API
     const fetchEvents = async () => {
@@ -42,7 +44,9 @@ const Home = () => {
                     loading={loading}
                     error={error}
                 />
-                <FinalCallToAction />
+                {!user && 
+                    <FinalCallToAction />
+                }
             </div>
         </Layout>
     );
