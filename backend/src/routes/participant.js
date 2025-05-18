@@ -50,7 +50,12 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: "Événement non trouvé" });
     }
 
-    // Vérifier si l'utilisateur est déjà inscrit à cet événement
+    // Vérifier s'il reste des places disponibles
+    if (event.places_disponibles <= 0) {
+      return res.status(400).json({ message: "Nombre de places atteint. Vous ne pouvez pas participer à cet événement." });
+    }
+
+    // Vérifier si l'utilisateur est déjà inscrit
     const existingParticipant = await Participant.findOne({
       where: { id_user, id_event },
     });
@@ -62,6 +67,9 @@ router.post('/', async (req, res) => {
     // Créer un nouveau participant
     const newParticipant = await Participant.create({ statut, id_user, id_event });
 
+    // Décrémenter le nombre de places disponibles
+    await event.update({ places_disponibles: event.places_disponibles - 1 });
+
     res.status(201).json({
       message: "Participant créé avec succès",
       participant: newParticipant,
@@ -71,6 +79,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: "Erreur lors de la création du participant" });
   }
 });
+
 
 
 /**
@@ -89,9 +98,15 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
   try {
-    const participants = await Participant.findAll();  // Récupère tous les participants
+    
+    const participants = await Participant.findAll({
+      include: [
+          { model: Utilisateur, as: 'participants' }
+      ]
+  });// Récupère tous les participants
     res.status(200).json(participants);  // Retourne les participants dans la réponse
   } catch (error) {
+    console.error(error)
     res.status(500).json({ message: 'Erreur lors de la récupération des participants' });
   }
 });

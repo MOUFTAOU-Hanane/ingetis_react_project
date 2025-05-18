@@ -129,4 +129,51 @@ router.get('/check', async (req, res) => {
     }
 });
 
+
+/**
+ * @swagger
+ * /api/favoris/{id_user}:
+ *   get:
+ *     summary: Récupérer les événements favoris d'un utilisateur
+ *     tags: [Favoris]
+ *     parameters:
+ *       - in: path
+ *         name: id_user
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID de l'utilisateur
+ *     responses:
+ *       200:
+ *         description: Liste des événements favoris récupérée avec succès
+ *       404:
+ *         description: Aucun favori trouvé pour cet utilisateur
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/:id_user', async (req, res) => {
+    const { id_user } = req.params;
+
+    try {
+        const favoris = await Favoris.findAll({
+            where: { id_user },
+            include: [{
+                model: Evenement,
+                as: 'event'
+            }]
+        });
+
+        if (favoris.length === 0) {
+            return res.status(404).json({ message: 'Aucun événement favori trouvé pour cet utilisateur.' });
+        }
+
+        // On extrait les données des événements uniquement
+        const evenementsFavoris = favoris.map(fav => fav.event);
+
+        res.status(200).json(evenementsFavoris);
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur lors de la récupération des favoris', details: error.message });
+    }
+});
+
 module.exports = router;
