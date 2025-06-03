@@ -37,6 +37,8 @@ export interface IEvent {
     date_debut: string;
     date_fin: string;
     lieu: ILieu;
+    places_disponible: number;
+    places_initial: number;
     comments: IComment[];
     programs: IProgram[];
     medias: IMedia[];
@@ -106,4 +108,38 @@ export interface IUser {
     bibliographie?: string;
     photo?: string;
     role: 'user' | 'admin' | 'organisateur';
+}
+
+export interface IRegistrationResponse {
+    success: boolean;
+    ticket?: {
+        id: string;
+        eventName: string;
+        eventDate: string;
+        eventLocation: string;
+        participantName: string;
+        participantEmail: string;
+        registrationDate: string;
+        ticketNumber: string;
+        qrCodeData?: string;
+    };
+    error?: string;
+}
+
+export interface IRegistrationRequest {
+    eventId: number;
+    participantId?: number; 
+    additionalInfo?: string;
+}
+
+export interface ITicket {
+    id: string;
+    eventName: string;
+    eventDate: string;
+    eventLocation: string;
+    participantName: string;
+    participantEmail: string;
+    registrationDate: string;
+    ticketNumber: string;
+    qrCodeData?: string;
 }

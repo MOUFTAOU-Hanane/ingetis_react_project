@@ -113,29 +113,36 @@ function calculateStats(
     // Taux de participation moyen (estimation)
     const tauxParticipation = events.length > 0 
         ? events.reduce((acc, event) => {
-                const eventParticipants = participants.filter(
+            const eventParticipants = participants.filter(
                 p => p.event?.id_event === event.id_event
             ).length;
-            // Estimation de capacité à 50 personnes par défaut
-            return acc + (eventParticipants / 50);
+            // utiliser le places_initial et places_disponible
+            const placesOccupees = event.places_initial - event.places_disponible;
+            const tauxEvent = (placesOccupees / event.places_initial) * 100;
+            
+            return acc + tauxEvent;
         }, 0) / events.length * 100
-        : 0;
+    : 0;
 
     // Top événements
+    
     const topEvents: TopEventData[] = events
         .map(event => {
             const participantCount = participants.filter(
                 p => p.event?.id_event === event.id_event
             ).length;
+            // Calculer le taux de participation basé sur les places initiales de l'événement
+            const placesOccupees = event.places_initial - event.places_disponible;
+            const tauxParticipation = (placesOccupees / event.places_initial) * 100;
+            
             return {
                 ...event,
                 participantCount,
-                tauxParticipation: 
-                ((participantCount / 50) * 100).toFixed(0) + '%'
+                tauxParticipation: tauxParticipation.toFixed(0) + '%'
             };
         })
-        .sort((a, b) => b.participantCount - a.participantCount)
-        .slice(0, 3);
+    .sort((a, b) => b.participantCount - a.participantCount)
+    .slice(0, 3);
 
     // Répartition des œuvres par type
     const typeCount: Record<string, number> = {};

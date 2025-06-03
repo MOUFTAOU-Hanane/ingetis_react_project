@@ -1,5 +1,5 @@
 import apiClient from "../apiClient";
-import { IEvent, IProgram } from "../interfaces";
+import { IEvent, IProgram, IRegistrationRequest, IRegistrationResponse } from "../interfaces";
 
 export const eventService = {
     fetchParticipants: async () => {
@@ -12,21 +12,39 @@ export const eventService = {
         }
     },
 
-    registerForEvent: async (eventId: number, userId: number) => {
+    async registerForEvent(registrationData: IRegistrationRequest): Promise<IRegistrationResponse> {
         try {
-            await apiClient.post('/participants', {
-                id_event: eventId,
-                id_user: userId,
+            const response = await apiClient.post(`/participants`, {
+                id_event: registrationData.eventId,
+                id_user: registrationData.participantId, 
                 statut: 'demande'
             });
-            return true;
+
+            return response.data;
         } catch (error) {
-            console.error('Error registering for event:', error);
-            throw error;
+            console.error("Erreur lors de l'inscription:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'Erreur inconnue'
+            };
         }
     },
 
-    async fetchEvents(): Promise<IEvent[]> {
+    // registerForEvent: async (eventId: number, userId: number) => {
+    //     try {
+    //         await apiClient.post('/participants', {
+    //             id_event: eventId,
+    //             id_user: userId,
+    //             statut: 'demande'
+    //         });
+    //         return true;
+    //     } catch (error) {
+    //         console.error('Error registering for event:', error);
+    //         throw error;
+    //     }
+    // },
+
+    fetchEvents: async (): Promise<IEvent[]> => {
         try {
             const response = await apiClient.get('/events');
             return response.data;
@@ -36,7 +54,7 @@ export const eventService = {
         }
     },
     
-    async deleteProgram(programId: number | undefined): Promise<void> {
+    deleteProgram: async (programId: number | undefined): Promise<void> => {
         try {
             await apiClient.delete(`/programs/${programId}`);
         } catch (error) {
@@ -44,9 +62,8 @@ export const eventService = {
             throw error;
         }
     },
-    
-    // You might want to add methods for creating/updating programs here
-    async createProgram(program: any | undefined): Promise<IProgram> {
+
+    createProgram: async (program: IProgram): Promise<IProgram> => {
         try {
             const response = await apiClient.post('/programs', program);
             return response.data;
@@ -55,8 +72,8 @@ export const eventService = {
             throw error;
         }
     },
-    
-    async updateProgram(programId: number | undefined, programData: any | undefined): Promise<IProgram> {
+
+    updateProgram: async (programId: number | undefined, programData: IProgram): Promise<IProgram> => {
         try {
             const response = await apiClient.put(`/programs/${programId}`, programData);
             return response.data;
@@ -64,5 +81,27 @@ export const eventService = {
             console.error("Error updating program:", error);
             throw error;
         }
+    },
+
+    // Vérification du ticket
+    verifyTicket: async (ticketId: string): Promise<{ valid: boolean; ticket?: any }> => {
+        try {
+            const response = await apiClient.get(`/tickets/${ticketId}/verify`);
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors de la vérification:', error);
+            return { valid: false };
+        }
+    },
+
+    // Envoi du ticket par email
+    sendTicketByEmail: async (ticketId: string, email: string): Promise<any> => {
+        try {
+            const response = await apiClient.post(`/tickets/${ticketId}/send-email`, { email });
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi de l\'email:', error);
+            throw error;
+        }
     }
-}
+};

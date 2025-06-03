@@ -41,7 +41,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
         }
         
         try {
-            await eventService.registerForEvent(eventId, user.id_user);
+            await eventService.registerForEvent({eventId, participantId: user.id_user});
             toast.success("Demande d'inscription réussie !");
             handleCloseModal();
         } catch (error) {
@@ -89,9 +89,13 @@ const EventCard: React.FC<EventCardProps> = ({ event, toggleEventExpansion, expa
             {/* Modal */}
             <ConfirmationModal
                 isOpen={isModalOpen}
-                eventId={selectedEventId}
+                eventId={event?.id_event}
                 onClose={handleCloseModal}
                 onConfirm={handleRegister}
+                eventName={event?.titre || ''}
+                participantId={user?.id_user || 0}
+                participantName={user?.nom || ''}
+                participantEmail={user?.email || ''}
             />
         </div>
     );

@@ -127,6 +127,10 @@ const EventDetails: React.FC = () => {
                         eventId={event?.id_event}
                         onClose={handleModal}
                         onConfirm={handleRegister}
+                        eventName={event?.titre || ''}
+                        participantId={user?.id_user || 0}
+                        participantName={user?.nom || ''}
+                        participantEmail={user?.email || ''}
                     />
                 </>
             )}
