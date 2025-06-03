@@ -12,7 +12,13 @@ module.exports = (sequelize, DataTypes) => {
       date_inscription: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
-      }
+      },
+      numero_billet: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+
     }, {
       timestamps: true,
       createdAt: 'created',

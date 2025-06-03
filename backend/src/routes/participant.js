@@ -1,15 +1,20 @@
 const express = require('express');
-const { Participant, Utilisateur, Evenement } = require('../db/sequelize');  // Importer les modèles nécessaires
+const { Participant, Utilisateur, Evenement ,Lieu} = require('../db/sequelize');  // Importer les modèles nécessaires
 const router = express.Router();
+const QRCode = require('qrcode');
+const nodemailer = require('nodemailer');
+const { v4: uuidv4 } = require('uuid');
+require('dotenv').config();
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 /**
  * @swagger
  * /api/participants:
  *   post:
- *     summary: Crée un nouveau participant
+ *     summary: Crée un nouveau participant et envoie un billet avec QR code par email
  *     tags: [Participants]
-
- *     description: Cette route permet de créer un participant en fonction des informations fournies.
+ *     description: Inscrit un utilisateur à un événement, génère un billet avec QR code et l'envoie par email.
  *     requestBody:
  *       required: true
  *       content:
@@ -22,15 +27,15 @@ const router = express.Router();
  *                 description: Le statut du participant
  *               id_user:
  *                 type: integer
- *                 description: L'ID de l'utilisateur participant
+ *                 description: L'ID de l'utilisateur
  *               id_event:
  *                 type: integer
- *                 description: L'ID de l'événement auquel le participant est inscrit
+ *                 description: L'ID de l'événement
  *     responses:
  *       201:
- *         description: Participant créé avec succès
+ *         description: Participant créé et billet envoyé par e-mail
  *       400:
- *         description: Données invalides
+ *         description: Données invalides ou inscription déjà faite
  *       500:
  *         description: Erreur serveur
  */
@@ -38,49 +43,112 @@ router.post('/', async (req, res) => {
   const { statut, id_user, id_event } = req.body;
 
   try {
-    // Vérifier si l'utilisateur existe
     const user = await Utilisateur.findByPk(id_user);
-    if (!user) {
-      return res.status(400).json({ message: "Utilisateur non trouvé" });
-    }
-
-    // Vérifier si l'événement existe
-    const event = await Evenement.findByPk(id_event);
-    if (!event) {
-      return res.status(400).json({ message: "Événement non trouvé" });
-    }
-
-    // Vérifier s'il reste des places disponibles
-    if (event.places_disponibles <= 0) {
-      return res.status(400).json({ message: "Nombre de places atteint. Vous ne pouvez pas participer à cet événement." });
-    }
-
-    // Vérifier si l'utilisateur est déjà inscrit
-    const existingParticipant = await Participant.findOne({
-      where: { id_user, id_event },
-    });
-
-    if (existingParticipant) {
-      return res.status(400).json({ message: "Cet utilisateur est déjà inscrit à cet événement." });
-    }
-
-    // Créer un nouveau participant
-    const newParticipant = await Participant.create({ statut, id_user, id_event });
-
-    // Décrémenter le nombre de places disponibles
-    await event.update({ places_disponibles: event.places_disponibles - 1 });
-
-    res.status(201).json({
-      message: "Participant créé avec succès",
-      participant: newParticipant,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erreur lors de la création du participant" });
-  }
+const event = await Evenement.findByPk(id_event, {
+  include: [{ model: Lieu, as: 'lieu' }]
 });
 
+    if (!user) return res.status(400).json({ message: "Utilisateur non trouvé" });
+    if (!event) return res.status(400).json({ message: "Événement non trouvé" });
+    if (event.places_disponibles <= 0) return res.status(400).json({ message: "Nombre de places atteint" });
 
+    const existing = await Participant.findOne({ where: { id_user, id_event } });
+    if (existing) return res.status(400).json({ message: "Déjà inscrit" });
+
+    const numero_billet = uuidv4();
+
+    const newParticipant = await Participant.create({
+      statut,
+      id_user,
+      id_event,
+      numero_billet
+    });
+
+    await event.update({ places_disponibles: event.places_disponibles - 1 });
+
+    const qrPayload = {
+      id: newParticipant.id_participant,
+      eventName: event.titre,
+      eventDate: event.date_debut,
+      eventLocation: event.lieu.adresse,
+      participantName: user.nom,
+      participantEmail: user.email,
+      registrationDate: newParticipant.date_inscription,
+      ticketNumber: numero_billet
+    };
+
+    const qrCodeDataUrl = await QRCode.toDataURL(JSON.stringify(qrPayload));
+
+    // S'assurer que le dossier ./tickets existe
+    if (!fs.existsSync('./tickets')) {
+      fs.mkdirSync('./tickets');
+    }
+
+    // Générer le PDF
+    const doc = new PDFDocument();
+    const filePath = `./tickets/billet_${newParticipant.id_participant}.pdf`;
+    const writeStream = fs.createWriteStream(filePath);
+    doc.pipe(writeStream);
+
+    doc.fontSize(20).text(` Billet pour ${event.titre}`, { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(14).text(`Nom du participant : ${user.nom}`);
+    doc.text(`Email : ${user.email}`);
+    doc.text(`Date : ${new Date(event.date_debut).toLocaleString()}`);
+    doc.text(`Lieu : ${event.lieu.adresse}`);
+    doc.text(`Numéro de billet : ${numero_billet}`);
+    doc.moveDown();
+
+    // Extraire l'image QR code en base64 et l'insérer dans le PDF
+    const qrImg = qrCodeDataUrl.replace(/^data:image\/png;base64,/, '');
+    doc.image(Buffer.from(qrImg, 'base64'), {
+      fit: [150, 150],
+      align: 'center',
+      valign: 'center'
+    });
+
+    doc.end();
+
+    writeStream.on('finish', async () => {
+      // Envoi de mail
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS
+        }
+      });
+
+      await transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: user.email,
+        subject: `Votre billet pour ${event.titre}`,
+        text: `Bonjour ${user.nom}, voici votre billet pour ${event.titre}.`,
+        html: `<p>Bonjour <strong>${user.nom}</strong>,</p><p>Voici votre billet pour <strong>${event.titre}</strong>. Merci de le présenter à l'entrée de l'événement.</p>`,
+        attachments: [
+          {
+            filename: `billet_${newParticipant.id_participant}.pdf`,
+            path: filePath
+          }
+        ]
+      });
+
+      res.status(201).json({
+        message: "Participant créé et billet envoyé par email",
+        participant: newParticipant
+      });
+
+      // Supprimer le fichier PDF après envoi
+      fs.unlink(filePath, (err) => {
+        if (err) console.error("Erreur lors de la suppression du fichier PDF :", err);
+      });
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
 
 /**
  * @swagger
@@ -88,7 +156,6 @@ router.post('/', async (req, res) => {
  *   get:
  *     summary: Récupère tous les participants
  *     tags: [Participants]
-
  *     description: Cette route permet de récupérer la liste de tous les participants.
  *     responses:
  *       200:
@@ -98,15 +165,14 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
   try {
-    
     const participants = await Participant.findAll({
       include: [
-          { model: Utilisateur, as: 'participants' }
+        { model: Utilisateur, as: 'participants' }
       ]
-  });// Récupère tous les participants
-    res.status(200).json(participants);  // Retourne les participants dans la réponse
+    });
+    res.status(200).json(participants);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({ message: 'Erreur lors de la récupération des participants' });
   }
 });
@@ -117,7 +183,6 @@ router.get('/', async (req, res) => {
  *   get:
  *     summary: Récupère un participant par son ID
  *     tags: [Participants]
-
  *     description: Cette route permet de récupérer les détails d'un participant spécifique en utilisant son ID.
  *     parameters:
  *       - name: id
@@ -144,7 +209,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: "Participant non trouvé" });
     }
 
-    res.status(200).json(participant);  // Retourner les détails du participant
+    res.status(200).json(participant);
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la récupération du participant' });
   }
@@ -156,7 +221,6 @@ router.get('/:id', async (req, res) => {
  *   put:
  *     summary: Met à jour un participant
  *     tags: [Participants]
-
  *     description: Cette route permet de mettre à jour les informations d'un participant spécifique.
  *     parameters:
  *       - name: id
@@ -202,12 +266,9 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: "Participant non trouvé" });
     }
 
-    // Mettre à jour le participant
     await participant.update({ statut, id_user, id_event });
 
-    res.status(200).json({
-      participant,
-    });
+    res.status(200).json({ participant });
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la mise à jour du participant' });
   }
@@ -219,8 +280,7 @@ router.put('/:id', async (req, res) => {
  *   delete:
  *     summary: Supprime un participant
  *     tags: [Participants]
-
- *     description: Cette route permet de supprimer un participant en utilisant son ID.
+ *     description: Cette route permet de supprimer un participant spécifique.
  *     parameters:
  *       - name: id
  *         in: path
@@ -229,7 +289,7 @@ router.put('/:id', async (req, res) => {
  *         schema:
  *           type: integer
  *     responses:
- *       200:
+ *       204:
  *         description: Participant supprimé avec succès
  *       404:
  *         description: Participant non trouvé
@@ -246,10 +306,9 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: "Participant non trouvé" });
     }
 
-    // Supprimer le participant
     await participant.destroy();
 
-    res.status(200).json({ message: "Participant supprimé avec succès" });
+    res.status(204).end();
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la suppression du participant' });
   }
