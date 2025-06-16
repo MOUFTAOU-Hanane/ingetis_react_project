@@ -190,6 +190,16 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
+// Générer un QR Code à partir d'un lien
+async function generateQRCodeURL(lieuId) {
+  const url = `http://localhost:3005/lieux/${lieuId}`; // ⚠️ En production, remplace localhost par ton domaine
+  try {
+    return await QRCode.toDataURL(url);
+  } catch (err) {
+    console.error('Erreur QR Code:', err);
+    return null;
+  }
+}
 /**
  * @swagger 
 
