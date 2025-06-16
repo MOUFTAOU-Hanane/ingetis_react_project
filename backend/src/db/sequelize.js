@@ -11,7 +11,7 @@ const OeuvreModel = require('../models/oeuvre');
 const ParticipantModel = require('../models/participant');
 const ProgrammeModel = require('../models/programme');
 const FavorisModel = require('../models/favoris');
-const ParcoursModel = require('../models/parcours');
+// const ParcoursModel = require('../models/parcours');
 
 
 
@@ -36,11 +36,10 @@ const Oeuvre = OeuvreModel(sequelize, DataTypes);
 const Participant = ParticipantModel(sequelize, DataTypes);
 const Programme = ProgrammeModel(sequelize, DataTypes);
 const Favoris = FavorisModel(sequelize, DataTypes);
-const Parcours = ParcoursModel(sequelize, DataTypes);
 
 
 // Regrouper tous les modèles
-const models = { Utilisateur, Lieu, Evenement, Catalogue, Commentaire, Media, Oeuvre, Participant, Programme, Favoris, Parcours};
+const models = { Utilisateur, Lieu, Evenement, Catalogue, Commentaire, Media, Oeuvre, Participant, Programme, Favoris};
 
 // Initialiser les associations pour chaque modèle
 Object.keys(models).forEach(modelName => {
