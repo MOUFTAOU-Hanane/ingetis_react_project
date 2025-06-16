@@ -78,6 +78,7 @@ app.use(cors(corsOptions));
 app.use('/api/media', mediaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/parcours', ParcoursRoutes);
 
 
 
@@ -93,7 +94,6 @@ app.use('/api/oeuvres', oeuvreRoutes);
 app.use('/api/participants', participantRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/favoris', favorisRoutes);
-app.use('/api/parcours', ParcoursRoutes);
 
 
 
