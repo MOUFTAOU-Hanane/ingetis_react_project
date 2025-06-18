@@ -1,195 +1,48 @@
-// const express = require('express');
-// const router = express.Router();
-// const { Parcours } =  require('../db/sequelize');
-
-// /**
-//  * @swagger
-//  * /api/parcours:
-//  *   get:
-//  *     summary: Récupérer tous les parcours
-//  *     tags: [Parcours]
-//  *     responses:
-//  *       200:
-//  *         description: Liste des parcours récupérée avec succès
-//  */
-// router.get('/', async (req, res) => {
-//     try {
-//         const parcours = await Parcours.findAll();
-//         res.status(200).json(parcours);
-//     } catch (error) {
-//         res.status(500).json({ error: 'Erreur lors de la récupération des parcours', details: error.message });
-//     }
-// });
-
-// /**
-//  * @swagger
-//  * /api/parcours/{id}:
-//  *   get:
-//  *     summary: Récupérer un parcours par ID
-//  *     tags: [Parcours]
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         required: true
-//  *         schema:
-//  *           type: integer
-//  *         description: ID du parcours à récupérer
-//  *     responses:
-//  *       200:
-//  *         description: Détails du parcours récupéré avec succès
-//  *       404:
-//  *         description: Parcours introuvable
-//  */
-// router.get('/:id', async (req, res) => {
-//     try {
-//         const parcours = await Parcours.findByPk(req.params.id);
-//         if (!parcours) {
-//             return res.status(404).json({ error: 'Parcours non trouvé' });
-//         }
-//         res.status(200).json(parcours);
-//     } catch (error) {
-//         res.status(500).json({ error: 'Erreur lors de la récupération du parcours', details: error.message });
-//     }
-// });
-
-// /**
-//  * @swagger
-//  * /api/parcours/create:
-//  *   post:
-//  *     summary: Ajouter plusieurs parcours pour un même lieu
-//  *     tags: [Parcours]
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             required:
-//  *               - id_lieu
-//  *               - parcours
-//  *             properties:
-//  *               id_lieu:
-//  *                 type: integer
-//  *                 description: ID du lieu où ajouter les parcours
-//  *               parcours:
-//  *                 type: array
-//  *                 items:
-//  *                   $ref: '#/components/schemas/Parcours'
-//  *     responses:
-//  *       201:
-//  *         description: Parcours créés avec succès
-//  *       500:
-//  *         description: Erreur lors de la création
-//  */
-// router.post('/create', async (req, res) => {
-//     const { id_lieu, parcours } = req.body;
-
-//     if (!id_lieu || !Array.isArray(parcours) || parcours.length === 0) {
-//         return res.status(400).json({ error: 'Données invalides' });
-//     }
-
-//     try {
-//         const parcoursList = parcours.map(p => ({
-//             nom: p.nom,
-//             description: p.description,
-//             date_debut: p.date_debut,
-//             date_fin: p.date_fin,
-//             id_lieu
-//         }));
-
-//         const nouveauxParcours = await Parcours.bulkCreate(parcoursList);
-//         res.status(201).json({ message: 'Parcours créés avec succès', parcours: nouveauxParcours });
-//     } catch (error) {
-//         res.status(500).json({ error: 'Erreur lors de la création des parcours', details: error.message });
-//     }
-// });
-
-// /**
-//  * @swagger
-//  * /api/parcours/{id}:
-//  *   put:
-//  *     summary: Mettre à jour un parcours
-//  *     tags: [Parcours]
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         required: true
-//  *         schema:
-//  *           type: integer
-//  *         description: ID du parcours à modifier
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             $ref: '#/components/schemas/Parcours'
-//  *     responses:
-//  *       200:
-//  *         description: Parcours mis à jour avec succès
-//  *       404:
-//  *         description: Parcours introuvable
-//  */
-// router.put('/:id', async (req, res) => {
-//     try {
-//         const parcours = await Parcours.findByPk(req.params.id);
-//         if (!parcours) {
-//             return res.status(404).json({ error: 'Parcours non trouvé' });
-//         }
-//         await parcours.update(req.body);
-//         res.status(200).json({ message: 'Parcours mis à jour avec succès', parcours });
-//     } catch (error) {
-//         res.status(500).json({ error: 'Erreur lors de la mise à jour du parcours', details: error.message });
-//     }
-// });
-
-// /**
-//  * @swagger
-//  * /api/parcours/{id}:
-//  *   delete:
-//  *     summary: Supprimer un parcours
-//  *     tags: [Parcours]
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         required: true
-//  *         schema:
-//  *           type: integer
-//  *         description: ID du parcours à supprimer
-//  *     responses:
-//  *       200:
-//  *         description: Parcours supprimé avec succès
-//  *       404:
-//  *         description: Parcours introuvable
-//  */
-// router.delete('/:id', async (req, res) => {
-//     try {
-//         const parcours = await Parcours.findByPk(req.params.id);
-//         if (!parcours) {
-//             return res.status(404).json({ error: 'Parcours non trouvé' });
-//         }
-//         await parcours.destroy();
-//         res.status(200).json({ message: 'Parcours supprimé avec succès' });
-//     } catch (error) {
-//         res.status(500).json({ error: 'Erreur lors de la suppression du parcours', details: error.message });
-//     }
-// });
-
 // module.exports = router;
 const express = require('express');
 const router = express.Router();
 const { Lieu } = require('../db/sequelize');
+const axios = require('axios');
 
 
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Rayon de la Terre en km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) ** 2 +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+
+// Fonction pour appeler Google Places API et récupérer monuments proches
+async function getNearbyMonuments(lat, lng, radius = 2000) {
+  const url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+  const params = {
+    location: `${lat},${lng}`,
+    radius,
+    type: 'tourist_attraction',
+    key: process.env.GOOGLE_MAPS_API_KEY,
+  };
+
+  try {
+    const response = await axios.get(url, { params });
+    if (response.data.status !== 'OK') {
+      console.error('Google Places API Error:', response.data.status, response.data.error_message);
+      return [];
+    }
+
+    // La liste brute des résultats
+    const results = response.data.results;
+
+    // Extraire les champs importants
+    const monuments = results.map(place => ({
+      nom: place.name,
+      adresse: place.vicinity || "",
+      latitude: place.geometry.location.lat,
+      longitude: place.geometry.location.lng,
+      rating: place.rating || null,
+    }));
+
+    return monuments;
+
+  } catch (error) {
+    console.error('Axios error:', error.message);
+    return [];
+  }
 }
+
 // Générer un QR Code à partir d'un lien
 async function generateQRCodeURL(lieuId) {
   const url = `http://localhost:3005/lieux/${lieuId}`; // ⚠️ En production, remplace localhost par ton domaine
@@ -253,63 +106,58 @@ async function generateQRCodeURL(lieuId) {
  *       500:
  *         description: Erreur serveur
  */
-
 router.get('/generate/:id_lieu', async (req, res) => {
   const { id_lieu } = req.params;
 
-   try {
+  try {
     const lieuDepart = await Lieu.findByPk(id_lieu);
     if (!lieuDepart) {
       return res.status(404).json({ message: "Lieu de départ introuvable" });
     }
 
-    // Récupérer tous les autres lieux sauf le point de départ
-    const autresLieux = await Lieu.findAll({
-      where: {
-        id_lieu: { [require('sequelize').Op.ne]: id_lieu }
-      }
-    });
+    const monuments = await getNearbyMonuments(lieuDepart.latitude, lieuDepart.longitude);
 
-    if (autresLieux.length < 3) {
-      return res.status(400).json({ message: "Pas assez de lieux pour générer des parcours" });
+    if (monuments.length === 0) {
+      return res.status(404).json({ message: "Aucun monument trouvé proche du lieu." });
     }
 
-    // Fonction pour générer un parcours aléatoire
-    const generateParcours = () => {
-      const lieuxChoisis = [];
-      const lieuxDisponibles = [...autresLieux];
+    const parcours = [];
+    const nbParcours = Math.floor(monuments.length / 3);
 
-      for (let i = 0; i < 3 && lieuxDisponibles.length > 0; i++) {
-        const index = Math.floor(Math.random() * lieuxDisponibles.length);
-        lieuxChoisis.push(lieuxDisponibles[index]);
-        lieuxDisponibles.splice(index, 1);
-      }
-
-      // Calculer distance totale
-      let totalDistance = 0;
-      lieuxChoisis.forEach(lieu => {
-        totalDistance += calculateDistance(
-          lieuDepart.latitude,
-          lieuDepart.longitude,
-          lieu.latitude,
-          lieu.longitude
-        );
+    for (let i = 0; i < nbParcours; i++) {
+      const lieux = monuments.slice(i * 3, i * 3 + 3);
+      parcours.push({
+        nom: `Parcours ${i + 1}`,
+        lieux
       });
+    }
 
-      return {
-        lieux: lieuxChoisis,
-        distance_total_km: parseFloat(totalDistance.toFixed(2))
-      };
-    };
+    // Si on a moins de 3 monuments, ou qu'on n'a généré aucun parcours, on propose un seul parcours partiel
+    if (parcours.length === 0 && monuments.length > 0) {
+      parcours.push({
+        nom: 'Parcours 1',
+        lieux: monuments
+      });
+    }
 
-    const parcours = [generateParcours(), generateParcours(), generateParcours()];
-
-    res.json({ parcours });
+    res.json({
+      lieu_principal: {
+        id: lieuDepart.id_lieu,
+        nom: lieuDepart.nom,
+        adresse: lieuDepart.adresse,
+        latitude: lieuDepart.latitude,
+        longitude: lieuDepart.longitude,
+      },
+      parcours
+    });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
+
+
+
 
 module.exports = router;
