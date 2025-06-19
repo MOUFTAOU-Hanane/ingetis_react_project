@@ -30,19 +30,14 @@ export const eventService = {
         }
     },
 
-    // registerForEvent: async (eventId: number, userId: number) => {
-    //     try {
-    //         await apiClient.post('/participants', {
-    //             id_event: eventId,
-    //             id_user: userId,
-    //             statut: 'demande'
-    //         });
-    //         return true;
-    //     } catch (error) {
-    //         console.error('Error registering for event:', error);
-    //         throw error;
-    //     }
-    // },
+    async unregisterFromEvent(participantId: number | null): Promise<void> {
+        try {
+            await apiClient.delete(`/participants/${participantId}`);
+        } catch (error) {
+            console.error("Erreur lors de la désinscription:", error);
+            throw error;
+        }
+    },
 
     fetchEvents: async (): Promise<IEvent[]> => {
         try {

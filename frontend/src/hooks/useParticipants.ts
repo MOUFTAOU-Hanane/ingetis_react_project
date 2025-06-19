@@ -17,7 +17,7 @@ export const useParticipants = () => {
                 
                 // Filtrer pour l'user connecté
                 const filtered = data.filter(
-                    (participant: IParticipant) => participant.user.id_user === user?.id_user
+                    (participant: IParticipant) => participant.id_user === user?.id_user
                 );
                 
                 setParticipants(filtered);
@@ -34,8 +34,14 @@ export const useParticipants = () => {
     }, [user?.id_user]);
 
     const isRegisteredForEvent = (eventId: number): boolean => {
-        return participants.some(participant => participant.event.id_event === eventId);
+        return participants.some(participant => participant.id_event === eventId);
     };
 
-    return { participants, loading, error, isRegisteredForEvent };
+    const getParticipantId = (eventId: number): number | null => {
+        const participant = participants.find(participant => participant.id_event === eventId && participant.id_user === user?.id_user);
+        
+        return participant ? participant.id_participant : null;
+    }
+
+    return { participants, loading, error, isRegisteredForEvent, getParticipantId };
 };

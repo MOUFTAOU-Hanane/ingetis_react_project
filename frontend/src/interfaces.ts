@@ -57,6 +57,8 @@ export interface IOeuvre {
 }
 
 export interface IParticipant {
+    id_user: number;
+    id_event: number;
     id_participant: number;
     user: IUser;
     event: IEvent;
@@ -65,13 +67,17 @@ export interface IParticipant {
     participants: IUser;
 }
 
+// export interface IParcours {
+//     id_parcours?: number;
+//     nom: string;
+//     description: string;
+//     // lieu: ILieu;
+//     // date_debut: Date;
+//     // date_fin: Date;
+// }
 export interface IParcours {
-    id_parcours?: number;
+    lieux: ILieu[];
     nom: string;
-    description: string;
-    // lieu: ILieu;
-    // date_debut: Date;
-    // date_fin: Date;
 }
 
 // Types communs pour le tableau de bord client
@@ -112,17 +118,7 @@ export interface IUser {
 
 export interface IRegistrationResponse {
     success: boolean;
-    ticket?: {
-        id: string;
-        eventName: string;
-        eventDate: string;
-        eventLocation: string;
-        participantName: string;
-        participantEmail: string;
-        registrationDate: string;
-        ticketNumber: string;
-        qrCodeData?: string;
-    };
+    ticket?: ITicket;
     error?: string;
 }
 
@@ -134,12 +130,22 @@ export interface IRegistrationRequest {
 
 export interface ITicket {
     id: string;
-    eventName: string;
-    eventDate: string;
-    eventLocation: string;
-    participantName: string;
-    participantEmail: string;
-    registrationDate: string;
     ticketNumber: string;
+    event: IEvent;
+    participant: IUser;
+    date: Date;
     qrCodeData?: string;
+}
+
+export interface ICoordinate {
+    lat: number;
+    lng: number;
+    nom: string;
+    adresse: string;
+}
+
+export interface IMarkerData extends ICoordinate {
+    index: number;
+    isFirst: boolean;
+    isLast: boolean;
 }

@@ -7,7 +7,6 @@ interface LieuTableProps {
     onView: (lieu: ILieu) => void;
     onEdit: (lieu: ILieu) => void;
     onDelete: (lieu: ILieu) => void;
-    onAddParcours: (lieu: ILieu) => void;
 }
 
 const LieuTable: React.FC<LieuTableProps> = ({
@@ -15,7 +14,6 @@ const LieuTable: React.FC<LieuTableProps> = ({
     onView,
     onEdit,
     onDelete,
-    onAddParcours,
 }) => {
     if (!lieux.length) {
         return (
@@ -65,11 +63,6 @@ const LieuTable: React.FC<LieuTableProps> = ({
                                     size={16}
                                     className="cursor-pointer text-red-400"
                                     onClick={() => onDelete(lieu)}
-                                />
-                                <List
-                                    size={16}
-                                    className="cursor-pointer text-yellow-100"
-                                    onClick={() => onAddParcours(lieu)}
                                 />
                                 </div>
                             </td>

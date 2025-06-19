@@ -5,6 +5,7 @@ interface EventActionsProps {
     onViewDetails: (eventId: number) => void;
     onToggleComments: (eventId: number) => void;
     onRegister: (eventId: number) => void;
+    onUnregister: (eventId: number) => void; 
     isRegistered: boolean;
 }
 
@@ -13,9 +14,9 @@ const EventActions: React.FC<EventActionsProps> = ({
     onViewDetails,
     onToggleComments,
     onRegister,
+    onUnregister, 
     isRegistered
 }) => {
-
     return (
         <div className="pt-2 flex justify-between items-center">
             <button 
@@ -30,14 +31,22 @@ const EventActions: React.FC<EventActionsProps> = ({
             >
                 <span>Commenter</span>
             </button>
-            
-            <button
-                className="bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg px-6 py-2 transition-colors font-medium"
-                onClick={() => !isRegistered && onRegister(eventId)}
-                disabled={isRegistered}
-            >
-                {isRegistered ? 'Déjà inscrit' : 'S\'inscrire'}
-            </button>
+
+            {isRegistered ? (
+                <button
+                    className="rounded-lg px-6 py-2 bg-red-500 hover:bg-red-600 text-white transition-colors font-medium"
+                    onClick={() => onUnregister(eventId)}
+                >
+                    Annuler l'inscription
+                </button>
+            ) : (
+                <button
+                    className="rounded-lg px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white transition-colors font-medium"
+                    onClick={() => onRegister(eventId)}
+                >
+                    S'inscrire
+                </button>
+            )}
         </div>
     );
 };

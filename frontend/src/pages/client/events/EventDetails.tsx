@@ -11,6 +11,7 @@ import EventSectionPrograms from "./sections/EventSectionPrograms";
 import EventSectionMedias from "./sections/EventSectionMedias";
 import EventSectionCatalogs from "./sections/EventSectionCatalogs";
 import EventSectionLieu from "./sections/EventSectionLieu";
+import EventSectionParcours from "./sections/EventSectionParcours";
 
 const EventDetails: React.FC = () => {
     const [event, setEvent] = useState<IEvent | null>(null);
@@ -116,10 +117,16 @@ const EventDetails: React.FC = () => {
 
                     {/* Location */}
                     {event.lieu && (
-                        <EventSectionLieu
-                            lieu={event.lieu}
-                        />
+                        <>
+                            <EventSectionLieu
+                                lieu={event.lieu}
+                            />
+                            <EventSectionParcours 
+                                lieu={event.lieu}
+                            />
+                        </>
                     )}
+
 
                     {/* Modal */}
                     <ConfirmationModal

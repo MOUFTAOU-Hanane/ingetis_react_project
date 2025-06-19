@@ -48,10 +48,6 @@ const LieuxList: React.FC = () => {
         navigate(`/admin/lieux/update/${lieu.id_lieu}`);
     };
 
-    const handleAddParcours = (lieu: ILieu) => {
-        navigate(`/admin/lieux/${lieu.id_lieu}/parcours`);
-    };
-
     const handleOpenConfirmation = (lieu: ILieu) => {
         setLieuToDelete(lieu);
         setIsConfirmationOpen(true);
@@ -98,7 +94,6 @@ const LieuxList: React.FC = () => {
                     onView={handleOpenModal}
                     onEdit={handleEdit}
                     onDelete={handleOpenConfirmation}
-                    onAddParcours={handleAddParcours}
                 />
             </div>
 

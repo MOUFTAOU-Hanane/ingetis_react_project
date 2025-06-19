@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { eventService } from './../../../services/eventService';
 import TicketModal from './TicketModal';
 import { IRegistrationRequest, ITicket } from '../../../interfaces';
+import { toast } from 'react-toastify';
 
 interface ConfirmationModalProps {
     isOpen: boolean;
@@ -25,8 +26,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     onConfirm 
 }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [ticketData, setTicketData] = useState<ITicket>();
-    const [showTicket, setShowTicket] = useState(false);
     const [error, setError] = useState<string>('');
 
     const handleConfirm = async () => {
@@ -46,14 +45,16 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
             const response = await eventService.registerForEvent(registrationData);
 
-            if (response.success && response.ticket) {
+            if (response) {
                 // Inscription réussie
                 onConfirm(eventId);
-                setTicketData(response.ticket);
-                setShowTicket(true);
-                onClose(); // Fermer le modal de confirmation
+                onClose(); 
+                toast.success('Votre billet a été envoyé dans votre boîte mail !');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
-                setError(response.error || 'Erreur lors de l\'inscription');
+                setError(response || 'Erreur lors de l\'inscription');
             }
         } catch (error) {
             setError('Erreur de connexion au serveur');
@@ -143,13 +144,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                     </div>
                 </div>
             </div>
-
-            {/* Modal du ticket */}
-            <TicketModal 
-                isOpen={showTicket}
-                ticketData={ticketData}
-                onClose={() => setShowTicket(false)}
-            />
         </>
     );
 };
