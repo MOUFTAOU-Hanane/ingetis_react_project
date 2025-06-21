@@ -18,10 +18,8 @@ export const ParcoursMapWithSelector: React.FC<ParcoursMapWithSelectorProps> = (
         }
     }, [parcours]);
 
-    // Effet pour le défilement automatique lors de la sélection d'un parcours
     useEffect(() => {
         if (selectedParcours && mapRef.current) {
-            // Petit délai pour s'assurer que le DOM est mis à jour
             setTimeout(() => {
                 mapRef.current?.scrollIntoView({
                     behavior: 'smooth',
