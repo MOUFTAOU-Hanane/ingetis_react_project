@@ -16,7 +16,6 @@ export const ParcoursCard: React.FC<ParcoursCardProps> = ({
     onClick 
 }) => {
     const downloadParcoursPdf = async (parcours: IParcours) => {
-        alert('aaaaa');
         try {
             // Générer le PDF
             const blob = await pdf(<ParcoursPDF parcours={parcours} />).toBlob();
