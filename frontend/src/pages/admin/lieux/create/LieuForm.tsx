@@ -41,20 +41,20 @@ const LieuForm: React.FC<LieuFormProps> = ({ lieu, onSubmit, isSubmitting }) => 
             description: ""
         },
         validationSchema,
-            onSubmit: (values) => {
+        onSubmit: (values) => {
             onSubmit(values);
         },
     });
 
     useEffect(() => {
         if (lieu) {
-        formik.setValues({
-            nom: lieu.nom ?? "",
-            adresse: lieu.adresse ?? "",
-            latitude: lieu.latitude ?? "",
-            longitude: lieu.longitude ?? "",
-            description: lieu.description ?? ""
-        });
+            formik.setValues({
+                nom: lieu.nom ?? "",
+                adresse: lieu.adresse ?? "",
+                latitude: lieu.latitude ?? "",
+                longitude: lieu.longitude ?? "",
+                description: lieu.description ?? ""
+            });
         }
     }, [lieu]);
 
