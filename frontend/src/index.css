@@ -1,0 +1,16 @@
+@import "leaflet/dist/leaflet.css";
+
+html, body {
+    height: 100%;
+    color: black;
+}
+
+body {
+    font-family: 'Comic Neue', sans-serif;
+    user-select: none;
+}
+
+.Toastify__toast, .Toastify {
+    font-family: 'Comic Neue', sans-serif !important;
+}
+
