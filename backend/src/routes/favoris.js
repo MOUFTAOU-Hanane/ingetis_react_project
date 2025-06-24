@@ -164,7 +164,7 @@ router.get('/:id_user', async (req, res) => {
         });
 
         if (favoris.length === 0) {
-            return res.status(404).json({ message: 'Aucun événement favori trouvé pour cet utilisateur.' });
+            return res.status(200).json({ message: 'Aucun événement favori trouvé pour cet utilisateur.' });
         }
 
         // On extrait les données des événements uniquement
