@@ -44,7 +44,7 @@ const CreateLieu: React.FC = () => {
             } else {
                 const response = await lieuService.create(values);
                 toast.success("Lieu créé !");
-                setCreatedLieuId(response.nouveauLieu.id_lieu); // A vérifier
+                setCreatedLieuId(response.id_lieu); // A vérifier
                 setOpenModal(true);
             }
         } catch (error) {

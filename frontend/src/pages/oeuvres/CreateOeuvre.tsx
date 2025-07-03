@@ -9,6 +9,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import apiClient from "../../apiClient";
 
+// Interface pour les valeurs du formulaire
+interface FormValues {
+    id_user: number | null;
+    titre: string;
+    description: string;
+    prix: string;
+    type: string;
+    image: File | null;
+}
+
 const validationSchema = Yup.object({
     titre: Yup.string().required("Le titre est requis").max(100, "Maximum 100 caractères"),
     description: Yup.string().max(500, "Maximum 500 caractères"),
@@ -22,7 +32,7 @@ const CreateOrEditOeuvre: React.FC = () => {
     const { id } = useParams<{ id?: string }>();
     const [loading, setLoading] = useState<boolean>(!!id);
 
-    const formik = useFormik({
+    const formik = useFormik<FormValues>({
         initialValues: {
             id_user: user?.id_user ?? null,
             titre: "",
@@ -151,7 +161,7 @@ const CreateOrEditOeuvre: React.FC = () => {
                                     size="small"
                                     fullWidth
                                     label="Fichier sélectionné"
-                                    value={formik.values.image ? formik.values.image?.name : ""}
+                                    value={formik.values.image?.name || ""}
                                     InputProps={{ readOnly: true }}
                                     error={formik.touched.image && Boolean(formik.errors.image)}
                                     helperText={formik.touched.image && formik.errors.image}

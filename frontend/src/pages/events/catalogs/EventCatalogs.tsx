@@ -61,7 +61,7 @@ const EventCatalogs: React.FC = () => {
 
     return (
         <Layout title={`Catalogue de l'évènement : ${eventSelected?.titre ?? ""}`}>
-            <EventInfo eventSelected={eventSelected} actualPage="programs"/>
+            <EventInfo eventSelected={eventSelected} actualPage="catalogs"/>
 
             <Button variant="contained" color="secondary" startIcon={<Plus />} onClick={handleOpenModal}>
                 {catalog ? "Modifier le catalogue" : "Ajouter un catalogue"}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dialog } from "@mui/material";
+import { Button } from "@mui/material";
 import { Trash, X } from "lucide-react";
 
 interface ConfirmationModalProps {
@@ -11,7 +11,6 @@ interface ConfirmationModalProps {
 }
 
 const ConfirmationDeleteParcours: React.FC<ConfirmationModalProps> = ({
-    isOpen,
     title,
     parcoursNom,
     onConfirm,

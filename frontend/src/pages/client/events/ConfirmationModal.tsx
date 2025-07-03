@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { eventService } from './../../../services/eventService';
-import TicketModal from './TicketModal';
-import { IRegistrationRequest, ITicket } from '../../../interfaces';
+import { IRegistrationRequest } from '../../../interfaces';
 import { toast } from 'react-toastify';
 
 interface ConfirmationModalProps {

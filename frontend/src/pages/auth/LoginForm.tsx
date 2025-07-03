@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, CircularProgress } from '@mui/material';
 import { toast } from 'react-toastify';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import apiClient from '../../apiClient';
 import { useAuth } from '../../context/AuthContext';
 import EventMasterLogo from '../../components/EventMasterLogo';
 import axios from 'axios';

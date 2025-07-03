@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IComment, IEvent } from '../../../../interfaces';
 import { useAuth } from '../../../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -48,7 +48,6 @@ const EventComment: React.FC<EventCommentProps> = ({ event }) => {
 
     const handleDelete = async () => {
         if (!deleteState.comment) return;
-
         try {
             await commentService.delete(deleteState.comment.id_comment);
             setComments((prev) => 

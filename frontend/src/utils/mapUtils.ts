@@ -103,7 +103,7 @@ const generateMapboxUrl = (
         route = `/path-5+f44-0.5(${coordinates})`;
     }
 
-    const mapboxToken = process.env.REACT_APP_MAPBOX_TOKEN || 'YOUR_MAPBOX_TOKEN';
+    const mapboxToken = import.meta.env.REACT_APP_MAPBOX_TOKEN || 'YOUR_MAPBOX_TOKEN';
     const styleUrl = MAP_PROVIDERS.mapbox.styles[style as keyof typeof MAP_PROVIDERS.mapbox.styles];
     
     return `${MAP_PROVIDERS.mapbox.baseUrl}/${styleUrl}/static/${markers}${route}/${centerLng},${centerLat},${zoom},0/${width}x${height}@2x?access_token=${mapboxToken}`;
@@ -117,7 +117,7 @@ const generateGoogleMapsUrl = (
   height: number, 
   zoom: number
 ): string => {
-    const googleApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_API_KEY';
+    const googleApiKey = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_API_KEY';
     
     // Créer les marqueurs
     const markers = lieux.map((lieu, index) => {

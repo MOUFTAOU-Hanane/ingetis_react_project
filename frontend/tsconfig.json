@@ -9,6 +9,8 @@
         "strict": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "types": ["jest", "node", "@testing-library/jest-dom"]
-    }
+        "types": ["jest", "node", "@testing-library/jest-dom"],
+        "noUnusedLocals": false,
+        "noUnusedParameters": false
+    },
 }

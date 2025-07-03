@@ -16,14 +16,20 @@ const FavorisModel = require('../models/favoris');
 
 
 // Connexion à la base de données
-const sequelize = new Sequelize('events', 'root', '', {
-    host: 'localhost',
+const sequelize = new Sequelize('events', 'root', '', { // eventculture, pwd: root si docker
+    host: 'localhost', // db si docker
     dialect: 'mariadb',
     dialectOptions: {
-        timezone: 'Etc/GMT-2',
+        timezone: '+02:00'  // format recommandé pour MariaDB/MySQL
     },
-    logging: false
+    logging: false,
+    define: {
+        // optionnel, pour gérer les timestamps en UTC
+        timestamps: true,
+        underscored: true
+    }
 });
+
 
 // Création des modèles avec Sequelize
 const Utilisateur = UtilisateurModel(sequelize, DataTypes);
@@ -50,7 +56,7 @@ Object.keys(models).forEach(modelName => {
 
 // Fonction pour initialiser la base de données
 const initDb = () => {
-    sequelize.sync({ force: false })  // `force: false` pour ne pas supprimer les données existantes
+    sequelize.sync({ force: false})  // `force: false` pour ne pas supprimer les données existantes
         .then(() => {
             console.log("✅ Les tables ont été créées avec succès !");
         })

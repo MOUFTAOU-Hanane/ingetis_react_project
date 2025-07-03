@@ -13,12 +13,27 @@ const orderedSeeders = [
   'parcours_seeder.js',
   'media_seeder.js',
   'participants_seeder.js',
-
-
 ];
+
+// Fonction qui attend que la DB soit prête (retry)
+const waitForDb = async (retries = 10, delayMs = 3000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await sequelize.authenticate();
+      console.log('🟢 Connexion à la DB réussie.');
+      return;
+    } catch (error) {
+      console.log(`🔴 Impossible de se connecter à la DB, tentative ${i + 1} sur ${retries}. Reconnexion dans ${delayMs / 1000}s...`);
+      await new Promise(res => setTimeout(res, delayMs));
+    }
+  }
+  throw new Error('La base de données n’a jamais répondu.');
+};
 
 const runSeeders = async () => {
   try {
+    await waitForDb(); // On attend que la DB soit prête
+
     await sequelize.sync({ force: true }); // Vide les tables
     console.log('🗃️ Tables synchronisées.');
 

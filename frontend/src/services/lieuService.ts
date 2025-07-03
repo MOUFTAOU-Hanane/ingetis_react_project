@@ -19,7 +19,7 @@ export const lieuService = {
 
     update: async (id: number | string, lieuData: Partial<ILieu>): Promise<ILieu> => {
         const response = await apiClient.put(`/lieu/${id}`, lieuData);
-        return response.data;
+        return response.data.lieu;
     },
 
     delete: async (id: number | string): Promise<void> => {

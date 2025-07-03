@@ -16,11 +16,11 @@ export const commentService = {
     create: async (eventId: number, commentText: string, userId?: number): Promise<IComment> => {
         try {
             const response = await apiClient.post('/comments', {
-                event_id: eventId,
+                id_event: eventId,
                 commentaire: commentText,
-                user_id: userId
+                id_user: userId
             });
-            return response.data;
+            return response.data.newComment;
         } catch (error) {
             console.error("Erreur lors de l'ajout du commentaire:", error);
             throw error;
@@ -28,6 +28,7 @@ export const commentService = {
     },
 
     delete: async (commentId: number): Promise<void> => {
+        console.log({commentId})
         try {
             await apiClient.delete(`/comments/${commentId}`);
         } catch (error) {

@@ -1,9 +1,9 @@
 import React from 'react'
-import { Favorite } from '../../../interfaces';
+import { IFavorite } from '../../../interfaces';
 import { NavLink } from 'react-router-dom';
 
 interface FavoritesProps {
-    favorites: Favorite[];
+    favorites: IFavorite[];
 }
 
 export const Favorites: React.FC<FavoritesProps> = ({ favorites }) => {

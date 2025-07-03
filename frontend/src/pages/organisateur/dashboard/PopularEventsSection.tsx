@@ -1,6 +1,5 @@
 import React from 'react';
 import { Award } from 'lucide-react';
-import { IEvent } from '../../../interfaces';
 import { formatDateLong } from '../../../helpers/utils';
 
 interface PopularEventsSectionProps {

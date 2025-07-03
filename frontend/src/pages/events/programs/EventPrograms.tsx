@@ -19,10 +19,11 @@ const EventPrograms: React.FC = () => {
     const [currentProgram, setCurrentProgram] = useState<IProgram | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const eventId = parseInt(id || "0", 10);
+
     const fetchData = async () => {
         try {
             const events = await eventService.fetchEvents();
-            const eventId = parseInt(id || "0", 10);
             const event = events.find((event) => event.id_event === eventId);
             
             if (event) {
@@ -50,44 +51,44 @@ const EventPrograms: React.FC = () => {
         setCurrentProgram(null);
     };
 
-    const handleSubmitPrograms = async (programsToSubmit: Partial<IProgram>[]) => {
+    const handleSubmitProgram = async (programData: Partial<IProgram>) => {
         try {
             setIsSubmitting(true);
-            const eventId = parseInt(id || "0", 10);
 
             if (currentProgram) {
                 // Update existing program
                 const updatedProgram = await eventService.updateProgram(
-                currentProgram.id_program, 
-                { ...programsToSubmit[0], id_event: eventId }
+                    currentProgram.id_program!, 
+                    {
+                        titre: programData.titre!,
+                        description: programData.description!,
+                        date_heure: programData.date_heure!,
+                        id_event: eventSelected?.id_event || undefined
+                    }
                 );
                 
-                const updatedPrograms = programs.map((program) =>
-                program.id_program === currentProgram.id_program
-                    ? updatedProgram
-                    : program
-                );
-                
-                setPrograms(updatedPrograms);
+                setPrograms(programs.map((program) =>
+                    program.id_program === currentProgram.id_program
+                        ? updatedProgram
+                        : program
+                ));
                 toast.success("Programme modifié avec succès !");
             } else {
-                // Create new programs
-                const newPrograms = await Promise.all(
-                programsToSubmit.map(p => 
-                    eventService.createProgram({ 
-                    ...p, 
-                    id_event: eventId 
-                    })
-                )
-                );
+                // Create new program
+                const newProgram = await eventService.createProgram({ 
+                    titre: programData.titre!,
+                    description: programData.description!,
+                    date_heure: programData.date_heure!,
+                    id_event: eventSelected?.id_event || undefined
+                });
                 
-                setPrograms([...programs, ...newPrograms]);
-                toast.success("Programmes ajoutés avec succès !");
+                setPrograms([...programs, newProgram]);
+                toast.success("Programme ajouté avec succès !");
             }
             
             handleCloseModal();
         } catch (error) {
-            toast.error("Une erreur est survenue lors de l'enregistrement des programmes");
+            toast.error("Une erreur est survenue lors de l'enregistrement du programme");
         } finally {
             setIsSubmitting(false);
         }
@@ -114,7 +115,7 @@ const EventPrograms: React.FC = () => {
                 onClick={() => handleOpenModal()}
                 sx={{ mb: 2 }}
             >
-                Ajouter des programmes
+                Ajouter un programme
             </Button>
             
             <Box sx={{
@@ -134,7 +135,7 @@ const EventPrograms: React.FC = () => {
                 <ProgramModal 
                     open={modalOpen}
                     onClose={handleCloseModal}
-                    onSubmit={handleSubmitPrograms}
+                    onSubmit={handleSubmitProgram}
                     currentProgram={currentProgram}
                     isSubmitting={isSubmitting}
                 />

@@ -1,5 +1,4 @@
 import React from "react";
-import { toast } from "react-toastify";
 
 interface ConfirmationModalProps {
     isOpen: boolean;
@@ -20,20 +19,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     title,
     type,
     onConfirm,
-    onCancel,
-    setIsConfirmationOpen,
-    setObjectToDelete,
-    objectToDelete,
-    objects,
-    setObject,
-    idKey
+    onCancel
 }) => {
     if (!isOpen) return null;
-
-    const handleCloseConfirmation = () => {
-        setIsConfirmationOpen(false);
-        setObjectToDelete(null);
-    };
     
 
     return (

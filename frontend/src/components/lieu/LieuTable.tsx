@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit, Trash, Eye, List } from "lucide-react";
+import { Edit, Trash, Eye } from "lucide-react";
 import { ILieu } from "../../interfaces";
 
 interface LieuTableProps {

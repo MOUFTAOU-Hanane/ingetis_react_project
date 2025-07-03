@@ -36,7 +36,7 @@ const ConfirmationModalUnRegister: React.FC<ConfirmationModalUnRegisterProps> = 
         setError('');
 
         try {
-            const response = await eventService.unregisterFromEvent(participantId);
+            await eventService.unregisterFromEvent(participantId);
 
             onConfirm(eventId);
             onClose();

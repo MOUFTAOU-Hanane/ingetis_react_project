@@ -1,4 +1,3 @@
-// src/components/dashboard/OeuvreTypePieChart.tsx
 import React from 'react';
 import { 
     PieChart, 
@@ -39,7 +38,7 @@ const OeuvreTypePieChart: React.FC<OeuvreTypePieChartProps> = ({ data }) => (
                             `${type}: ${(percent * 100).toFixed(0)}%`
                         }
                     >
-                        {data.map((entry, index) => (
+                        {data.map((_, index) => (
                             <Cell 
                                 key={`cell-${index}`} 
                                 fill={COLORS[index % COLORS.length]} 

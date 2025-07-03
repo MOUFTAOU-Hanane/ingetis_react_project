@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { IUser } from '../../../interfaces'
-import ClientEditInfo from './CLientEditInfo';
+import ClientEditInfo from './ClientEditInfo';
 
 interface ClientInfoProps {
     user: IUser;

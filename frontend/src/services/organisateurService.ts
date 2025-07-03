@@ -1,7 +1,6 @@
-// src/services/dashboardService.ts
 import apiClient from '../apiClient';
 import { formatDate } from '../helpers/utils';
-import { IEvent, IOeuvre, IParticipant } from '../interfaces';
+import { IEvent, IOeuvre, IParticipant, IUser } from '../interfaces';
 
 export interface DailyParticipantData {
     date: string;
@@ -32,7 +31,7 @@ export interface DashboardStats {
     oeuvreParType: OeuvreTypeData[];
 }
 
-export const dashboardService = {
+export const dashboardService = (user: IUser | null) => ({
     async fetchDashboardData(): Promise<{ 
         oeuvres: IOeuvre[], 
         events: IEvent[], 
@@ -45,32 +44,34 @@ export const dashboardService = {
             apiClient.get<IParticipant[]>('/participants')
         ]);
 
+
         const stats = calculateStats(
-            eventsRes.data, 
+            eventsRes.data.filter((event: IEvent) => event.createur.id_user === user?.id_user), 
             participantsRes.data, 
             oeuvresRes.data
         );
 
         return {
             oeuvres: oeuvresRes.data,
-            events: eventsRes.data,
+            events: eventsRes.data.filter((event: IEvent) => event.createur.id_user === user?.id_user),
             participants: participantsRes.data,
             stats
         };
     }
-};
+});
 
-function calculateStats(
-        events: IEvent[], 
-        participants: IParticipant[], 
-        oeuvres: IOeuvre[]
-    ): DashboardStats {
+
+const calculateStats = (
+    events: IEvent[], 
+    participants: IParticipant[], 
+    oeuvres: IOeuvre[]
+): DashboardStats => {
 
     // Participants par jour (7 derniers jours)
     const today = new Date();
     const last7Days = Array.from({ length: 7 }, (_, i) => {
         const date = new Date(today);
-        date.setDate(date.getDate() - i);
+        date.setDate(today.getDate() - i);
         return date.toISOString().split('T')[0];
     }).reverse();
 
@@ -89,8 +90,8 @@ function calculateStats(
     const eventCounts: Record<number, number> = {};
     participants.forEach(p => {
         if (p.event?.id_event) {
-        eventCounts[p.event.id_event] = 
-            (eventCounts[p.event.id_event] || 0) + 1;
+            eventCounts[p.event.id_event] = 
+                (eventCounts[p.event.id_event] || 0) + 1;
         }
     });
 
@@ -100,49 +101,45 @@ function calculateStats(
             const event = events.find(e => e.id_event === eventId);
             return {
                 id_event: eventId,
-                nom: event ? 
-                event.titre.substring(0, 15) + 
-                (event.titre.length > 15 ? '...' : '') : 
-                'Inconnu',
+                nom: event 
+                    ? event.titre.substring(0, 15) + (event.titre.length > 15 ? '...' : '') 
+                    : 'Inconnu',
                 participants: count
             };
         })
         .sort((a, b) => b.participants - a.participants)
         .slice(0, 5);
 
-    // Taux de participation moyen (estimation)
-    const tauxParticipation = events.length > 0 
-        ? events.reduce((acc, event) => {
-            const eventParticipants = participants.filter(
-                p => p.event?.id_event === event.id_event
-            ).length;
-            // utiliser le places_initial et places_disponible
+    // Taux de participation moyen sur tous les événements valides
+    const validEvents = events.filter(e => e.places_initial > 0);
+    const tauxParticipation = validEvents.length > 0
+        ? validEvents.reduce((acc, event) => {
             const placesOccupees = event.places_initial - event.places_disponible;
-            const tauxEvent = (placesOccupees / event.places_initial) * 100;
-            
-            return acc + tauxEvent;
-        }, 0) / events.length * 100
-    : 0;
+            return acc + (placesOccupees / event.places_initial);
+        }, 0) / validEvents.length * 100
+        : 0;
 
-    // Top événements
-    
+
+    // Top 3 événements selon nombre de participants
     const topEvents: TopEventData[] = events
         .map(event => {
             const participantCount = participants.filter(
-                p => p.event?.id_event === event.id_event
+                p => p?.id_event === event.id_event
             ).length;
-            // Calculer le taux de participation basé sur les places initiales de l'événement
-            const placesOccupees = event.places_initial - event.places_disponible;
-            const tauxParticipation = (placesOccupees / event.places_initial) * 100;
             
+            const placesOccupees = event.places_initial - event.places_disponible;
+            const tauxParticipation = event.places_initial > 0
+                ? (placesOccupees / event.places_initial) * 100
+                : 0;
+
             return {
                 ...event,
                 participantCount,
                 tauxParticipation: tauxParticipation.toFixed(0) + '%'
             };
         })
-    .sort((a, b) => b.participantCount - a.participantCount)
-    .slice(0, 3);
+        .sort((a, b) => b.participantCount - a.participantCount)
+        .slice(0, 3);
 
     // Répartition des œuvres par type
     const typeCount: Record<string, number> = {};

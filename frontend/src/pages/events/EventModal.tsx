@@ -1,12 +1,12 @@
 import React from "react";
 import { Chip } from "@mui/material";
 import { MapPin, ExternalLink, AlertTriangle } from "lucide-react";
-import { Event } from "../../interfaces";
+import { IEvent } from "../../interfaces";
 import { NavLink } from "react-router-dom";
 
 interface EventModalProps {
   isOpen: boolean;
-  event: Event | null;
+  event: IEvent | null;
   onClose: () => void;
 }
 

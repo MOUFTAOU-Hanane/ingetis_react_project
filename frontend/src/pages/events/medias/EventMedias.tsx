@@ -75,13 +75,17 @@ const EventMedias: React.FC = () => {
             />
             
             {/* Modal */}
-            <MediaForm 
-                modalOpen={modalOpen} 
-                handleCloseModal={handleCloseModal}
-                currentMedia={currentMedia}
-                medias={medias} 
-                setMedias={setMedias}
-            />
+            {id && (
+                <MediaForm
+                    modalOpen={modalOpen}
+                    handleCloseModal={handleCloseModal}
+                    currentMedia={currentMedia}
+                    medias={medias}
+                    setMedias={setMedias}
+                    eventId={parseInt(id)} // Nouvel paramètre requis
+                />
+            )}
+            
         </Layout>
     );
 };

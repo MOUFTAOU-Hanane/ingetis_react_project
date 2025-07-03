@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { IEvent, IMedia, IParticipant } from "../../../interfaces";
+import { IEvent, IParticipant } from "../../../interfaces";
 import apiClient from "../../../apiClient";
 import { useParams } from "react-router-dom";
 import Layout from "../../../components/Layout";
@@ -28,8 +28,9 @@ const EventDetails: React.FC = () => {
                 // Filtrer pour l'user connecté
                 if(id) {
                     const filtered = response.data.filter(
-                        (participant: IParticipant) => participant.participants.id_user == user?.id_user && participant?.event?.id_event == parseInt(id)
+                        (participant: IParticipant) => participant.id_event === parseInt(id) && participant.id_user === user?.id_user
                     );
+
                     setParticipants(filtered); 
                 }
             } catch (error) {
@@ -56,7 +57,7 @@ const EventDetails: React.FC = () => {
     }, [id]);
 
     const isAlreadyRegistered = useMemo(() => {
-        return Object.values(participants).some((participant: IParticipant) => participant.event.id_event === event?.id_event);
+        return Object.values(participants).some((participant: IParticipant) => participant.id_event === event?.id_event);
     }, [participants, event?.id_event]);
 
     const handleModal = () => {

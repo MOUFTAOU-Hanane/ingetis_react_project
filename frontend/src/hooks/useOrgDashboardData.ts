@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { dashboardService, DashboardStats } from '../services/organisateurService';
 import { IEvent, IOeuvre, IParticipant } from '../interfaces';
+import { useAuth } from '../context/AuthContext';
 
 const useOrgDashboardData = () => {
     const [oeuvres, setOeuvres] = useState<IOeuvre[]>([]);
+    const { user } = useAuth();
     const [events, setEvents] = useState<IEvent[]>([]);
     const [participants, setParticipants] = useState<IParticipant[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -25,7 +27,7 @@ const useOrgDashboardData = () => {
                     events, 
                     participants, 
                     stats 
-                } = await dashboardService.fetchDashboardData();
+                } = await dashboardService(user).fetchDashboardData();
                 
                 setOeuvres(oeuvres);
                 setEvents(events);

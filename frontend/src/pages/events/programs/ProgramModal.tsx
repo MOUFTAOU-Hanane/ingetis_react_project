@@ -6,10 +6,9 @@ import {
     DialogActions, 
     Button, 
     TextField, 
-    Box, 
-    Divider 
+    Box
 } from "@mui/material";
-import { Plus, X, Save } from "lucide-react";
+import { X, Save } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IProgram } from '../../../interfaces';
@@ -17,7 +16,7 @@ import { IProgram } from '../../../interfaces';
 interface ProgramModalProps {
     open: boolean;
     onClose: () => void;
-    onSubmit: (programs: Partial<IProgram>[]) => void;
+    onSubmit: (program: Partial<IProgram>) => void;
     currentProgram?: IProgram | null;
     isSubmitting: boolean;
 }
@@ -31,57 +30,26 @@ const ProgramModal: React.FC<ProgramModalProps> = ({
 }) => {
     const validationSchema = useMemo(() => 
         Yup.object({
-            programs: Yup.array()
-            .of(
-                Yup.object({
-                    titre: Yup.string().required("Le titre est requis"),
-                    description: Yup.string(),
-                    date_heure: Yup.string().required("La date et l'heure sont requis"),
-                })
-            )
-            .min(1, "Il doit y avoir au moins un programme"),
+            titre: Yup.string().required("Le titre est requis"),
+            description: Yup.string(),
+            date_heure: Yup.string().required("La date et l'heure sont requis"),
         }), []
     );
 
     const initialValues = useMemo(() => ({
-        programs: [{
-            titre: currentProgram?.titre || "",
-            description: currentProgram?.description || "",
-            date_heure: currentProgram?.date_heure 
-                ? new Date(currentProgram.date_heure).toISOString().slice(0, 16) 
-                : new Date().toISOString().slice(0, 16),
-        }],
+        titre: currentProgram?.titre || "",
+        description: currentProgram?.description || "",
+        date_heure: currentProgram?.date_heure 
+            ? new Date(currentProgram.date_heure).toISOString().slice(0, 16) 
+            : new Date().toISOString().slice(0, 16),
     }), [currentProgram]);
 
     const formik = useFormik({
         initialValues,
         validationSchema,
         enableReinitialize: true,
-        onSubmit: (values) => onSubmit(values.programs),
+        onSubmit: (values) => onSubmit(values),
     });
-
-    const addNewProgramField = () => {
-        formik.setFieldValue("programs", [
-            ...formik.values.programs,
-            { 
-                titre: "", 
-                description: "", 
-                date_heure: new Date().toISOString().slice(0, 16) 
-            }
-        ]);
-    };
-
-    const getFieldError = (index: number, fieldName: keyof IProgram): string | undefined => {
-        const touched = formik.touched.programs?.[index];
-        const programErrors = formik.errors.programs as any;
-        
-        return touched && 
-               programErrors?.[index]?.[fieldName] as string | undefined;
-    };
-
-    const hasFieldError = (index: number, fieldName: keyof IProgram): boolean => {
-        return Boolean(getFieldError(index, fieldName));
-    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -97,64 +65,47 @@ const ProgramModal: React.FC<ProgramModalProps> = ({
             sx={{ backdropFilter: "blur(5px)" }}
         >
             <DialogTitle>
-                {currentProgram ? "Modifier le programme" : "Ajouter des programmes"}
+                {currentProgram ? "Modifier le programme" : "Ajouter un programme"}
             </DialogTitle>
             <DialogContent dividers>
                 <form onSubmit={handleSubmit}>
-                    {formik.values.programs.map((program, index) => (
-                        <Box key={index} sx={{ mb: 2 }}>
-                            <TextField
-                                fullWidth
-                                label="Titre"
-                                name={`programs[${index}].titre`}
-                                value={program.titre || ""}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={hasFieldError(index, 'titre')}
-                                helperText={getFieldError(index, 'titre')}
-                                sx={{ mb: 2 }}
-                            />
-                            <TextField
-                                fullWidth
-                                label="Description"
-                                name={`programs[${index}].description`}
-                                multiline
-                                rows={3}
-                                value={program.description || ""}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                sx={{ mb: 2 }}
-                            />
-                            <TextField
-                                fullWidth
-                                type="datetime-local"
-                                label="Date et heure"
-                                name={`programs[${index}].date_heure`}
-                                value={program.date_heure || ""}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={hasFieldError(index, 'date_heure')}
-                                helperText={getFieldError(index, 'date_heure')}
-                                InputLabelProps={{ shrink: true }}
-                                sx={{ mb: 1 }}
-                            />
-
-                            {index < formik.values.programs.length - 1 && (
-                                <Divider sx={{ my: 2 }} />
-                            )}
-                        </Box>
-                    ))}
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Titre"
+                            name="titre"
+                            value={formik.values.titre}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.titre && Boolean(formik.errors.titre)}
+                            helperText={formik.touched.titre && formik.errors.titre}
+                            sx={{ mb: 2 }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Description"
+                            name="description"
+                            multiline
+                            rows={3}
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            sx={{ mb: 2 }}
+                        />
+                        <TextField
+                            fullWidth
+                            type="datetime-local"
+                            label="Date et heure"
+                            name="date_heure"
+                            value={formik.values.date_heure}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.date_heure && Boolean(formik.errors.date_heure)}
+                            helperText={formik.touched.date_heure && formik.errors.date_heure}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Box>
                 </form>
-                {!currentProgram && (
-                    <Button
-                        variant="outlined"
-                        onClick={addNewProgramField}
-                        startIcon={<Plus />}
-                        sx={{ mt: 1 }}
-                    >
-                        Ajouter un autre programme
-                    </Button>
-                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} startIcon={<X />}>

@@ -10,6 +10,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-500 via-yellow-600 to-black">
+            <div className='hidden'>{title}</div>
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
                 <div className="absolute top-40 left-20 w-72 h-72 bg-yellow-400 rounded-full filter blur-3xl opacity-20" />
                 <div className="absolute top-60 right-20 w-96 h-96 bg-yellow-300 rounded-full filter blur-3xl opacity-10" />

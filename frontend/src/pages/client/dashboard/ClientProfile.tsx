@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { IUser } from '../../../interfaces';
-import ClientPreference from './ClientPreference';
 import ClientSecurite from './ClientSecurite';
 import ClientInfo from './ClientInfo';
 import { Edit } from 'lucide-react';

@@ -9,7 +9,7 @@ interface ParcoursMapProps {
 }
 
 export const ParcoursMap: React.FC<ParcoursMapProps> = ({ parcours, className }) => {
-    const { coordinates, loading, error, mapCenter } = useGeocoding(parcours.lieux);
+    const { coordinates, loading, error, mapCenter } = useGeocoding(parcours?.lieux ?? []);
 
     return (
         <InteractiveMap

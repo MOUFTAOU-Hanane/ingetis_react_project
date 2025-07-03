@@ -107,7 +107,7 @@ const OeuvresList: React.FC = () => {
                                         <td className="px-6 py-4">{oeuvre.prix} €</td>
                                         <td className="px-6 py-4">
                                             {oeuvre.image && 
-                                                <img src={`http://localhost:3005${oeuvre.image}`} alt={oeuvre.titre} className="h-12 w-12 object-cover" />
+                                                <img src={`${oeuvre.image}`} alt={oeuvre.titre} className="h-12 w-12 object-cover" />
                                             }
                                         </td>
                                         <td className="px-6 py-4">

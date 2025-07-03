@@ -119,10 +119,10 @@ export const ParcoursPDF: React.FC<ParcoursPDFProps> = ({ parcours }) => {
                 {/* Content */}
                 <View style={styles.content}>
                     <Text style={styles.sectionTitle}>
-                        Itinéraire ({parcours.lieux.length} étapes)
+                        Itinéraire ({parcours.lieux && parcours.lieux.length} étapes)
                     </Text>
 
-                    {parcours.lieux.map((lieu, index) => (
+                    {parcours.lieux && parcours.lieux.map((lieu, index) => (
                         <View key={index} style={styles.lieuContainer}>
                             <Text style={styles.lieuNumber}>
                                 Étape {index + 1}
@@ -140,7 +140,7 @@ export const ParcoursPDF: React.FC<ParcoursPDFProps> = ({ parcours }) => {
                     <View style={styles.stats}>
                         <Text style={styles.statsTitle}>Informations du parcours</Text>
                         <Text style={styles.statsText}>
-                            • Nombre total d'étapes : {parcours.lieux.length}
+                            • Nombre total d'étapes : {parcours.lieux && parcours.lieux.length}
                         </Text>
                         <Text style={styles.statsText}>
                             • Parcours : {parcours.nom}

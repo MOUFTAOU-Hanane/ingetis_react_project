@@ -9,6 +9,8 @@ export interface ILieu {
 
 export interface IProgram {
     id_program?: number;
+    event?: IEvent;
+    id_event?: number;
     titre: string;
     description: string;
     date_heure: Date | string;
@@ -76,8 +78,10 @@ export interface IParticipant {
 //     // date_fin: Date;
 // }
 export interface IParcours {
-    lieux: ILieu[];
-    nom: string;
+    id_parcours?: number;
+    description?: string;
+    lieux?: ILieu[];
+    nom?: string;
 }
 
 // Types communs pour le tableau de bord client
@@ -93,6 +97,11 @@ export interface IReservation {
 
 export interface IFavorite {
     id_favorite: number;
+    image_url?: string;
+    titre?: string;
+    artiste?: string;
+    type?: string;
+    id_oeuvre?: number;
     event: IEvent;
     user: IUser;
     created: Date;

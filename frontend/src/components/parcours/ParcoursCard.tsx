@@ -26,7 +26,7 @@ export const ParcoursCard: React.FC<ParcoursCardProps> = ({
             // Créer un lien temporaire pour le téléchargement
             const link = document.createElement('a');
             link.href = url;
-            link.download = `parcours-${parcours.nom.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
+            link.download = parcours.nom ? `parcours-${parcours?.nom.replace(/[^a-zA-Z0-9]/g, '-')}.pdf` : "";
             
             // Déclencher le téléchargement
             document.body.appendChild(link);
@@ -73,7 +73,7 @@ export const ParcoursCard: React.FC<ParcoursCardProps> = ({
                             ? 'text-amber-600'
                             : 'text-gray-500'
                         }`}>
-                    {parcours.lieux.map((lieu, i) => (
+                    {parcours.lieux && parcours.lieux.map((lieu, i) => (
                         <li key={i}>
                             <span className={`block ${
                                 isSelected
